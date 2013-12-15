@@ -30,14 +30,15 @@ DingBa::Application.configure do
   config.action_mailer.delivery_method = :smtp
 
   config.action_mailer.default_url_options = { :host => 'localhost:3000' }
-  #config.action_mailer.default_url_options = { :host => 'http://pacific-plains-2043.herokuapp.com/' }
+  #config.action_mailer.default_url_options = { :host => 'http://dingba.codream.tw/' }
+
 
   ActionMailer::Base.smtp_settings = {
       :address        => "smtp.gmail.com",
       :port           => 587,
       :authentication => :plain,
-      :user_name      => "a17877yun@gmail.com",
-      :password       => "yunyun123",
+      :user_name      => "dingba-admin@codream.tw",
+      :password       => "asdf1234",
       :openssl_verify_mode  => 'none'
   }
 end
