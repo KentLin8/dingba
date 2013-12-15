@@ -339,28 +339,41 @@ class Home
     end
   end
 
-  def self.save_booking(user_id, booking)
+  def self.save_booking(booker, origin_booking)
     begin
-      restaurant = Restaurant.find(booking[:restaurant_id])
-      booking =  Booking.new
-      booking.user_id = user_id
-      booking.restaurant_id = restaurant_id
-      booking.res_url = restaurant.res_url
-      booking.restaurant_name = restaurant.name
-      booking.restaurant_address = restaurant.city + restaurant.area + restaurant.address
-      booking.booking_time = booking[:booking_time]
-      booking.num_of_people = booking[:num_of_people]
-      booking.name = booking[:booker_name]
-      booking.phone = booking[:booker_phone]
-      booking.email = booking[:booker_email]
-      booking.remark = booking[:booker_remark]
-      booking.save
+      is_pass = false
+      restaurant = Restaurant.find(origin_booking[:restaurant_id])
 
-      booking = Booking.find(1)
+      if origin_booking[:booker_id].blank? && !booker.blank?
+        is_pass = true
+      elsif booker.id != origin_booking[:booker_id].to_i       # check null params value can to_i ?
+        return {:error => true, :message => '阿! 發生錯誤了! 訂位失敗!'}
+      elsif booker.id == origin_booking[:booker_id].to_i
+        is_pass = true
+      end
 
-      MyMailer.booking_success(params[:email], booking).deliver
+      if is_pass == true
+        booking = Booking.new
+        booking.user_id = booker.id
+        booking.restaurant_id = restaurant_id
+        booking.res_url = restaurant.res_url
+        booking.restaurant_name = restaurant.name
+        booking.restaurant_address = restaurant.city + restaurant.area + restaurant.address
+        booking.booking_time = origin_booking[:booking_time]
+        booking.num_of_people = origin_booking[:num_of_people]
+        booking.name = origin_booking[:booker_name]
+        booking.phone = origin_booking[:booker_phone]
+        booking.email = origin_booking[:booker_email]
+        booking.remark = origin_booking[:booker_remark]
+        booking.save
 
-      return {:success => true, :data => '訂位成功!', :booking_id => booking.id }
+        send_mail_result = MyMailer.booking_success(booking.email, booking).deliver   # Send mail fail may be the email problem, check time out
+
+        return {:success => true, :data => '訂位成功!', :booking_id => booking.id }
+      else
+        return {:error => true, :message => '阿! 發生錯誤了! 訂位失敗!'}
+      end
+
     rescue => e
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/Models/home.rb  ,Method:save_booking(user_id, booking)"
       return {:error => true, :message => '阿! 發生錯誤了! 訂位失敗!'}

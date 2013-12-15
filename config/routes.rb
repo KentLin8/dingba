@@ -27,9 +27,8 @@ DingBa::Application.routes.draw do
   get  'r/:id' => 'home#booking_restaurant'
   get  'home/get_condition'
   get  'home/notice_friend'
-  post 'home/notice_friend'
   get  'home/cancel_booking'
-  post 'home/cancel_booking'
+  post 'home/save_cancel_booking'
 
   #==========================================================================
   # restaurant_manage controller
@@ -72,7 +71,7 @@ DingBa::Application.routes.draw do
   #==========================================================================
   # booker_manage controller
   #==========================================================================
-  get 'booker_manage/index', :as => 'booker_index'
+  get 'booker_manage/index', :as => 'booker_manage_index'
   get 'booker_manage/booking_record'
 
 

@@ -75,15 +75,15 @@
                 <table>
                   <tr>
                     <td>訂位者大名：</td>
-                    <td><input type="text" name="booker_name"></td>
+                    <td><input type="text" name="booker_name" value="<%= @booker.name %>"></td>
                   </tr>
                   <tr>
                     <td>訂位者電話：</td>
-                    <td><input type="text" name="booker_phone"></td>
+                    <td><input type="text" name="booker_phone" value="<%= @booker.phone %>"></td>
                   </tr>
                   <tr>
                     <td>訂位E-mail：</td>
-                    <td><input type="text" name="booker_email"></td>
+                    <td><input type="text" name="booker_email" value="<%= @booker.email %>"></td>
                   </tr>
                   <tr>
                     <td colspan="2"><textarea style="width: 100%" placeholder="留言給餐廳" name="remark"></textarea></td>
