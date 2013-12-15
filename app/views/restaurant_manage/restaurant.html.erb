@@ -1,0 +1,69 @@
+<%= render :partial => 'restaurant_header' %>
+
+<%= render :partial => 'restaurant_step' %>
+
+<div id="main" class="row-fluid">
+
+  <%= render :partial => 'restaurant_left' %>
+
+  <div id="form_place" class="span9">
+    <%= render :template => 'restaurant_manage/restaurant_info', :layout => false %>
+  </div>
+</div>
+
+<div id="lightbox_wrap">
+  <div id="lightbox">
+    <div id="tabs">
+      <ul>
+        <li><a href="#tabs-1">修改供位設定</a></li>
+        <li><a href="#tabs-2">訂位資料</a></li>
+      </ul>
+      <div id="tabs-1">
+        <form action="restaurant_manage/special_create" id="new_supply" method="post">
+          <div id="tab_time">
+          </div>
+          <div class="float-r">
+            <input class="btn btn-primary" type="submit" value="確定新增">
+            <input class="btn" type="reset" value="清除">
+          </div>
+        </form>
+      </div>
+      <div id="tabs-2">
+        <div id="tab_day_booking">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+//    $("#tabs").tabs({
+//        activate: function(event, ui) {
+//            alert("PRESSED TAB!");
+//        }
+//    });
+
+  $("#tabs").on("tabsactivate", function(event, ui) {
+    //alert('pressed tab! ,solution 2')
+    tab_change(ui.newTab.index())
+  });
+
+  tab_change()
+  function tab_change(tab_index) {
+    if(1 == tab_index){
+      $.ajax({
+        url: "restaurant_manage/day_booking",
+        type: "get",
+        data: {special_day:$("#tab_time [name='special_day']").val()},
+        success: function (data) {
+            $("#tab_day_booking").html(data);
+        }
+      });
+    };
+  }
+</script>
+
+
+
+

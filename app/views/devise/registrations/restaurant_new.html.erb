@@ -1,0 +1,39 @@
+<div class="span5">
+  <a href= "/home/index">
+    <%= image_tag "res/cover.png", :size => "350", :style => 'display:block;margin:auto' %>
+  </a>
+</div>
+<div class="span6">
+  <%= form_tag res_create_path do %>
+    <table class="table">
+      <tr>
+        <td>您的姓名</td>
+        <td><%= text_field_tag :tag_name, nil, :required => true, :class => 'input-block-level' %></td>
+      </tr>
+      <tr>
+        <td>您的E-Mail</td>
+        <td><%= email_field_tag :tag_email, nil, :required => true, :class => 'input-block-level' %></td>
+      </tr>
+      <tr>
+        <td>餐廳電話</td>
+        <td><%= phone_field_tag :tag_phone, nil, :required => true, :class => 'input-block-level' %></td>
+      </tr>
+      <tr>
+        <td>設定密碼</td>
+        <td><%= password_field_tag :tag_password, nil, :required => true, :class => 'input-block-level' %></td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <label class="checkbox inline"><%= check_box_tag :tag_i_agree, 1, false, {required: 'required'} %> 我同意<a href="ry" target="_blank" class="base_brown">訂吧 條款</a></label>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2"><%= submit_tag "註冊帳號" , { :class => 'btn btn-large btn-block' } %></td>
+      </tr>
+    </table>
+點擊「註冊帳號」的同時，表示您同意接受我們的個人資料提供同意書以及使用條款<br>
+，也詳讀和完全了解我們的資料使用政策，包括Cookie的使用，<br>
+詳細資訊及內容請參考<a href="" target="_blank" class="base_brown">訂吧 條款</a>
+
+  <% end %>
+</div>

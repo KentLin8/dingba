@@ -1,0 +1,94 @@
+
+<form action="restaurant_manage/supply_condition_save" id="new_supply" method="post">
+
+  <input name="condition[id]" type="hidden" value="<%= @supply_time.id %>">
+  <table class="table">
+    <tr>
+      <td>設立名稱</td>
+      <td><input type="text" name="condition[name]" value="<%= @supply_time.name %>" required="required"></td>
+    </tr>
+    <tr>
+      <td>設立訂位有效期間</td>
+      <td>
+        <label for="from">From</label>
+        <input type="date" name="condition[range_begin]" class="datepicker">
+        <label for="to">to</label>
+        <input type="date" name="condition[range_end]" class="datepicker">
+      </td>
+    </tr>
+
+    <tr>
+      <td>每周可提供訂位日</td>
+      <td>
+        <label class="checkbox inline"><input type="checkbox" name="condition[week1]" value="1">星期一</label>
+        <label class="checkbox inline"><input type="checkbox" name="condition[week2]" value="2">星期二</label>
+        <label class="checkbox inline"><input type="checkbox" name="condition[week3]" value="3">星期三</label>
+        <label class="checkbox inline"><input type="checkbox" name="condition[week4]" value="4">星期四</label>
+        <label class="checkbox inline"><input type="checkbox" name="condition[week5]" value="5">星期五</label>
+        <label class="checkbox inline"><input type="checkbox" name="condition[week6]" value="6">星期六</label>
+        <label class="checkbox inline"><input type="checkbox" name="condition[week7]" value="0">星期日</label>
+      </td>
+    </tr>
+  </table>
+
+  <%= render :partial => 'time_zones' %>
+
+  <div class="float-r">
+    <input class="btn btn-primary" type="submit" value="確定新增">
+    <input class="btn" type="reset" value="清除">
+  </div>
+</form>
+
+
+<script>
+    //===========================================================================
+    // view: supply_time
+    //===========================================================================
+
+    $(function() {
+
+        $("#from").datepicker({
+            dateFormat: 'yy-mm-dd',
+            //defaultDate: "+1w",
+            changeMonth: true,
+            numberOfMonths: 3,
+            onClose: function( selectedDate ) {
+                $("#to").datepicker( "option", "minDate", selectedDate );
+            }
+        }).val(getTodaysDate(0)); // For current date;
+        $("#to").datepicker({
+            dateFormat: 'yy-mm-dd',
+            //defaultDate: "+1w",
+            changeMonth: true,
+            numberOfMonths: 3,
+            onClose: function( selectedDate ) {
+                $("#from").datepicker( "option", "maxDate", selectedDate );
+            }
+        }).val(getTodaysDate(1));
+
+        // $.datepicker.setDefaults($.datepicker.regional['zh-TW']);
+    });
+
+    function getTodaysDate (val) {
+        if ('<%= @supply_time.range_begin %>' != '' && val == 0)
+            return '<%= @supply_time.range_begin.strftime("%Y-%m-%d") %>'
+
+        if ('<%= @supply_time.range_end %>' != '' && val == 1)
+            return '<%= @supply_time.range_end.strftime("%Y-%m-%d") %>'
+
+        var t = new Date;
+        var year = t.getFullYear();
+
+        var day = t.getDate()
+        if (day < 10) {
+            day = '0' + day;
+        }
+
+        var month = t.getMonth() + 1;
+        if ( month < 10){
+            month = '0' + month;
+        }
+
+        return (year + '-' + month + '-' + day);
+    }
+</script>

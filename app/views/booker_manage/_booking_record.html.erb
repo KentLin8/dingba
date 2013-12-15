@@ -1,0 +1,50 @@
+
+<% @books.each do |booking| %>
+    <table class="history">
+      <tr>
+        <td rowspan="2">
+          <h3>TIME</h3>
+          <img src="" alt="RES_PIC">
+        </td>
+        <td>
+          <table class="no_border">
+            <tr>
+              <td>餐廳：<%= booking.name %></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>地址：<%= booking.restaurant_address %></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>名字：<%= booking.name %></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>Mail：<%= booking.email %></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>電話：<%= booking.phone %></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>人數：<%= booking.num_of_people %></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>出席者：<%= booking.participants %></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>備註：<%= booking.remark %></td>
+              <td></td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td>消費感想 <a href="" data-id="3" class="add_comment base_orange">輸入感想</a> </td>
+      </tr>
+    </table>
+<% end %>

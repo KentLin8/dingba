@@ -1,0 +1,19 @@
+defaults: &defaults
+  app_title: DingBa (DEV ENV)
+  domain: "localhost:3000/r/"
+
+
+development:
+  <<: *defaults
+  app_title: DingBa (DEV ENV)
+  domain: "localhost:3000/r/"
+  error: "=============Catch Error:"
+
+test:
+  <<: *defaults
+  app_title: DingBa (TEST ENV)
+
+production:
+  <<: *defaults
+  app_title: DingBa
+  error: "Catch Error:"

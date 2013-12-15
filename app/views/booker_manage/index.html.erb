@@ -1,0 +1,24 @@
+<div id="tabs">
+  <ul>
+    <li><a href="#tabs-1">我的訂位記錄</a></li>
+    <li><a href="#tabs-2">我的會員資料</a></li>
+  </ul>
+  <div id="tabs-1">
+    <%= render :partial => 'booking_record' %>
+  </div>
+  <div id="tabs-2">
+    <%= render :template => 'devise/registrations/edit',
+               :locals => {
+               :resource => @booker,
+               :resource_name => 'user' } %>
+  </div>
+</div>
+
+<div id="comment">
+  <h4>輸入消費感想</h4>
+  <form action="">
+    <textarea name=""></textarea><br>
+    <input type="hidden" name="">
+    <input type="submit" value="確認" class="btn">
+  </form>
+</div>

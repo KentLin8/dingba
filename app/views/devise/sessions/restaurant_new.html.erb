@@ -1,0 +1,35 @@
+<div class="span5">
+  <a href= "/home/index">
+    <%= image_tag "res/cover.png", :size => "350", :style => 'display:block;margin:auto' %>
+  </a>
+  <a href="/sessions/booker_new" class="base_brown" style="display: block;font-size: 18px;text-align: center;text-decoration: underline;">若您為消費者要訂位請至此連結</a>
+</div>
+
+<div class="span6">
+  <h3>餐廳訂位管理平台</h3>
+  沒有帳號，我要<a href="/registrations/restaurant_new" class="base_brown">註冊訂吧帳號</a>
+  <div class="line"></div>
+  <%= form_for(resource, :as => resource_name, :url => login_session_path(resource_name)) do |f| %>
+      <div><%= f.label :email,"信箱" %>
+        <%= f.email_field :email, :autofocus => true, :required => true %></div>
+
+      <div><%= f.label :password,"密碼" %>
+        <%= f.password_field :password, :required => true %></div>
+
+      <% if devise_mapping.rememberable? -%>
+          <label class="checkbox">
+            <%= f.check_box :remember_me %>
+             保持登入
+          </label>
+      <% end -%>
+      <a href="/users/password/new" class="base_brown">忘記密碼?</a>
+      <div><%= f.submit "Sign in" , { :class => 'btn btn-large btn-block' } %></div>
+  <% end %>
+  <div class="line"></div>
+  點擊「登入」或「其他社群帳號」登入的同時，<br>
+  表示您同意接受我們的個人資料提供同意書以及使用條款，<br>
+  也詳讀和完全了解我們的資料使用政策，<br>
+  包括Cookie的使用，詳細資訊及內容請參考<a href="" target="_blank" class="base_brown">訂吧 條款</a>
+</div>
+
+<input type="hidden" name="target" value="/dashboard"/>

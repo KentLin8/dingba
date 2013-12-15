@@ -1,0 +1,74 @@
+
+<table>
+  <tr>
+    <td rowspan="2">請選擇期間：</td>
+    <td>
+      <input type="text" id="from" name="" class="datepicker">
+    </td>
+    <td rowspan="2">至</td>
+  </tr>
+  <tr>
+    <td>
+      <input type="text" id="to" name="" class="datepicker">
+    </td>
+  </tr>
+</table>
+<!--<input id="export_excel" type="button" value="匯出EXCEL報表" class="btn btn-primary pull-right">-->
+<input id="export_excel" type="button" value="匯出EXCEL報表" >
+
+<div id="books_report">
+    <table class="table table-bordered">
+      <tr>
+        <td>No.</td>
+        <td>日期</td>
+        <td>人數</td>
+        <td>訂位者大名</td>
+        <td>訂位者電話</td>
+        <td>訂位者EMAIL</td>
+        <td>備註</td>
+        <td>是否取消/原因</td>
+      </tr>
+
+      <% @books.each_with_index do |b, i| %>
+          <tr>
+            <td><%= i + 1 %></td>
+            <td><%= b.booking_time.strftime("%Y-%m-%d %H:%M") %></td>
+            <td><%= b.num_of_people %></td>
+            <td><%= b.name %></td>
+            <td><%= b.phone %></td>
+            <td><%= b.email %></td>
+            <td><%= b.remark %></td>
+
+            <td>
+              <% if b.status == '0' %>
+                  未用餐
+              <% elsif b.status == '1'%>
+                  已用餐
+              <% elsif b.status == '2'%>
+                  取消訂位! </br>原因:  同伴無法配合
+              <% elsif b.status == '3'%>
+                  取消訂位! </br>原因:  餐廳當天座位不夠
+              <% elsif b.status == '4'%>
+                  取消訂位! </br>原因:  選擇了其他餐廳
+              <% elsif b.status == '5'%>
+                  取消訂位! </br>原因:  餐廳臨時公休
+              <% elsif b.status == '6'%>
+                  取消訂位! </br>原因:  聚餐延期
+              <% elsif b.status == '7'%>
+                  取消訂位! </br>原因:  <%= b.cancel_note %>
+              <% end %>
+            </td>
+
+          </tr>
+      <% end %>
+    </table>
+</div>
+
+<script>
+    $(function(){
+        $('#export_excel').click(function(e){
+            window.open('data:application/vnd.ms-excel,' + encodeURIComponent( $('#books_report').html()));
+            e.preventDefault();
+        });
+    })
+</script>

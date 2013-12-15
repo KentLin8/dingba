@@ -1,0 +1,31 @@
+<input type="text" name="" id="show_day" class="datepicker">
+<table class="table" id="daily_info">
+  <% @zones_books.each do |z| %>
+      <tr>
+        <th class="mark mark1"></th>
+        <th colspan="6"><%= z.name%></th>
+      </tr>
+      <tr>
+        <td>時間</td>
+        <td>人數</td>
+        <td>訂位人大名</td>
+        <td>訂位人電話</td>
+        <td>訂位人EMail</td>
+        <td>備註</td>
+        <td></td>
+      </tr>
+
+      <% z.books.each do |b| %>
+      <tr>
+        <td><%= b.booking_time.strftime("%Y-%m-%d %H:%M") %></td>
+        <td><%= b.num_of_people %></td>
+        <td><%= b.name %></td>
+        <td><%= b.phone %></td>
+        <td><%= b.email %></td>
+        <td><%= b.remark %></td>
+        <td><a href="" class="btn">修改</a></td>
+      </tr>
+      <% end %>
+      <tr><td colspan="7"></td></tr>
+  <% end %>
+ </table>

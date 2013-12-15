@@ -1,0 +1,68 @@
+
+<!--<div id="date_show"></div>-->
+<select name="" id="year" class="month_picker">
+  <option value="2012">2012</option>
+  <option value="2013">2013</option>
+  <option value="2014">2014</option>
+  <option value="2015">2015</option>
+  <option value="2016">2016</option>
+</select>
+年
+<select name="" id="month" class="month_picker">
+  <option value="1">1</option>
+  <option value="2">2</option>
+  <option value="3">3</option>
+  <option value="4">4</option>
+  <option value="5">5</option>
+  <option value="6">6</option>
+  <option value="7">7</option>
+  <option value="8">8</option>
+  <option value="9">9</option>
+  <option value="10">10</option>
+  <option value="11">11</option>
+  <option value="12">12</option>
+</select>
+月
+
+<table id="calendar" class="table table-bordered">
+  <tr>
+    <th>日</th>
+    <th>一</th>
+    <th>二</th>
+    <th>三</th>
+    <th>四</th>
+    <th>五</th>
+    <th>六</th>
+  </tr>
+
+  <input id="year" type="hidden" value="<%= @year %>">
+
+  <% @calendar_data.each_with_index do |x, i| %>
+
+      <%= tag('tr') if i % 7 == 0 %>
+
+        <td id ="<%= x.con_id %>">
+
+          <div class="date"><%= @month %>/<%= x.day %></div>
+
+          <div class="info">
+            <% if x.con_id == 0 %>
+                不提供訂位
+            <% else %>
+                <% if !x.n1.blank?%> <%= x.n1 %> <%= @books[i].zone1 %>/ <%= x.z1 %> </br> <% end %>
+                <% if !x.n2.blank?%> <%= x.n2 %> <%= @books[i].zone2 %>/ <%= x.z2 %> </br> <% end %>
+                <% if !x.n3.blank?%> <%= x.n3 %> <%= @books[i].zone3 %>/ <%= x.z3 %> </br> <% end %>
+                <% if !x.n4.blank?%> <%= x.n4 %> <%= @books[i].zone4 %>/ <%= x.z4 %> </br> <% end %>
+                <% if !x.n5.blank?%> <%= x.n5 %> <%= @books[i].zone5 %>/ <%= x.z5 %> </br> <% end %>
+                <% if !x.n6.blank?%> <%= x.n6 %> <%= @books[i].zone6 %>/ <%= x.z6 %> </br> <% end %>
+            <% end %>
+          </div>
+        </td>
+
+      <%= tag('/tr') if i % 7 == 6 %>
+
+  <% end %>
+
+</table>
+
+

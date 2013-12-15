@@ -1,0 +1,38 @@
+
+<table>
+  <% if @booking_condition.option_max_people.blank? && @booking_condition[:error] == true %>
+  <tr>
+    <td colspan="2">
+      <%= @booking_condition[:message] %>
+    </td>
+  </tr>
+  <% end %>
+  <tr>
+    <td>用餐日期</td>
+    <td>
+      <input type="text" name="" id="datepicker">
+    </td>
+  </tr>
+  <tr>
+    <td>用餐人數</td>
+    <td>
+      <%= select_tag(:booking_people, options_for_select(@booking_condition.option_max_people) , id:'select_people') %>
+    </td>
+  </tr>
+  <tr>
+    <td>用餐時段</td>
+    <td>
+      <select id="select_zone">
+      </select>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2">用餐時間<input type="hidden" name="time" id="time"> <!-- 放置選擇時間的結果 --></td>
+  </tr>
+  <tr>
+    <td id="time_select" colspan="2">
+    </td>
+  </tr>
+</table>
+
+

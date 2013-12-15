@@ -1,0 +1,106 @@
+<div id="main" class="container">
+  <div id="booking" class="container">
+    <div class="row-fluid" id="res_info">
+      <div class="span5">
+        <div id="pics">
+          <!-- 這邊換成圖片 -->
+          <% 4.times do %>
+              <div></div>
+          <% end %>
+        </div>
+        <!-- 這邊是封面 id保留 -->
+        <div id="main_pic"></div>
+      </div>
+      <div class="span7">
+        <table>
+          <tr>
+            <td>餐廳名稱：</td>
+            <td><%= @restaurant.name %></td>
+          </tr>
+          <tr>
+            <td>餐廳地址：</td>
+            <td><%= @restaurant.city + @restaurant.area + @restaurant.address %></td>
+          </tr>
+          <tr>
+            <td>餐廳電話：</td>
+            <td><%= @restaurant.phone %></td>
+          </tr>
+          <tr>
+            <td>餐廳特色：</td>
+            <td><%= @restaurant.feature %></td>
+          </tr>
+          <tr>
+            <td>營業時間：</td>
+            <td><%= @restaurant.business_hours %></td>
+          </tr>
+          <tr>
+            <td>付款方式：</td>
+            <td>
+              <% if @restaurant.pay_type.include?('1') %>
+                  現金
+              <% end %>
+
+              <% if @restaurant.pay_type.include?('2') %>
+                  信用卡
+              <% end %>
+
+              <% if @restaurant.pay_type.include?('3') %>
+                  悠遊卡
+              <% end %>
+            </td>
+          </tr>
+          <tr>
+            <td>餐廳網址：</td>
+            <td>
+              <a href="<%= @restaurant.url1 %>" target="_blank"><%= @restaurant.info_url1 %></a>、
+              <a href="<%= @restaurant.url2 %>" target="_blank"><%= @restaurant.info_url2 %></a>、
+              <a href="<%= @restaurant.url3 %>" target="_blank"><%= @restaurant.info_url3 %></a>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="row">
+      <div class="span6">
+        <table>
+          <tr>
+            <td>用餐日期：<%= @booking.booking_time %></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>用餐人數：<%= @booking.num_of_people %></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>訂位者大名：<%= @booking.name %></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>訂位者電話：<%= @booking.phone %></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>訂位E-mail：<%= @booking.email %></td>
+            <td></td>
+          </tr>
+        </table>
+      </div>
+      <div class="span6">
+        備註：<br>
+        <%= @booking.remark %><br>
+        <span class="base_orange">訂位取消原因：</span>
+        <%= form_for :booking ,:url => "save_cancel_booking" do |f| %>
+          <%= f.hidden_field :id %>
+          <%= f.radio_button :status, "2" %> 同伴無法配合
+          <%= f.radio_button :status, "3" %> 餐廳當天座位不夠
+          <%= f.radio_button :status, "4" %> 選擇了其他餐廳
+          <%= f.radio_button :status, "5" %> 餐廳臨時公休
+          <%= f.radio_button :status, "6" %> 聚餐延期
+          <%= f.radio_button :status, "7" %> 其他，因為：
+          <%= f.text_field :cancel_note, :placeholder => '請輸入' %>
+          <input type="submit" value="確認取消定位" class="btn btn-primary">
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

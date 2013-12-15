@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>DingBa</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <%= stylesheet_link_tag    'restaurant_manage', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'restaurant_manage', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+
+  <div class="container">
+    <div class="row" style="margin: 35px 0">
+      <%= yield %>
+    </div>
+
+    <div class="row">
+      <div id="about" class="span6">
+        <a href="">關於我們</a>
+        <a href="">會員條款</a>
+        <a href="">常見問與答</a>
+      </div>
+      <div id="copyright" class="span6">
+        © 2013 Codream. All Rights Reserved.
+      </div>
+    </div>
+
+    <div class="row">
+      <div id="statement" class="span12">
+        此訂位平台為免費資源，不收取任何費用，由 Codream 團隊提供。
+      </div>
+    </div>
+  </div>
+<div style="margin: 0px auto;width: 1024px">
+    <% if alert %>
+      <script type="text/javascript">alert("<%= alert %>");</script>
+    <% end %>
+
+    <div style="margin-left: 10%;margin-right: 10%; text-align: right">
+      <% if user_signed_in? %>
+
+          <%= link_to "帳戶管理" , booker_index_path , :class => 'navbar-link' %>
+          <%= link_to "登出", destroy_user_session_path, method: :delete, :class => 'navbar-link'  %>
+      <% else %>
+          <%= link_to "註冊", new_user_registration_path, :class => 'navbar-link'  %> |
+          <%= link_to "登入", new_user_session_path, :class => 'navbar-link'  %>
+      <% end %>
+    </div>
+
+
+</div>
+
+</body>
+</html>

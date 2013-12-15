@@ -1,0 +1,149 @@
+
+<div class="btn btn-primary" style="font-size: 13px" id="new_condition">
+  <i class="icon-plus icon-white"></i>
+  新增一組可供訂位的時間
+</div>
+
+<br>已設立時間：<br>
+
+<table>
+  <tbody id="period_set">
+  <% @conditions.each_with_index do |c, index|%>
+      <tr class="sortable" data-sort="<%= index %>">
+        <td>
+          <div class="dropdown">
+            <input name="con_id" type="hidden" value="<%= c.id %>">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#"><%= c.name %><b class="caret pull-right"></b></a>
+            <ul class="dropdown-menu" role="menu">
+              <li><a data-id="<%= c.id %>" class="edit_condition">編輯</a></li>
+              <li><a data-id="<%= c.id %>" class="destroy_condition">刪除</a></li>
+            </ul>
+          </div>
+        </td>
+        <td>
+            <label class="radio inline">
+              <input type="radio" name="con_status<%= index %>" value="t" <%= c.status == 't' ? 'checked="checked"' : '' %>>
+              開啓
+            </label>
+        </td>
+        <td>
+            <label class="radio inline">
+              <input type="radio" name="con_status<%= index %>" value="f" <%= c.status == 'f' ? 'checked="checked"' : '' %>>
+              關閉
+            </label>
+        </td>
+      </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<table id="reserve_table">
+    <tr>
+      <td>最晚接受訂位期間</td>
+      <td>
+        <label class="radio inline">
+          <input type="radio" name="reserve_type" value="0">開放預約到
+        </label>
+
+        <input class="input-small" type="text" id="reserve_hour" value="0">小時之前的時間&nbsp;
+        <a class="ans" title="為確保訂位人數，建議餐廳設定最晚的訂位時間，爲該用餐時段前的幾個小時。">?</a>
+        <br>
+
+        <label class="radio inline"><input type="radio" name="reserve_type" value="1">開放預約到前一天</label>
+        <select class="input-small" id="reserve_previous_hour" data-value="<%= @restaurant.available_date %>">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+          <option value="11">11</option>
+          <option value="12">12</option>
+          <option value="13">13</option>
+          <option value="14">14</option>
+          <option value="15">15</option>
+          <option value="16">16</option>
+          <option value="17">17</option>
+          <option value="18">18</option>
+          <option value="19">19</option>
+          <option value="20">20</option>
+          <option value="21">21</option>
+          <option value="22">22</option>
+          <option value="23">23</option>
+          <option value="24">24</option>
+        </select>
+        &nbsp;
+        <a class="ans" title="為確保訂位人數，建議餐廳接受最晚的訂位時間，爲前一日的幾點幾分。">?</a>
+      </td>
+    </tr>
+</table>
+
+<a href="#" id="period_save" class="btn btn-primary">確定修改</a>
+<a href="#" id="period_reset" class="btn">取消</a>
+<br><br>
+因特別時段 / 節慶設定的供位時間會與日常供位時間發生重疊，<br>
+請餐廳經營者設定時間的優先順序(以滑鼠拖曳方式，最上面為首)。<br><br>
+
+
+<script>
+    //===========================================================================
+    // view: supply_condition
+    //===========================================================================
+
+    function init_state() {
+        $("#reserve_table [name='reserve_type']").attr("checked",'<%= @restaurant.available_type %>');
+        $("#reserve_hour").val(<%= @restaurant.available_hour %>)
+        $("#reserve_previous_hour").val(<%= @restaurant.available_date %>)
+    };
+
+    $("#period_save").click(function(e){
+        e.preventDefault()
+        var ids = ''
+        var status = ''
+
+        $("#period_set [name='con_id']").each(function(){
+            ids = ids + ',' + $(this).val();
+        });
+
+        $('#period_set input:radio:checked').each(function(){
+            status = status + ',' + $(this).val();
+        });
+
+        var reserve_type = $("#reserve_table [name='reserve_type']:checked").val()
+        var reserve_hour = $("#reserve_hour").val()
+        var reserve_previous_hour = $("#reserve_previous_hour").val()
+        var reserve_previous_type = $("#reserve_previous_type").val()
+
+        var con_state = {
+            id_list: ids,
+            status_list: status,
+            reserve_type: reserve_type,
+            reserve_hour: reserve_hour,
+            reserve_previous_hour: reserve_previous_hour,
+            reserve_previous_type: reserve_previous_type
+        }
+
+        $.ajax({
+            url: "/restaurant_manage/condition_state_save",
+            type: 'POST',
+            data:  JSON.stringify(con_state),
+            cache: false,
+            success: function(response){
+                if (response.success)
+                    alert(response.data)
+                else if (response.error)
+                    alert(response.message)
+                else
+                    alert('發生未預期的回應，請告知CoDream小組處理!')
+            },
+            error: function(){
+                alert('oops! 出現錯誤了!');
+            }
+        });
+    });
+
+</script>

@@ -1,0 +1,49 @@
+<div class="span5">
+  <a href= "/home/index">
+    <%= image_tag "booker/cover.png", :size => "350", :style => 'display:block;margin:auto' %>
+  </a>
+</div>
+
+<div class="span6">
+
+  <%= form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f| %>
+
+    <table class="table">
+
+      <tr>
+        <td>信箱</td>
+        <td><%= f.email_field :email, :required => true, :class => 'input-block-level' %></td>
+      </tr>
+
+      <tr>
+        <td>密碼</td>
+        <td><%= f.password_field :password, :required => true, :class => 'input-block-level' %></td>
+      </tr>
+
+      <tr>
+        <td></td>
+        <td>
+          <% if devise_mapping.rememberable? -%>
+              <label class="checkbox"><%= f.check_box :remember_me %>  保持登入</label>
+          <% end -%>
+        </td>
+      </tr>
+
+      <tr>
+        <td colspan="2"><%= f.submit "登入" , { :class => 'btn btn-large btn-block' } %></td>
+      </tr>
+
+    </table>
+
+  <% end %>
+
+
+  <%= link_to "Sign in with Facebook", user_omniauth_authorize_path(:facebook) %>
+  </br>
+
+  <%= link_to "Sign in with Google", user_omniauth_authorize_path(:google_oauth2) %>
+
+</div>
+
+<input type="hidden" name="target" value="/dashboard"/>
+

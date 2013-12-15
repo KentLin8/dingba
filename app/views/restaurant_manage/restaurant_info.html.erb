@@ -1,0 +1,123 @@
+
+<%= form_for :restaurant ,:url => "restaurant_manage/restaurant_info_save" do |f| %>      <!-- @res, :url => res_mange_info_save_path-->
+    <%= f.hidden_field :id %>
+    <table class="table">
+      <tr>
+        <td>餐廳名稱</td>
+        <td><%= f.text_field :name, required: true %>
+        </td>
+      </tr>
+      <tr>
+        <td>餐廳地址</td>
+        <td>
+
+          縣市
+          <%= f.select(:city,
+                       options_for_select([
+                          ['請選擇縣市',''],
+                          ['新北市','新北市'],
+                          ['臺北市','臺北市'],
+                          ['臺中市','臺中市'],
+                          ['臺南市','臺南市'],
+                          ['高雄市','高雄市'],
+                          ['宜蘭縣','宜蘭縣'],
+                          ['桃園縣','桃園縣'],
+                          ['新竹縣','新竹縣'],
+                          ['苗栗縣','苗栗縣'],
+                          ['彰化縣','彰化縣'],
+                          ['南投縣','南投縣'],
+                          ['雲林縣','雲林縣'],
+                          ['嘉義縣','嘉義縣'],
+                          ['屏東縣','屏東縣'],
+                          ['臺東縣','臺東縣'],
+                          ['花蓮縣','花蓮縣'],
+                          ['澎湖縣','澎湖縣'],
+                          ['基隆市','基隆市'],
+                          ['新竹市','新竹市'],
+                          ['嘉義市','嘉義市'],
+                          ['金門縣','金門縣'],
+                          ['連江縣','連江縣']
+                        ]), {}, {:class => 'input-medium','data-value' => @restaurant.city }) %>
+          區域
+          <%= f.select(:area,
+          options_for_select([['請選擇縣市','']]), {}, {:class => 'input-medium','data-value' => @restaurant.area}) %>
+          <%= f.text_field :address, required: true %>
+        </td>
+      </tr>
+      <tr>
+        <td>餐廳電話</td>
+        <td><%= f.phone_field :phone %></td>
+      </tr>
+      <tr>
+        <td>餐廳類別</td>
+        <td><%= f.select(:res_type,
+                         options_for_select(
+                                 [['請選擇','0'],['台菜海鮮','1'],['美式料理','2'],
+                                  ['義式料理','3'],['法式料理','4'],['德式料理','5'],
+                                  ['西班牙料理','6'],['西式排餐','7'],['港式料理','8'],
+                                  ['泰式料理','9'],['日式料理','10'],['韓式料理','11'],
+                                  ['印度料理','12'],['其他異國料理','13'],['複合式簡餐','14'],
+                                  ['Lounge Bar','15'],['火鍋','16'],['素食','17'],
+                                  ['早午餐','18'],['下午茶','19'],['甜點','20']
+                                 ]), {}, {:class => 'input-medium','data-value' => @restaurant.res_type }) %>
+        </td>
+
+      </tr>
+      <tr>
+        <td>餐廳特色</td>
+        <td><%= f.text_area :feature %></td>
+      </tr>
+      <tr>
+        <td>營業時間</td>
+        <td><%= f.text_field :business_hours, required: true %></td>
+      </tr>
+      <tr>
+        <td>付款方式</td>
+        <td>
+          <label class="checkbox inline"><input type="checkbox" value="1" name="restaurant[pay_type_cash]">現金</label>
+          <label class="checkbox inline"><input type="checkbox" value="2" name="restaurant[pay_type_CreditCard]">信用卡</label>
+          <label class="checkbox inline"><input type="checkbox" value="3" name="restaurant[pay_type_EasyCard]">悠遊卡</label>
+        </td>
+      </tr>
+      <tr>
+        <td>供位聯絡人</td>
+        <td><%= f.text_field :supply_person, required: true %></td>
+      </tr>
+      <tr>
+        <td>供位E-mail</td>
+        <td><%= f.email_field :supply_email, required: true %></td>
+      </tr>
+      <tr>
+        <td>網址名稱1</td>
+        <td><%= f.text_field :info_url1 %></td>
+      </tr>
+      <tr>
+        <td>餐廳網址1</td>
+        <td><%= f.text_field :url1 %></td>
+      </tr>
+      <tr>
+        <td>網址名稱2</td>
+        <td><%= f.text_field :info_url2 %></td>
+      </tr>
+      <tr>
+        <td>餐廳網址2</td>
+        <td><%= f.text_field :url2 %></td>
+      </tr>
+      <tr>
+        <td>網址名稱3</td>
+        <td><%= f.text_field :info_url3 %></td>
+      </tr>
+      <tr>
+        <td>餐廳網址3</td>
+        <td><%= f.text_field :url3 %></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td>
+          <input class="btn btn-primary" type="submit" value="確定">
+          <input class="btn" type="reset" value="取消">
+        </td>
+      </tr>
+    </table>
+
+<% end %>
