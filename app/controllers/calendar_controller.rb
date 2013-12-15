@@ -123,6 +123,13 @@ class CalendarController < ApplicationController
           after.day = 0
           @calendar_data.push(after)
         end
+      elsif @calendar_data.length > 35
+        difference = 42 -@calendar_data.length
+        difference.times do
+          after = Calendar.new
+          after.day = 0
+          @calendar_data.push(after)
+        end
       end
       #==================================
     rescue => e

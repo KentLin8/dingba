@@ -87,27 +87,52 @@ class RegistrationsController < Devise::RegistrationsController
   def restaurant_init(phone, user_id)
     begin
       Restaurant.transaction do
-        max_seq = Restaurant.maximum(:res_url)
+        # =================== res_url use integer increase
+        #max_seq = Restaurant.maximum(:res_url)
+        #
+        #if max_seq.blank?
+        #  max_seq = 0
+        #end
+        #
+        #max_seq += 1
+        #
+        #res = Restaurant.new
+        #res.phone = phone
+        #res.res_url = max_seq         #APP_CONFIG['domain'] + res_store?res=00000001
+        #res.save!
+        #
+        #res_user = RestaurantUser.new
+        #res_user.restaurant_id = res.id
+        #res_user.permission = 0       # 0 mean all manger
+        #res_user.user_id = user_id
+        #res_user.save!
+        # =====================================================
 
-        if max_seq.blank?
-          max_seq = 0
-        end
-
-        max_seq += 1
-
+        res_url_tag = get_res_url_tag
         res = Restaurant.new
         res.phone = phone
-        res.res_url = max_seq         #APP_CONFIG['domain'] + res_store?res=00000001
+        res.res_url = res_url_tag         # APP_CONFIG['domain']
         res.save!
 
         res_user = RestaurantUser.new
         res_user.restaurant_id = res.id
-        res_user.permission = 0       # 0 mean all manger
+        res_user.permission = 0           # 0 mean all manager
         res_user.user_id = user_id
         res_user.save!
       end
     rescue => e
       Rails.logger.error "#{e.message}"
+    end
+  end
+
+  def get_res_url_tag
+    rand_string = SecureRandom.hex(13)
+    check = Restaurant.where(:res_url => rand_string)
+
+    if check.blank?
+      return rand_string
+    else
+      get_res_url_tag
     end
   end
 

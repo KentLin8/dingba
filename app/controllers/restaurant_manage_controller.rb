@@ -181,7 +181,8 @@ class RestaurantManageController < ApplicationController
   # GET ==== Function: show booking report view
   # =========================================================================
   def query_books_by_date
-    @books = RestaurantManage.query_books_by_date(@restaurant.id, params[:range_begin], params[:range_end])
+    #@books = RestaurantManage.query_books_by_date(@restaurant.id, params[:range_begin], params[:range_end])
+    @books = RestaurantManage.query_books_by_date(@restaurant.id, params[:from], params[:to])
     render 'restaurant_manage/_booking_report', :layout => false
   end
 

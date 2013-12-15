@@ -80,7 +80,7 @@ class HomeController < ApplicationController
   def cancel_booking
     begin
       #@booking = Booking.find(1)
-      @booking = Booking.find(params[:booking_id].toi)
+      @booking = Booking.find(params[:booking_id].to_i)
       @restaurant = Restaurant.find(@booking.restaurant_id)
     rescue => e
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/controllers/home_controller.rb ,Action:cancel_booking"

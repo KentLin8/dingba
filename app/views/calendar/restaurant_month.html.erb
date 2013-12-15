@@ -43,7 +43,9 @@
 
         <td id ="<%= x.con_id %>">
 
+          <% if x.day != 0 %>
           <div class="date"><%= @month %>/<%= x.day %></div>
+          <% end %>
 
           <div class="info">
             <% if x.con_id == 0 %>

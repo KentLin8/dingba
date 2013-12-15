@@ -3,9 +3,8 @@ class CreateBookings < ActiveRecord::Migration
     create_table :bookings do |t|
       t.integer :user_id
       t.integer :restaurant_id
-      t.integer :time_zone_id
       t.datetime :booking_time
-      t.integer :res_url
+      t.string :res_url           , :limit => 30
       t.string :restaurant_name   , :limit => 50
       t.string :restaurant_address, :limit => 180
       t.string :name              , :limit => 20
