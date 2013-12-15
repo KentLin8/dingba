@@ -1,6 +1,6 @@
 
 <table>
-  <% if @booking_condition.option_max_people.blank? && @booking_condition[:error] == true %>
+  <% if @booking_condition[:error] == true %>
   <tr>
     <td colspan="2">
       <%= @booking_condition[:message] %>
@@ -16,7 +16,9 @@
   <tr>
     <td>用餐人數</td>
     <td>
-      <%= select_tag(:booking_people, options_for_select(@booking_condition.option_max_people) , id:'select_people') %>
+      <% if @booking_condition[:error] == false %>
+          <%= select_tag(:booking_people, options_for_select(@booking_condition.option_max_people) , id:'select_people') %>
+      <% end %>
     </td>
   </tr>
   <tr>
