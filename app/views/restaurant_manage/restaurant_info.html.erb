@@ -3,12 +3,12 @@
     <%= f.hidden_field :id %>
     <table class="table">
       <tr>
-        <td>餐廳名稱</td>
+        <td>餐廳名稱<i class="required">*</i></td>
         <td><%= f.text_field :name, required: true %>
         </td>
       </tr>
       <tr>
-        <td>餐廳地址</td>
+        <td>餐廳地址<i class="required">*</i></td>
         <td>
 
           縣市
@@ -40,7 +40,7 @@
                         ]), {}, {:class => 'input-medium','data-value' => @restaurant.city }) %>
           區域
           <%= f.select(:area,
-          options_for_select([['請選擇縣市','']]), {}, {:class => 'input-medium','data-value' => @restaurant.area}) %>
+          options_for_select([['請選擇區域','']]), {}, {:class => 'input-medium','data-value' => @restaurant.area}) %>
           <%= f.text_field :address, required: true %>
         </td>
       </tr>
@@ -68,7 +68,7 @@
         <td><%= f.text_area :feature %></td>
       </tr>
       <tr>
-        <td>營業時間</td>
+        <td>營業時間<i class="required">*</i></td>
         <td><%= f.text_field :business_hours, required: true %></td>
       </tr>
       <tr>
@@ -80,11 +80,11 @@
         </td>
       </tr>
       <tr>
-        <td>供位聯絡人</td>
+        <td>供位聯絡人<i class="required">*</i></td>
         <td><%= f.text_field :supply_person, required: true %></td>
       </tr>
       <tr>
-        <td>供位E-mail</td>
+        <td>供位E-mail<i class="required">*</i></td>
         <td><%= f.email_field :supply_email, required: true %></td>
       </tr>
       <tr>

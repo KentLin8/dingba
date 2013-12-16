@@ -4,11 +4,11 @@
   <input name="condition[id]" type="hidden" value="<%= @supply_time.id %>">
   <table class="table">
     <tr>
-      <td>設立名稱</td>
+      <td>設立名稱<i class="required">*</i></td>
       <td><input type="text" name="condition[name]" value="<%= @supply_time.name %>" required="required"></td>
     </tr>
     <tr>
-      <td>設立訂位有效期間</td>
+      <td>設立訂位有效期間<i class="required">*</i></td>
       <td>
         <label for="from">From</label>
         <input type="date" name="condition[range_begin]" class="datepicker" required="required">

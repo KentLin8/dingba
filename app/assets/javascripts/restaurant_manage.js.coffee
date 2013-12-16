@@ -50,6 +50,8 @@ $ ->
       return
 
   hook_event = ->
+    # require 提示
+    $('.required').tooltip(title: '必填')
     # datepicker
     $(".datepicker").datepicker(
       dateFormat: "yy-mm-dd"

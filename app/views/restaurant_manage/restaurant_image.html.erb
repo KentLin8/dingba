@@ -2,41 +2,19 @@
 <div class="info">請挑選5張餐廳照片</div>
 
 <div id="pics">
-  <div class="float" data-id="1">
-    <label class="radio"><input type="radio" name="radio_img">設成封面</label>
-    <div class="placeholder">
-      <img src="" alt="">
-      <i class="icon-remove"></i>
+  <% 5.times do |i| %>
+    <div class="float" data-id="<%= i + 1 %>">
+      <label class="radio"><input type="radio" name="radio_img">設成封面</label>
+      <div class="placeholder">
+        <% if pic_name = @restaurant.method("pic_name#{i + 1}".to_sym).call %>
+          <img src="/res/<%= @restaurant.id %>/images/<%= pic_name %>" alt="">
+        <% else %>
+          <img src="" alt="">
+        <% end %>
+        <i class="icon-remove"></i>
+      </div>
     </div>
-  </div>
-  <div class="float" data-id="2">
-    <label class="radio"><input type="radio" name="radio_img">設成封面</label>
-    <div class="placeholder">
-      <img src="" alt="">
-      <i class="icon-remove"></i>
-    </div>
-  </div>
-  <div class="float" data-id="3">
-    <label class="radio"><input type="radio" name="radio_img">設成封面</label>
-    <div class="placeholder">
-      <img src="" alt="">
-      <i class="icon-remove"></i>
-    </div>
-  </div>
-  <div class="float" data-id="4">
-    <label class="radio"><input type="radio" name="radio_img">設成封面</label>
-    <div class="placeholder">
-      <img src="" alt="">
-      <i class="icon-remove"></i>
-    </div>
-  </div>
-  <div class="float" data-id="5">
-    <label class="radio"><input type="radio" name="radio_img">設成封面</label>
-    <div class="placeholder">
-      <img src="" alt="">
-      <i class="icon-remove"></i>
-    </div>
-  </div>
+  <% end %>
   <div class="clear"></div>
 </div>
 <a href="#" id="upload" class="not_ajax btn btn-primary">選擇檔案上傳</a>
