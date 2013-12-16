@@ -87,6 +87,8 @@ class RestaurantManageController < ApplicationController
       @time_zones = RestaurantManage.get_time_zones(condition_id)
       if !condition_id.blank?
         @supply_time = SupplyCondition.find(condition_id.to_i)
+      else
+        @supply_time = nil
       end
     rescue => e
       # in this condition is that user change the condition_id
