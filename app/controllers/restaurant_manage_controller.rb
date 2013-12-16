@@ -85,7 +85,11 @@ class RestaurantManageController < ApplicationController
     condition_id = params[:condition_id]
     begin
       @time_zones = RestaurantManage.get_time_zones(condition_id)
-      @supply_time = SupplyCondition.find(condition_id.to_i) if !condition_id.blank?
+      if !condition_id.blank?
+        @supply_time = SupplyCondition.find(condition_id.to_i)
+      else
+        @supply_time = nil
+      end
     rescue => e
       # in this condition is that user change the condition_id
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/controllers/restaurant_manage_controller.rb  ,Action:supply_time"

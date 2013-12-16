@@ -214,6 +214,7 @@ class RestaurantManage
 
         zones = TimeZone.where(:supply_condition_id => origin_condition[:id].to_i).order('sequence ASC')
         time_zone_save(origin_zones, condition_id, zones)
+        return {:success => true, :data => '修改成功!'}
       end
     rescue => e
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/models/restaurant_manage.rb  ,Method:supply_condition_update(restaurant_id, origin_condition, origin_zones)"
@@ -222,7 +223,7 @@ class RestaurantManage
   end
 
   def self.supply_condition_save(origin_condition, restaurant_id, target_condition)
-    begin
+    #begin
       target_condition.restaurant_id = restaurant_id
       target_condition.name = origin_condition[:name]
       target_condition.range_begin = origin_condition[:range_begin]
@@ -231,15 +232,15 @@ class RestaurantManage
       target_condition.status = 't'   # t = enable ,f = disable
       target_condition.save
       return target_condition.id
-    rescue => e
-      Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/models/restaurant_manage.rb  ,Method:supply_condition_save(origin_condition, restaurant_id, target_condition)"
-      return nil
-    end
+    #rescue => e
+    #  Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/models/restaurant_manage.rb  ,Method:supply_condition_save(origin_condition, restaurant_id, target_condition)"
+    #  return nil
+    #end
   end
 
   def self.time_zone_save(origin_zones, condition_id, target_zones)
     #TODO: batch save
-    begin
+    #begin
       zones = []
       origin_zones.each_with_index do |origin_zone, index|
         zone = target_zones[index]
@@ -277,10 +278,10 @@ class RestaurantManage
       end
 
       return true
-    rescue => e
-      Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/models/restaurant_manage.rb  ,Method:time_zone_save(origin_zones, condition_id, target_zones)"
-      return false
-    end
+    #rescue => e
+    #  Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/models/restaurant_manage.rb  ,Method:time_zone_save(origin_zones, condition_id, target_zones)"
+    #  return false
+    #end
   end
 
   def self.destroy_condition(condition_id)

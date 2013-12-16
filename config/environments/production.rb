@@ -81,7 +81,7 @@ DingBa::Application.configure do
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
 
-  config.action_mailer.default_url_options = { :host => 'http://dingba.codream.tw/' }
+  config.action_mailer.default_url_options = { :host => 'http://dingba.codream.tw' }
   ActionMailer::Base.smtp_settings = {
       :address        => "smtp.gmail.com",
       :port           => 587,

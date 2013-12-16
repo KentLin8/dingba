@@ -11,6 +11,8 @@ group :assets do
   gem 'uglifier', '>= 1.3.0'
 end
 
+
+
 #jquery-ui-rails
 gem 'jquery-ui-rails'
 
@@ -75,3 +77,5 @@ end
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
+
+ gem 'i18n'

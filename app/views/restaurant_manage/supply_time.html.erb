@@ -1,11 +1,16 @@
 
 <form action="restaurant_manage/supply_condition_save" id="new_supply" method="post">
-
+  <% if !@supply_time.blank? %>
   <input name="condition[id]" type="hidden" value="<%= @supply_time.id %>">
+  <% end %>
   <table class="table">
     <tr>
       <td>設立名稱<i class="required">*</i></td>
-      <td><input type="text" name="condition[name]" value="<%= @supply_time.name %>" required="required"></td>
+      <% if !@supply_time.blank? %>
+          <td><input type="text" name="condition[name]" value="<%= @supply_time.name %>" required="required"></td>
+      <% else %>
+          <td><input type="text" name="condition[name]" value="" required="required"></td>
+      <% end %>
     </tr>
     <tr>
       <td>設立訂位有效期間<i class="required">*</i></td>

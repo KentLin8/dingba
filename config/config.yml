@@ -17,4 +17,4 @@ production:
   <<: *defaults
   app_title: DingBa
   domain: "dingba.codream.tw/r/"
-  error: "Catch Error:"
+  error: "=============Catch Error:"
