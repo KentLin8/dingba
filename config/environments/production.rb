@@ -81,13 +81,13 @@ DingBa::Application.configure do
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
 
-  config.action_mailer.default_url_options = { :host => 'http://pacific-plains-2043.herokuapp.com/' }
+  config.action_mailer.default_url_options = { :host => 'http://dingba.codream.tw/' }
   ActionMailer::Base.smtp_settings = {
       :address        => "smtp.gmail.com",
       :port           => 587,
       :authentication => :plain,
-      :user_name      => "a17877yun@gmail.com",
-      :password       => "yunyun123",
+      :user_name      => "dingba-admin@codream.tw",
+      :password       => "asdf1234",
       :openssl_verify_mode  => 'none'
   }
 end
