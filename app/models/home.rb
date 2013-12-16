@@ -25,7 +25,10 @@ class Home
         end
       end
 
-      conditions = SupplyCondition.where(:restaurant_id => restaurant.id, :status => 't').where('range_end >= ?', booking_day).where('range_begin <= ?', booking_day).order('sequence ASC')
+      booking_day_begin = Time.parse(booking_day.strftime("%Y-%m-%d") + " 00:00")
+      booking_day_end = Time.parse(booking_day.strftime("%Y-%m-%d") + " 23:59")
+
+      conditions = SupplyCondition.where(:restaurant_id => restaurant.id, :status => 't').where('range_end >= ?', booking_day_begin).where('range_begin <= ?', booking_day_begin).order('sequence ASC')
 
       if conditions.blank?
         return {:error => true, :message => '目前這個時段，餐廳沒有開放的訂位，請選擇較後面的日期查看喲!'}
@@ -189,8 +192,10 @@ class Home
           booking_condition.option_max_people.push(i + 1)
         end
 
-        booking_day_begin = booking_day.strftime("%Y-%m-%d ")
-        booking_day_end = (booking_day + 1.days).strftime("%Y-%m-%d ")
+        #booking_day_begin = booking_day.strftime("%Y-%m-%d ")
+        #booking_day_end = (booking_day + 1.days).strftime("%Y-%m-%d ")
+        booking_day_begin = Time.parse(booking_day.strftime("%Y-%m-%d") + " 00:00")
+        booking_day_end = Time.parse(booking_day.strftime("%Y-%m-%d") + " 23:59")
         bookings_of_select_day = Booking.where('booking_time >= ?', booking_day_begin).where('booking_time <= ?', booking_day_end).group('booking_time').sum(:num_of_people)
 
 

@@ -464,15 +464,32 @@ class RestaurantManage
   def self.get_day_books(restaurant_id, special_day)
     begin
       special_day = Date.parse(special_day)
+      special_day_begin = Time.parse(special_day.strftime("%Y-%m-%d") + " 00:00")
+      special_day_end = Time.parse(special_day.strftime("%Y-%m-%d") + " 23:59")
 
       # FIX  where below
-      day_books = Booking.where(:restaurant_id => restaurant_id).where('booking_time >= ?', special_day).where('booking_time <= ?', special_day + 1.days).order('booking_time ASC')
+      day_books = Booking.where(:restaurant_id => restaurant_id).where('booking_time >= ?', special_day_begin).where('booking_time <= ?', special_day_end).order('booking_time ASC')
 
       # why use this solution => because use day to know the condition is too slow , so i use books to get the condition id ,if no book, just show no one booking
       if !day_books.blank?
-        temp_zone = TimeZone.find(day_books.first.time_zone_id)
-        zones = TimeZone.where(:supply_condition_id => temp_zone.supply_condition_id)
+        #temp_zone = TimeZone.find(day_books.first.time_zone_id)
+        #zones = TimeZone.where(:supply_condition_id => temp_zone.supply_condition_id)
 
+        conditions = SupplyCondition.where(:restaurant_id => restaurant_id).where(:status => 't').where('range_begin <= ?', special_day_begin).where('range_end >= ?',special_day_begin).order('sequence ASC')
+
+        effect_conditions = nil
+        conditions.each do |c|
+          if c.available_week.split(',').include?(special_day.wday.to_s)
+            effect_conditions = c
+            break;
+          end
+        end
+
+        if effect_conditions.blank?
+          return nil
+        end
+
+        zones = TimeZone.where(:supply_condition_id => effect_conditions.id, :status => 't').order('sequence ASC')
         zones_books = []
         if !zones.blank?
           zones.each do |z|
@@ -480,7 +497,7 @@ class RestaurantManage
 
             books = []
             day_books.each do |b|
-              if z.id == b.time_zone_id
+              if z.range_begin <= b.booking_time.strftime("%H:%M") && z.range_end >= b.booking_time.strftime("%H:%M")
                 books.push(b)
                 has_books = true
                 #day_books.delete(b)  # TODO already push in books pop up the day_books
@@ -492,6 +509,15 @@ class RestaurantManage
               zone_booking.name = z.name
               zone_booking.books = books
               zones_books.push(zone_booking)
+            end
+          end
+        end
+
+        if !zones_books.blank?
+          length = zones_books.length
+          length.times do |i|
+            if length != (i + 1)
+              zones_books[i].books = zones_books[i].books - zones_books[i + 1].books
             end
           end
         end
