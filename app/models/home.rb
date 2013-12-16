@@ -21,7 +21,11 @@ class Home
         booking_day = Date.parse(booking_day)
 
         if booking_day <= Date.parse(Time.now.to_s)
-          return {:error => true, :message => '不能選過去的時間喔!'}
+          booking_condition = BookingCondition.new
+          booking_condition.error = true
+          booking_condition.message = '不能選過去的時間喔!'
+          return booking_condition
+          #return {:error => true, :message => '不能選過去的時間喔!'}
         end
       end
 
@@ -31,7 +35,11 @@ class Home
       conditions = SupplyCondition.where(:restaurant_id => restaurant.id, :status => 't').where('range_end >= ?', booking_day_begin).where('range_begin <= ?', booking_day_begin).order('sequence ASC')
 
       if conditions.blank?
-        return {:error => true, :message => '目前這個時段，餐廳沒有開放的訂位，請選擇較後面的日期查看喲!'}
+        booking_condition = BookingCondition.new
+        booking_condition.error = true
+        booking_condition.message = '目前這個時段，餐廳沒有開放的訂位，請選擇較後面的日期查看喲!'
+        return booking_condition
+        #return {:error => true, :message => '目前這個時段，餐廳沒有開放的訂位，請選擇較後面的日期查看喲!'}
       end
       #=========================================================================
 
@@ -48,14 +56,22 @@ class Home
       end
 
       if effect_condition.blank?
-        return {:error => true, :message => '目前這個時段，餐廳沒有開放的訂位，請選擇較後面的日期查看喲!'}
+        booking_condition = BookingCondition.new
+        booking_condition.error = true
+        booking_condition.message = '目前這個時段，餐廳沒有開放的訂位，請選擇較後面的日期查看喲!'
+        return booking_condition
+        #return {:error => true, :message => '目前這個時段，餐廳沒有開放的訂位，請選擇較後面的日期查看喲!'}
       end
       #=========================================================================
 
       zones = TimeZone.where(:supply_condition_id => effect_condition.id, :status => 't').order('sequence ASC')
 
       if zones.blank?
-        return {:error => true, :message => '目前這個時段，餐廳沒有開放的訂位，請選擇較後面的日期查看喲!'}
+        booking_condition = BookingCondition.new
+        booking_condition.error = true
+        booking_condition.message = '目前這個時段，餐廳沒有開放的訂位，請選擇較後面的日期查看喲!'
+        return booking_condition
+        #return {:error => true, :message => '目前這個時段，餐廳沒有開放的訂位，請選擇較後面的日期查看喲!'}
       end
       #=========================================================================
 
@@ -71,7 +87,11 @@ class Home
       end
 
       if is_today && !limit_day_time.blank?
-        return {:error => true, :message => '目前這個時段，餐廳沒有開放的訂位，請選擇較後面的日期查看喲!'}
+        booking_condition = BookingCondition.new
+        booking_condition.error = true
+        booking_condition.message = '目前這個時段，餐廳沒有開放的訂位，請選擇較後面的日期查看喲!'
+        return booking_condition
+        #return {:error => true, :message => '目前這個時段，餐廳沒有開放的訂位，請選擇較後面的日期查看喲!'}
       end
       #=========================================================================
 
@@ -84,6 +104,22 @@ class Home
       if !is_today && !limit_day_time.blank?      # =========================================
         # booking day not today and use limit_day_time condition
         use_type = 1
+
+        #booking_day_begin = booking_day.strftime("%Y-%m-%d ")
+        #booking_day_end = (booking_day + 1.days).strftime("%Y-%m-%d ")
+        booking_day_begin = Time.parse(booking_day.strftime("%Y-%m-%d") + " 00:00")
+        booking_day_end = Time.parse(booking_day.strftime("%Y-%m-%d") + " 23:59")
+        bookings_of_select_day = Booking.where('booking_time >= ?', booking_day_begin).where('booking_time <= ?', booking_day_end).group('booking_time').sum(:num_of_people)
+
+
+        bookings_of_select_day.each do |b|
+          b[0] = b[0].strftime("%H:%M")       #把相同時段的]人數統計出來
+          c = b[0]
+          c = 0
+        end
+
+        xxxx = bookings_of_select_day
+        xxxx = 0
 
         zones.each do |z|
           if limit_day_time >= z.range_begin
@@ -192,17 +228,7 @@ class Home
           booking_condition.option_max_people.push(i + 1)
         end
 
-        #booking_day_begin = booking_day.strftime("%Y-%m-%d ")
-        #booking_day_end = (booking_day + 1.days).strftime("%Y-%m-%d ")
-        booking_day_begin = Time.parse(booking_day.strftime("%Y-%m-%d") + " 00:00")
-        booking_day_end = Time.parse(booking_day.strftime("%Y-%m-%d") + " 23:59")
-        bookings_of_select_day = Booking.where('booking_time >= ?', booking_day_begin).where('booking_time <= ?', booking_day_end).group('booking_time').sum(:num_of_people)
 
-
-        bookings_of_select_day.each do |b|
-          b= b
-
-        end
 
 
         return booking_condition
@@ -352,7 +378,10 @@ class Home
 
     rescue => e
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/Models/home.rb  ,Method:get_condition(restaurant_url, booking_day)"
-      return
+      booking_condition = BookingCondition.new
+      booking_condition.error = true
+      booking_condition.message = '目前這個時段，餐廳沒有開放的訂位，請選擇較後面的日期查看喲!'
+      return booking_condition
     end
   end
 

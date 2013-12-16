@@ -93,7 +93,7 @@ class HomeController < ApplicationController
           if !manage_restaurants.blank?         # system error
             target = manage_restaurants.first   # let user choose restaurant to mange, in phase 2
           end
-
+          @booker = User.new
         elsif current_user.role == '1'  # booker
           @booker = current_user
         end

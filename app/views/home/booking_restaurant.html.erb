@@ -157,7 +157,7 @@
         $('#select_zone').empty();
 
         var first_zone_id = null
-        <% if @booking_condition[:error] == false %>
+        <% if @booking_condition.error != true %>
             <% @booking_condition.option_of_people.each do |ofp| %>
             if ('<%= ofp[0] %>' >= num_of_people) {
                 $("#select_zone").append(new Option('<%= ofp[2] %>', '<%= ofp[1] %>'))
@@ -181,7 +181,7 @@
     function set_time_button(zone_id){
         $('#time_select').empty();
 
-        <% if @booking_condition[:error] == false %>
+        <% if @booking_condition.error != true %>
             <% @booking_condition.option_of_time.each do |oft| %>
             if ('<%= oft[0] %>' == zone_id){
                 <% (oft.length - 1).times do |i| %>
