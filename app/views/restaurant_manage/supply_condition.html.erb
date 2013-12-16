@@ -45,7 +45,7 @@
           <input type="radio" name="reserve_type" value="0">開放預約到
         </label>
 
-        <input class="input-small" type="text" id="reserve_hour" value="0">小時之前的時間&nbsp;
+        <input class="input-small" type="text" id="reserve_hour" value="<%= @restaurant.available_hour %>">小時之前的時間&nbsp;
         <a class="ans" title="為確保訂位人數，建議餐廳設定最晚的訂位時間，爲該用餐時段前的幾個小時。">?</a>
         <br>
 
@@ -75,7 +75,7 @@
           <option value="22:00">22</option>
           <option value="23:00">23</option>
           <option value="24:00">24</option>
-        </select>
+        </select>點
         &nbsp;
         <a class="ans" title="為確保訂位人數，建議餐廳接受最晚的訂位時間，爲前一日的幾點幾分。">?</a>
       </td>
@@ -94,11 +94,7 @@
     // view: supply_condition
     //===========================================================================
 
-    function init_state() {
-        $("#reserve_table [name='reserve_type']").attr("checked",'<%= @restaurant.available_type %>');
-        $("#reserve_hour").val(<%= @restaurant.available_hour %>)
-        $("#reserve_previous_hour").val(<%= @restaurant.available_date %>)
-    };
+    $(":radio[name='reserve_type'][value='<%= @restaurant.available_type %>']").attr("checked",'checked');
 
     $("#period_save").click(function(e){
         e.preventDefault()
