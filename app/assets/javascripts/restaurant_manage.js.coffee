@@ -228,6 +228,7 @@ $ ->
             if response.success
               if response.attachmentPartial
                 refresh response.attachmentPartial
+              alert response.data
               $('#lightbox_wrap').hide()
             else if response.error
               alert response.message
