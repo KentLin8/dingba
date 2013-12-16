@@ -1,5 +1,6 @@
 class HomeController < ApplicationController
   layout 'home'
+  before_action :get_user, :only => [:booking_restaurant, :get_condition, :save_booking]
   #before_action :get_restaurant, :only => [:booking_restaurant]
 
   # =========================================================================
@@ -33,7 +34,6 @@ class HomeController < ApplicationController
         @booking_condition = Home.get_condition(@restaurant, booking_day)
       end
     end
-
   end
 
   def get_condition
@@ -62,12 +62,7 @@ class HomeController < ApplicationController
     #booker_email = params[:booker_email]
     #booker_remark = params[:booker_remark]
 
-    user_id = nil
-    if !@booker.blank?
-      user_id = @booker.id
-    end
-
-    result = Home.save_booking(user_id, params[:booking])
+    result = Home.save_booking(@booker, params[:booking])
     render json: result
   end
 
@@ -75,18 +70,22 @@ class HomeController < ApplicationController
     params[:booking_id]
     params[:email]
 
-    booking = Booking.find(1)
+    if params[:booking_id].blank? || params[:email].blank?
+      return {:error => true, :message => '阿! 發生錯誤了! 通知失敗!'}
+    end
 
-    #MyMailer.booking_success(params[:email], booking).deliver
-    MyMailer.notify_friend(params[:email], booking).deliver
-
+    MyMailer.notify_friend(params[:email], params[:booking_id]).deliver
   end
 
   def cancel_booking
-    params[:booking_id]
-    @booking = Booking.find(1)
-
-    @restaurant = Restaurant.find(@booking.restaurant_id)
+    begin
+      #@booking = Booking.find(1)
+      @booking = Booking.find(params[:booking_id].to_i)
+      @restaurant = Restaurant.find(@booking.restaurant_id)
+    rescue => e
+      Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/controllers/home_controller.rb ,Action:cancel_booking"
+      return {:error => true, :message => '阿! 發生錯誤了! 資料異常!'}
+    end
   end
 
   def save_cancel_booking
@@ -97,13 +96,13 @@ class HomeController < ApplicationController
   def get_user
     begin
       if !current_user.blank?
-        if current_user.role = '0'   # restaurant
+        if current_user.role == '0'   # restaurant
           manage_restaurants = RestaurantUser.where(:user_id => current_user.id)
           if !manage_restaurants.blank?         # system error
             target = manage_restaurants.first   # let user choose restaurant to mange, in phase 2
           end
 
-        elsif current_user.role = '1'  # booker
+        elsif current_user.role == '1'  # booker
           @booker = current_user
         end
       end

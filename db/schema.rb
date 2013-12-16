@@ -16,9 +16,8 @@ ActiveRecord::Schema.define(version: 20131115013217) do
   create_table "bookings", force: true do |t|
     t.integer  "user_id"
     t.integer  "restaurant_id"
-    t.integer  "time_zone_id"
     t.datetime "booking_time"
-    t.integer  "res_url"
+    t.string   "res_url",            limit: 30
     t.string   "restaurant_name",    limit: 50
     t.string   "restaurant_address", limit: 180
     t.string   "name",               limit: 20
@@ -66,7 +65,7 @@ ActiveRecord::Schema.define(version: 20131115013217) do
   add_index "restaurant_users", ["user_id"], name: "index_restaurant_users_on_user_id", using: :btree
 
   create_table "restaurants", force: true do |t|
-    t.integer  "res_url"
+    t.string   "res_url",        limit: 30
     t.string   "name",           limit: 50
     t.string   "phone",          limit: 30
     t.string   "city",           limit: 15

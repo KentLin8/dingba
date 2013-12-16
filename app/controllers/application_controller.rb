@@ -24,7 +24,7 @@ class ApplicationController < ActionController::Base
           confirmation_getting_started_path
         end
       else
-        booker_manage_path
+        booker_manage_index_path
       end
     rescue => e
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/controllers/application_controller.rb  ,Method:sign_in_with_cus(user)"

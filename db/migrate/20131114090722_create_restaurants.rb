@@ -1,7 +1,7 @@
 class CreateRestaurants < ActiveRecord::Migration
   def change
     create_table :restaurants do |t|
-      t.integer :res_url
+      t.string :res_url         , :limit => 30
       t.string :name            , :limit => 50
       t.string :phone           , :limit => 30
       t.string :city            , :limit => 15

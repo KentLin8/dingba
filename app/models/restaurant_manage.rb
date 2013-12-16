@@ -418,37 +418,37 @@ class RestaurantManage
       zone1 = TimeZone.new
       zone1.name = '早餐'
       zone1.range_begin = '06:00'
-      zone1.range_begin = '10:00'
+      zone1.range_end = '10:00'
       time_zones.push(zone1)
 
       zone2 = TimeZone.new
       zone2.name = '早午餐'
       zone2.range_begin = '10:00'
-      zone2.range_begin = '12:00'
+      zone2.range_end = '12:00'
       time_zones.push(zone2)
 
       zone3 = TimeZone.new
       zone3.name = '午餐'
       zone3.range_begin = '12:00'
-      zone3.range_begin = '14:00'
+      zone3.range_end = '14:00'
       time_zones.push(zone3)
 
       zone4 = TimeZone.new
       zone4.name = '下午茶'
       zone4.range_begin = '14:00'
-      zone4.range_begin = '17:00'
+      zone4.range_end = '17:00'
       time_zones.push(zone4)
 
       zone5 = TimeZone.new
       zone5.name = '晚餐'
       zone5.range_begin = '17:00'
-      zone5.range_begin = '21:00'
+      zone5.range_end = '21:00'
       time_zones.push(zone5)
 
       zone6 = TimeZone.new
       zone6.name = '宵夜'
       zone6.range_begin = '21:00'
-      zone6.range_begin = '00:00'
+      zone6.range_end = '24:00'
       time_zones.push(zone6)
     else
       zones = TimeZone.where(:supply_condition_id => condition_id)  # if add .to_i must add begin recure
