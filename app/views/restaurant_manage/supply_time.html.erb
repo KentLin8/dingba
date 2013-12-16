@@ -76,6 +76,15 @@
     // });
 
     function getTodaysDate (val) {
+
+        if ('<%= @supply_time %>' != 'null'){
+            if ('<%= @supply_time.range_begin %>' != '' && val == 0)
+                return '<%= @supply_time.range_begin.strftime("%Y-%m-%d") %>'
+
+            if ('<%= @supply_time.range_end %>' != '' && val == 1)
+                return '<%= @supply_time.range_end.strftime("%Y-%m-%d") %>'
+        }
+
         var t = new Date;
         var year = t.getFullYear();
 
