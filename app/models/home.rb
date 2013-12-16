@@ -9,9 +9,10 @@ class Home
     end
   end
 
-  def self.get_condition(restaurant_url, booking_day)
+  def self.get_condition(restaurant, booking_day)
     begin
-      restaurant = Restaurant.where(:res_url => restaurant_url).first
+      #restaurant = Restaurant.where(:res_url => restaurant_url).first
+      restaurant = restaurant
       booking_condition = BookingCondition.new
 
       if booking_day.blank?

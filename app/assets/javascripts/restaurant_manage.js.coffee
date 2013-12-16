@@ -126,7 +126,7 @@ $ ->
         area.val(area.data('value'))
 
   refresh = (html) ->
-    form_place.html $.parseHTML(html)
+    form_place.html $.parseHTML(html, document, true)
     hook_event()
 
   load_page = (url, set_href = false) ->
@@ -193,7 +193,7 @@ $ ->
     $.get('restaurant_manage/special_time', {condition_id: $(this).attr('id'), special_day: $('#year').val() + '/' + $(this).find('.date').html()})
     .done( (response) ->
         if typeof response is 'string'
-          $('#tab_time').html($.parseHTML response)
+          $('#tab_time').html($.parseHTML(response, document, true))
           $('.ans').tooltip()
       )
     .fail( -> alert '資料傳遞失敗' )
@@ -218,8 +218,7 @@ $ ->
           else if typeof response is 'object'
             if response.success
               if response.attachmentPartial
-                $('#form_place').html($.parseHTML(response.attachmentPartial))
-              alert response.data
+                refresh response.attachmentPartial
               $('#lightbox_wrap').hide()
             else if response.error
               alert response.message
@@ -321,7 +320,7 @@ $ ->
     $.getJSON('/restaurant_manage/destroy_condition', {condition_id: $(this).data('id')})
       .done( (response) ->
         if response.success
-          $('#form_place').html($.parseHTML(response.attachmentPartial));
+          refresh response.attachmentPartial
           alert(response.data)
         else if response.error
           alert(response.message)

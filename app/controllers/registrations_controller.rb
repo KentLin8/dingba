@@ -112,6 +112,8 @@ class RegistrationsController < Devise::RegistrationsController
         res = Restaurant.new
         res.phone = phone
         res.res_url = res_url_tag         # APP_CONFIG['domain']
+        res.available_type = '1'
+        res.available_date = '22:00'
         res.save!
 
         res_user = RestaurantUser.new
