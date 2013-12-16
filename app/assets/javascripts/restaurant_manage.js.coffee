@@ -206,6 +206,7 @@ $ ->
     $.get('restaurant_manage/special_time', {condition_id: $(this).attr('id'), special_day: $('#year').val() + '/' + $(this).find('.date').html()})
     .done( (response) ->
         if typeof response is 'string'
+          $('#tabs').tabs(active: 0)
           $('#tab_time').html($.parseHTML(response, document, true))
           $('.ans').tooltip()
       )
