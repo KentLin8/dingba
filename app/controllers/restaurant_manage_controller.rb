@@ -88,10 +88,10 @@ class RestaurantManageController < ApplicationController
       if !condition_id.blank?
         @supply_time = SupplyCondition.find(condition_id.to_i)
 
-        @begin = @supply_time.range_begin.strftime("%Y-%m-%d")
-        @end = @supply_time.range_end.strftime("%Y-%m-%d")
+        @supply_time.range_begin = @supply_time.range_begin.strftime("%Y-%m-%d")
+        @supply_time.range_end = @supply_time.range_end.strftime("%Y-%m-%d")
       else
-        @supply_time = 'null'
+        @supply_time = SupplyCondition.new
       end
     rescue => e
       # in this condition is that user change the condition_id

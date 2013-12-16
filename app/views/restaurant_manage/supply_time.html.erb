@@ -1,12 +1,12 @@
 
 <form action="restaurant_manage/supply_condition_save" id="new_supply" method="post">
-  <% if @supply_time != 'null' %>
+  <% if @supply_time.id != '' %>
     <input name="condition[id]" type="hidden" value="<%= @supply_time.id %>">
   <% end %>
   <table class="table">
     <tr>
       <td>設立名稱<i class="required">*</i></td>
-      <% if @supply_time != 'null' %>
+      <% if @supply_time.id != '' %>
           <td><input type="text" name="condition[name]" value="<%= @supply_time.name %>" required="required"></td>
       <% else %>
           <td><input type="text" name="condition[name]" value="" required="required"></td>
@@ -77,13 +77,16 @@
 
     function getTodaysDate (val) {
 
-        if ('<%= @supply_time %>' != 'null'){
-            if ('<%= @begin %>' != '' && val == 0)
-                return '<%= @begin %>'
-
-            if ('<%= @end %>' != '' && val == 1)
-                return '<%= @end %>'
+        if ('<%= @supply_time.range_begin %>' != '' && val == 0) {
+            var str = '<%= @supply_time.range_begin %>'
+            return str.substring(0, 10)
         }
+
+        if ('<%= @supply_time.range_end %>' != '' && val == 1) {
+            var str = '<%= @supply_time.range_end %>'
+            return str.substring(0, 10)
+        }
+
 
         var t = new Date;
         var year = t.getFullYear();
