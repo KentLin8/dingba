@@ -149,6 +149,7 @@ class CalendarController < ApplicationController
     select_date = params[:select_date]
     select_date = Time.now.to_s if select_date.blank?
     @zones_books = RestaurantManage.get_day_books(@restaurant.id, select_date)
+    @show_select_date = select_date.to_date.to_s
     render 'restaurant_manage/_day_booking', :layout => false
   end
 
