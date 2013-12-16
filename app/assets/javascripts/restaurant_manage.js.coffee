@@ -143,13 +143,10 @@ $ ->
             location.href = tmp.join '#'
           else
             location.href += '#' + url
-
-        setTimeout(hook_event, 200)
       )
       .fail( -> alert '連線失敗，請稍後再試' )
 
   form_place = $('#form_place')
-
 
   $(document).on 'submit', '#new_supply', (e) ->
     check = true
@@ -165,11 +162,18 @@ $ ->
       _this = $(this)
       ban = true
       if _this.find(':checkbox').is(':checked')
-        $(this).find('input').each -> if $(this).val() is ''
+        input = $(this).find('input')
+        # 必須填滿
+        input.each -> if $(this).val() is ''
           check = false
           ban = false
           return
-        alert '請填滿所有欄位' unless ban
+        input.slice(-3).each ->
+          i = parseInt this.value, 10
+          if isNaN(i) || i < 0
+            check = false
+            ban = false
+          return
         # 前需比後小
         # 順便儲存值準備檢查時段衝突
         periods.unshift(_this.find('select').map -> $(this).val())
@@ -177,9 +181,10 @@ $ ->
           _this.addClass('invalid')
           check = false
           ban = false
-          alert '前需比後小'
       _this.addClass('invalid') unless ban
       return
+
+    alert '請檢查已啟用的時段是否有欄位空白或非數字，或是開始時間比結束時間早' unless check
 
     # 時段不衝突
     for period in periods

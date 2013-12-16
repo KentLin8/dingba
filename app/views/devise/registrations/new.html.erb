@@ -16,3 +16,8 @@
 <% end %>
 
 <%= render "devise/shared/links" %>
+<script>
+  $('form').submit(function(){
+    return validate(this);
+  });
+</script>

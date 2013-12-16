@@ -33,3 +33,8 @@
 </div>
 
 <input type="hidden" name="target" value="/dashboard"/>
+<script>
+  $('form').submit(function(){
+    return validate(this);
+  });
+</script>

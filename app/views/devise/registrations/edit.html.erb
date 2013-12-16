@@ -28,6 +28,11 @@
 
     <div><%= f.submit "確認修改" %></div>
 <% end %>
+<script>
+  $('form').submit(function(){
+    return validate(this);
+  });
+</script>
 
 
 

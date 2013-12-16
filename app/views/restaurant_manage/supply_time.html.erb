@@ -11,9 +11,9 @@
       <td>設立訂位有效期間<i class="required">*</i></td>
       <td>
         <label for="from">From</label>
-        <input type="date" name="condition[range_begin]" class="datepicker" required="required">
+        <input type="date" name="condition[range_begin]" class="datepicker from" required="required">
         <label for="to">to</label>
-        <input type="date" name="condition[range_end]" class="datepicker" required="required">
+        <input type="date" name="condition[range_end]" class="datepicker to" required="required">
       </td>
     </tr>
 
@@ -45,9 +45,9 @@
     // view: supply_time
     //===========================================================================
 
-    $(function() {
+    // $(function() {
 
-        $("#from").datepicker({
+        $(".from").datepicker({
             dateFormat: 'yy-mm-dd',
             //defaultDate: "+1w",
             changeMonth: true,
@@ -56,7 +56,8 @@
                 $("#to").datepicker( "option", "minDate", selectedDate );
             }
         }).val(getTodaysDate(0)); // For current date;
-        $("#to").datepicker({
+
+        $(".to").datepicker({
             dateFormat: 'yy-mm-dd',
             //defaultDate: "+1w",
             changeMonth: true,
@@ -67,7 +68,7 @@
         }).val(getTodaysDate(1));
 
         // $.datepicker.setDefaults($.datepicker.regional['zh-TW']);
-    });
+    // });
 
     function getTodaysDate (val) {
         if ('<%= @supply_time.range_begin %>' != '' && val == 0)

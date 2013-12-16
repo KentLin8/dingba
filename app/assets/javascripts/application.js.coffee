@@ -27,6 +27,11 @@ window.validate = (form) ->
       unless this.value.match(/^http(s?):\/\/[\w|.]+$/)
         _this.addClass('invalid')
         check = false
+    if _this.attr('type') is 'password'
+      unless this.value.length > 6
+        _this.addClass('invalid')
+        check = false
+
 
   $(form).find(':checkbox').each ->
     _this = $(this)
