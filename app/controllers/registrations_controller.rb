@@ -128,7 +128,7 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def get_res_url_tag
-    rand_string = SecureRandom.hex(13)
+    rand_string = SecureRandom.hex(3)
     check = Restaurant.where(:res_url => rand_string)
 
     if check.blank?

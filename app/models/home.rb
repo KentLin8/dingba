@@ -78,7 +78,7 @@ class Home
       booking_condition.option_of_time = []       # ['12:00', '12:15' ....]
 
       use_type = 0
-      if !is_today && !limit_day_time.blank?
+      if !is_today && !limit_day_time.blank?      # =========================================
         # booking day not today and use limit_day_time condition
         use_type = 1
 
@@ -189,9 +189,20 @@ class Home
           booking_condition.option_max_people.push(i + 1)
         end
 
+        booking_day_begin = booking_day.strftime("%Y-%m-%d ")
+        booking_day_end = (booking_day + 1.days).strftime("%Y-%m-%d ")
+        bookings_of_select_day = Booking.where('booking_time >= ?', booking_day_begin).where('booking_time <= ?', booking_day_end).group('booking_time').sum(:num_of_people)
+
+
+        bookings_of_select_day.each do |b|
+          b= b
+
+        end
+
+
         return booking_condition
 
-      elsif !limit_hour.blank?
+      elsif !limit_hour.blank?                  # =========================================
         # use pre hour condition
         use_type = 2
         temp_booking_day = booking_day.strftime("%Y-%m-%d ")
