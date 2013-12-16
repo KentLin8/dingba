@@ -34,9 +34,10 @@ class RestaurantManage
       pay_type_CreditCard = origin_restaurant[:pay_type_CreditCard]
       pay_type_EasyCard = origin_restaurant[:pay_type_EasyCard]
 
-      pay_type = pay_type_cash if !pay_type_cash.blank?
-      pay_type = pay_type + ',' + pay_type_CreditCard if !pay_type_CreditCard.blank?
-      pay_type = pay_type + ',' + pay_type_EasyCard if !pay_type_EasyCard.blank?
+      pay_type = [origin_restaurant[:pay_type_cash], origin_restaurant[:pay_type_CreditCard], origin_restaurant[:pay_type_EasyCard]].join(',')
+      # pay_type = pay_type_cash if !pay_type_cash.blank?
+      # pay_type = pay_type + ',' + pay_type_CreditCard if !pay_type_CreditCard.blank?
+      # pay_type = pay_type + ',' + pay_type_EasyCard if !pay_type_EasyCard.blank?
       restaurant.pay_type = pay_type
 
       restaurant.business_hours = origin_restaurant[:business_hours]

@@ -52,6 +52,7 @@ $ ->
   hook_event = ->
     # require 提示
     $('.required').tooltip(title: '必填')
+    $('.ans').tooltip()
     # datepicker
     $(".datepicker").datepicker(
       dateFormat: "yy-mm-dd"
@@ -194,8 +195,6 @@ $ ->
 
   $("#tabs").tabs()
 
-  $('.ans').tooltip()
-
   $('#lightbox_wrap').click (e) -> $(this).hide() if e.target is this
 
   $(document).on 'click', '#calendar td', ->
@@ -274,11 +273,13 @@ $ ->
 
   # 設定封面
   $(document).on 'click', '#pics :radio', ->
-    p = $(this).parent()
+    p = $(this).parents('.float')
+    return false if p.find('img').attr('src') is ''
     $.getJSON('restaurant_manage/image_cover_save', {cover_id: p.data('id')})
       .done( (response) ->
         if response.success
-          p.find('.placeholder').css('border', '1px solid #ff0000')
+          $('.cover').removeClass('cover')
+          p.find('.placeholder').addClass('cover')
         else if response.error
           alert "封面設定失敗，原因：#{response.message}"
         else
