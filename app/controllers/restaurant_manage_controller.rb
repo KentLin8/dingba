@@ -88,7 +88,7 @@ class RestaurantManageController < ApplicationController
       if !condition_id.blank?
         @supply_time = SupplyCondition.find(condition_id.to_i)
       else
-        @supply_time = nil
+        @supply_time = 'null'
       end
     rescue => e
       # in this condition is that user change the condition_id
