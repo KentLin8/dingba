@@ -484,9 +484,9 @@ class RestaurantManage
             break;
           end
         end
-
+        zones_books = []
         if effect_conditions.blank?
-          return nil
+          return zones_books
         end
 
         zones = TimeZone.where(:supply_condition_id => effect_conditions.id, :status => 't').order('sequence ASC')
@@ -524,11 +524,13 @@ class RestaurantManage
 
         return zones_books
       else
-        return nil
+        zones_books = []
+        return zones_books
       end
     rescue => e
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/models/restaurant_manage.rb  ,Method:get_day_books(restaurant_id, special_day)"
-      return nil
+      zones_books = []
+      return zones_books
     end
   end
 
@@ -544,8 +546,13 @@ class RestaurantManage
 
       date_start = Time.parse(date_start)
       date_end = Time.parse(date_end)
+      bookings =  Booking.where(:restaurant_id => restaurant_id).where('booking_time >= ?', date_start).where('booking_time <= ?', date_end).order('booking_time ASC')
 
-      return Booking.where(:restaurant_id => restaurant_id).where('booking_time >= ?', date_start).where('booking_time <= ?', date_end).order('booking_time ASC')
+      #bookings.each do |b|
+      #  b.booking_time = b.booking_time.strftime("%Y-%m-%d %H:%M")
+      #end
+
+      return bookings
     rescue => e
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/models/restaurant_manage.rb  ,Method:query_books_by_date(restaurant_id, date_start, date_end)"
       return nil
