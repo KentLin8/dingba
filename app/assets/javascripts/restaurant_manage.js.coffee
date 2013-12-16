@@ -332,7 +332,7 @@ $ ->
       .done( (response) -> refresh response )
       .fail( -> alert('oops! 出現錯誤了!') )
 
-  $(document).on 'click', '.destory_condition', ->
+  $(document).on 'click', '.destroy_condition', ->
     $.getJSON('/restaurant_manage/destroy_condition', {condition_id: $(this).data('id')})
       .done( (response) ->
         if response.success
