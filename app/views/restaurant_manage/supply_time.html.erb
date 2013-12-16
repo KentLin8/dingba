@@ -78,11 +78,11 @@
     function getTodaysDate (val) {
 
         if ('<%= @supply_time %>' != 'null'){
-            if ('<%= @supply_time.range_begin %>' != '' && val == 0)
-                return '<%= @supply_time.range_begin.strftime("%Y-%m-%d") %>'
+            if ('<%= @begin %>' != '' && val == 0)
+                return '<%= @begin %>'
 
-            if ('<%= @supply_time.range_end %>' != '' && val == 1)
-                return '<%= @supply_time.range_end.strftime("%Y-%m-%d") %>'
+            if ('<%= @end %>' != '' && val == 1)
+                return '<%= @end %>'
         }
 
         var t = new Date;

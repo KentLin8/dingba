@@ -87,6 +87,9 @@ class RestaurantManageController < ApplicationController
       @time_zones = RestaurantManage.get_time_zones(condition_id)
       if !condition_id.blank?
         @supply_time = SupplyCondition.find(condition_id.to_i)
+
+        @begin = @supply_time.range_begin.strftime("%Y-%m-%d")
+        @end = @supply_time.range_end.strftime("%Y-%m-%d")
       else
         @supply_time = 'null'
       end
