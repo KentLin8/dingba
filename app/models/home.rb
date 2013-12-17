@@ -654,7 +654,7 @@ class Home
   def self.save_booking(booker, origin_booking)
     begin
       is_pass = false
-      restaurant = Restaurant.find(origin_booking[:restaurant_id])
+      restaurant = Restaurant.find(origin_booking[:restaurant_id].to_i)
 
       if origin_booking[:booker_id].blank? && !booker.blank?
         is_pass = true
@@ -665,27 +665,48 @@ class Home
       end
 
       if is_pass == true
-        booking = Booking.new
-        booking.user_id = booker.id
-        booking.restaurant_id = restaurant_id
-        booking.res_url = restaurant.res_url
-        booking.restaurant_name = restaurant.name
-        booking.restaurant_address = restaurant.city + restaurant.area + restaurant.address
-        booking.booking_time = origin_booking[:booking_time]
-        booking.num_of_people = origin_booking[:num_of_people]
-        booking.name = origin_booking[:booker_name]
-        booking.phone = origin_booking[:booker_phone]
-        booking.email = origin_booking[:booker_email]
-        booking.remark = origin_booking[:booker_remark]
-        booking.save
+        Booking.transaction do
+          booking = Booking.new
+          booking.user_id = booker.id
+          booking.restaurant_id = restaurant_id
+          booking.res_url = restaurant.res_url
+          booking.restaurant_name = restaurant.name
+          booking.restaurant_address = restaurant.city + restaurant.area + restaurant.address
+          booking.booking_time = Time.parse(origin_booking[:booking_time].to_s)
+          booking.num_of_people = origin_booking[:num_of_people].to_i
+          booking.name = origin_booking[:booker_name]
+          booking.phone = origin_booking[:booker_phone]
+          booking.email = origin_booking[:booker_email]
+          booking.remark = origin_booking[:booker_remark]
+          booking.save
 
-        send_mail_result = MyMailer.booking_success(booking.email, booking).deliver   # Send mail fail may be the email problem, check time out
+          time_zone = TimeZone.find( origin_booking[:time_zone_id].to_i)
+          day_booking = DayBooking.where(:restaurant_id => restaurant_id, :day => Date.parse(booking.booking_time.to_s)).first
 
-        return {:success => true, :data => '訂位成功!', :booking_id => booking.id }
-      else
-        return {:error => true, :message => '阿! 發生錯誤了! 訂位失敗!'}
+          if day_booking.blank?
+            day_booking = DayBooking.new
+          end
+
+          if time_zone.sequence == 0
+            day_booking.zone1 = day_booking.zone1 + booking.num_of_people
+          elsif time_zone.sequence == 1
+            day_booking.zone1 = day_booking.zone2 + booking.num_of_people
+          elsif time_zone.sequence == 2
+            day_booking.zone1 = day_booking.zone3 + booking.num_of_people
+          elsif time_zone.sequence == 3
+            day_booking.zone1 = day_booking.zone4 + booking.num_of_people
+          elsif time_zone.sequence == 4
+            day_booking.zone1 = day_booking.zone5 + booking.num_of_people
+          elsif time_zone.sequence == 5
+            day_booking.zone1 = day_booking.zone6 + booking.num_of_people
+          end
+          day_booking.save
+
+          send_mail_result = MyMailer.booking_success(booking.email, booking).deliver   # Send mail fail may be the email problem, check time out
+
+          return {:success => true, :data => '訂位成功!', :booking_id => booking.id }
+        end
       end
-
     rescue => e
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/Models/home.rb  ,Method:save_booking(user_id, booking)"
       return {:error => true, :message => '阿! 發生錯誤了! 訂位失敗!'}

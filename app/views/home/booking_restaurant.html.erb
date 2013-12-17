@@ -189,7 +189,7 @@
 
                 if ((parseInt('<%= oft[3] %>') + parseInt(num_of_people)) > parseInt('<%= oft[2] %>')) {
                     <% (oft.length - 4).times do |i| %>
-                        var btn = $("<input type=\"button\"  value=\"" + '<%= oft[i + 4][1] %>' + "\" class=\"btn btn-inverse\" />");
+                        var btn = $("<input type=\"button\"  value=\"" + '<%= oft[i + 4][1] %>' + "\" data-value=\"" + '<%= oft[0] %>' + "\" class=\"btn btn-inverse\" />");
                         $("#time_select").append(btn)
                     <% end %>
                     return
@@ -198,14 +198,14 @@
                     <% (oft.length - 4).times do |i| %>
 
                         if ((parseInt('<%= oft[i + 4][2] %>') + parseInt(num_of_people)) > parseInt('<%= oft[1] %>')){
-                            var btn = $("<input type=\"button\"  value=\"" + '<%= oft[i + 4][1] %>' + "\" class=\"btn btn-inverse\" />");
+                            var btn = $("<input type=\"button\"  value=\"" + '<%= oft[i + 4][1] %>' + "\" data-value=\"" + '<%= oft[0] %>' + "\" class=\"btn btn-inverse\" />");
                             $("#time_select").append(btn)
                         }
                         else if ('<%= oft[i + 4][0]%>' == 0) {
-                            var btn = $("<input type=\"button\"  value=\"" + '<%= oft[i + 4][1] %>' + "\" class=\"btn\" />");
+                            var btn = $("<input type=\"button\"  value=\"" + '<%= oft[i + 4][1] %>' + "\" data-value=\"" + '<%= oft[0] %>' + "\" class=\"btn\" />");
                             $("#time_select").append(btn)
                         }else if ('<%= oft[i + 4][0]%>' == 1) {
-                            var btn = $("<input type=\"button\"  value=\"" + '<%= oft[i + 4][1] %>' + "\" class=\"btn btn-inverse\" />");
+                            var btn = $("<input type=\"button\"  value=\"" + '<%= oft[i + 4][1] %>' + "\" data-value=\"" + '<%= oft[0] %>' + "\"class=\"btn btn-inverse\" />");
                             $("#time_select").append(btn)
                         }
 
