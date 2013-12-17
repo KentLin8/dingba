@@ -243,6 +243,11 @@ class RestaurantManageController < ApplicationController
 
           @restaurant = Restaurant.find(target.restaurant_id)
           @res_url = APP_CONFIG['domain'] + @restaurant.res_url.to_s
+
+          @pay_type = []
+          if !@restaurant.pay_type.blank?
+            @pay_type = @restaurant.pay_type.split(',')
+          end
         end
       end
     rescue => e
