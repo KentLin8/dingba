@@ -16,17 +16,17 @@ class Home
       booking_condition = BookingCondition.new
 
       if booking_day.blank?
-        booking_day = Date.parse(Time.now.to_s) # + 1.days
+        booking_day = Date.parse(Time.now.to_s)
       else
         booking_day = Date.parse(booking_day)
 
-        if booking_day <= Date.parse(Time.now.to_s)
-          booking_condition = BookingCondition.new
-          booking_condition.error = true
-          booking_condition.message = '不能選過去的時間喔!'
-          return booking_condition
-          #return {:error => true, :message => '不能選過去的時間喔!'}
-        end
+        #if booking_day <= Date.parse(Time.now.to_s)
+        #  booking_condition = BookingCondition.new
+        #  booking_condition.error = true
+        #  booking_condition.message = '不能選過去的時間喔!'
+        #  return booking_condition
+        #  #return {:error => true, :message => '不能選過去的時間喔!'}
+        #end
       end
 
       booking_day_begin = Time.parse(booking_day.strftime("%Y-%m-%d") + " 00:00")
@@ -86,13 +86,13 @@ class Home
         is_today = true
       end
 
-      if is_today && !limit_day_time.blank?
-        booking_condition = BookingCondition.new
-        booking_condition.error = true
-        booking_condition.message = '目前這個時段，餐廳沒有開放的訂位，請選擇較後面的日期查看喲!'
-        return booking_condition
-        #return {:error => true, :message => '目前這個時段，餐廳沒有開放的訂位，請選擇較後面的日期查看喲!'}
-      end
+      #if is_today && !limit_day_time.blank?
+      #  booking_condition = BookingCondition.new
+      #  booking_condition.error = true
+      #  booking_condition.message = '目前這個時段，餐廳沒有開放的訂位，請選擇較後面的日期查看喲!'
+      #  return booking_condition
+      #  #return {:error => true, :message => '目前這個時段，餐廳沒有開放的訂位，請選擇較後面的日期查看喲!'}
+      #end
       #=========================================================================
 
       booking_condition = BookingCondition.new
