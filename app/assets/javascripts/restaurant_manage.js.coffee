@@ -227,7 +227,7 @@ $ ->
   $('#lightbox_wrap').click (e) -> $(this).hide() if e.target is this
 
   $(document).on 'click', '#calendar td', ->
-    $.get('restaurant_manage/special_time', {condition_id: $(this).attr('id'), special_day: $('#year').val() + '/' + $(this).find('.date').html()})
+    $.get('restaurant_manage/special_time', {condition_id: $(this).data('id'), special_day: $('#year').val() + '/' + $(this).find('.date').html()})
     .done( (response) ->
         if typeof response is 'string'
           $('#tabs').tabs(active: 0)
