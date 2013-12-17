@@ -179,8 +179,11 @@ class RestaurantManage
       SupplyCondition.transaction do
         target_condition = SupplyCondition.new
 
+        max_sequence = SupplyCondition.maximum(:sequence)
+        max_sequence.blank? ? max_sequence = 0 : max_sequence = max_sequence + 1
+
         # why set sequence in this area => because the supply_condition_save method have multi usage, and they don't set sequence
-        target_condition.sequence = SupplyCondition.maximum(:sequence) + 1
+        target_condition.sequence = max_sequence
         target_condition.sequence.blank?  ? target_condition.sequence = 1 : target_condition.sequence
         condition_id = supply_condition_save(origin_condition, restaurant_id, target_condition)
 

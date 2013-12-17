@@ -109,17 +109,14 @@ class Home
         #booking_day_end = (booking_day + 1.days).strftime("%Y-%m-%d ")
         booking_day_begin = Time.parse(booking_day.strftime("%Y-%m-%d") + " 00:00")
         booking_day_end = Time.parse(booking_day.strftime("%Y-%m-%d") + " 23:59")
-        bookings_of_select_day = Booking.where('booking_time >= ?', booking_day_begin).where('booking_time <= ?', booking_day_end).group('booking_time').sum(:num_of_people)
+        temp_bookings = Booking.where('booking_time >= ?', booking_day_begin).where('booking_time <= ?', booking_day_end).group('booking_time').sum(:num_of_people)
 
+        bookings_of_select_day = []
 
-        bookings_of_select_day.each do |b|
+        temp_bookings.each do |b|
           b[0] = b[0].strftime("%H:%M")       #把相同時段的]人數統計出來
-          c = b[0]
-          c = 0
+          bookings_of_select_day.push(b)
         end
-
-        xxxx = bookings_of_select_day
-        xxxx = 0
 
         zones.each do |z|
           if limit_day_time >= z.range_begin
@@ -159,15 +156,131 @@ class Home
             origin_end_hour = origin_end_hour.to_i
             (temp_begin_hour..origin_end_hour).each do |h|
               if h <= temp_end_hour
-                zone_option_of_time.push([0,h.to_s + ":00"])     # [[gray],[time]]
-                zone_option_of_time.push([0,h.to_s + ":15"])
-                zone_option_of_time.push([0,h.to_s + ":30"])
-                zone_option_of_time.push([0,h.to_s + ":45"])
+
+                h00 = false
+                h15 = false
+                h30 = false
+                h45 = false
+                h00_data = nil
+                h15_data = nil
+                h30_data = nil
+                h45_data = nil
+
+                bookings_of_select_day.each do |b|
+                  if b[0] == h.to_s + ":00"
+                    h00 = true
+                    if b[1] >= z.fifteen_allow
+                      h00_data = [1, h.to_s + ":00", b[1]]              # [[gray],[time],[booking_people]]  1 = gray
+                    elsif b[1] < z.fifteen_allow
+                      h00_data = [0, h.to_s + ":00", b[1]]
+                    end
+                  elsif b[0] == h.to_s + ":15"
+                    h15 = true
+                    if b[1] >= z.fifteen_allow
+                      h15_data = [1, h.to_s + ":15", b[1]]
+                    elsif b[1] < z.fifteen_allow
+                      h15_data = [0, h.to_s + ":15", b[1]]
+                    end
+                  elsif b[0] == h.to_s + ":30"
+                    h30 = true
+                    if b[1] >= z.fifteen_allow
+                      h30_data = [1, h.to_s + ":30", b[1]]
+                    elsif b[1] < z.fifteen_allow
+                      h30_data = [0, h.to_s + ":30", b[1]]
+                    end
+                  elsif b[0] == h.to_s + ":45"
+                    h45 = true
+                    if b[1] >= z.fifteen_allow
+                      h45_data = [1, h.to_s + ":45", b[1]]
+                    elsif b[1] < z.fifteen_allow
+                      h45_data = [0, h.to_s + ":45", b[1]]
+                    end
+                  end
+                end
+
+                if h00 == true
+                  zone_option_of_time.push(h00_data)
+                elsif h00 == false
+                  zone_option_of_time.push([0, h.to_s + ":00", 0])
+                end
+
+                if h15 == true
+                  zone_option_of_time.push(h15_data)
+                elsif h15 == false
+                  zone_option_of_time.push([0, h.to_s + ":15", 0])
+                end
+
+                if h30 == true
+                  zone_option_of_time.push(h30_data)
+                elsif h30 == false
+                  zone_option_of_time.push([0, h.to_s + ":30", 0])
+                end
+
+                if h45 == true
+                  zone_option_of_time.push(h45_data)
+                elsif h45 == false
+                  zone_option_of_time.push([0, h.to_s + ":45", 0])
+                end
+
+                #zone_option_of_time.push([0,h.to_s + ":00"])
+                #zone_option_of_time.push([0,h.to_s + ":15"])
+                #zone_option_of_time.push([0,h.to_s + ":30"])
+                #zone_option_of_time.push([0,h.to_s + ":45"])
               else
-                zone_option_of_time.push([1,h.to_s + ":00"])
-                zone_option_of_time.push([1,h.to_s + ":15"])
-                zone_option_of_time.push([1,h.to_s + ":30"])
-                zone_option_of_time.push([1,h.to_s + ":45"])
+
+                h00 = false
+                h15 = false
+                h30 = false
+                h45 = false
+                h00_data = nil
+                h15_data = nil
+                h30_data = nil
+                h45_data = nil
+
+                bookings_of_select_day.each do |b|
+                  if b[0] == h.to_s + ":00"
+                    h00 = true
+                    h00_data = [1, h.to_s + ":00", b[1]]
+                  elsif b[0] == h.to_s + ":15"
+                    h15 = true
+                    h15_data = [1, h.to_s + ":15", b[1]]
+                  elsif b[0] == h.to_s + ":30"
+                    h30 = true
+                    h30_data = [1, h.to_s + ":30", b[1]]
+                  elsif b[0] == h.to_s + ":45"
+                    h45 = true
+                    h45_data = [1, h.to_s + ":45", b[1]]
+                  end
+                end
+
+                if h00 == true
+                  zone_option_of_time.push(h00_data)
+                elsif h00 == false
+                  zone_option_of_time.push([1, h.to_s + ":00", 0])
+                end
+
+                if h15 == true
+                  zone_option_of_time.push(h15_data)
+                elsif h15 == false
+                  zone_option_of_time.push([1, h.to_s + ":15", 0])
+                end
+
+                if h30 == true
+                  zone_option_of_time.push(h30_data)
+                elsif h30 == false
+                  zone_option_of_time.push([1, h.to_s + ":30", 0])
+                end
+
+                if h45 == true
+                  zone_option_of_time.push(h45_data)
+                elsif h45 == false
+                  zone_option_of_time.push([1, h.to_s + ":45", 0])
+                end
+
+                #zone_option_of_time.push([1,h.to_s + ":00"])
+                #zone_option_of_time.push([1,h.to_s + ":15"])
+                #zone_option_of_time.push([1,h.to_s + ":30"])
+                #zone_option_of_time.push([1,h.to_s + ":45"])
               end
             end
             # end add ========
@@ -223,7 +336,6 @@ class Home
           end
         end
 
-
         booking_condition.option_of_people[target_index][0].times do |i|
           booking_condition.option_max_people.push(i + 1)
         end
@@ -237,6 +349,17 @@ class Home
         # use pre hour condition
         use_type = 2
         temp_booking_day = booking_day.strftime("%Y-%m-%d ")
+
+        booking_day_begin = Time.parse(booking_day.strftime("%Y-%m-%d") + " 00:00")
+        booking_day_end = Time.parse(booking_day.strftime("%Y-%m-%d") + " 23:59")
+        temp_bookings = Booking.where('booking_time >= ?', booking_day_begin).where('booking_time <= ?', booking_day_end).group('booking_time').sum(:num_of_people)
+
+        bookings_of_select_day = []
+
+        temp_bookings.each do |b|
+          b[0] = b[0].strftime("%H:%M")       #把相同時段的]人數統計出來
+          bookings_of_select_day.push(b)
+        end
 
         zones.each do |z|
 
@@ -288,15 +411,128 @@ class Home
             origin_end_hour = origin_end_hour.to_i
             (origin_begin_hour..origin_end_hour).each do |h|
               if all_block || h < temp_begin_hour
-                zone_option_of_time.push([1,h.to_s + ":00"])     # [[gray],[time]]
-                zone_option_of_time.push([1,h.to_s + ":15"])
-                zone_option_of_time.push([1,h.to_s + ":30"])
-                zone_option_of_time.push([1,h.to_s + ":45"])
+                h00 = false
+                h15 = false
+                h30 = false
+                h45 = false
+                h00_data = nil
+                h15_data = nil
+                h30_data = nil
+                h45_data = nil
+
+                bookings_of_select_day.each do |b|
+                  if b[0] == h.to_s + ":00"
+                    h00 = true
+                    h00_data = [1, h.to_s + ":00", b[1]]
+                  elsif b[0] == h.to_s + ":15"
+                    h15 = true
+                    h15_data = [1, h.to_s + ":15", b[1]]
+                  elsif b[0] == h.to_s + ":30"
+                    h30 = true
+                    h30_data = [1, h.to_s + ":30", b[1]]
+                  elsif b[0] == h.to_s + ":45"
+                    h45 = true
+                    h45_data = [1, h.to_s + ":45", b[1]]
+                  end
+                end
+
+                if h00 == true
+                  zone_option_of_time.push(h00_data)
+                elsif h00 == false
+                  zone_option_of_time.push([1, h.to_s + ":00", 0])
+                end
+
+                if h15 == true
+                  zone_option_of_time.push(h15_data)
+                elsif h15 == false
+                  zone_option_of_time.push([1, h.to_s + ":15", 0])
+                end
+
+                if h30 == true
+                  zone_option_of_time.push(h30_data)
+                elsif h30 == false
+                  zone_option_of_time.push([1, h.to_s + ":30", 0])
+                end
+
+                if h45 == true
+                  zone_option_of_time.push(h45_data)
+                elsif h45 == false
+                  zone_option_of_time.push([1, h.to_s + ":45", 0])
+                end
+                #zone_option_of_time.push([1,h.to_s + ":00"])
+                #zone_option_of_time.push([1,h.to_s + ":15"])
+                #zone_option_of_time.push([1,h.to_s + ":30"])
+                #zone_option_of_time.push([1,h.to_s + ":45"])
               else
-                zone_option_of_time.push([0,h.to_s + ":00"])
-                zone_option_of_time.push([0,h.to_s + ":15"])
-                zone_option_of_time.push([0,h.to_s + ":30"])
-                zone_option_of_time.push([0,h.to_s + ":45"])
+                h00 = false
+                h15 = false
+                h30 = false
+                h45 = false
+                h00_data = nil
+                h15_data = nil
+                h30_data = nil
+                h45_data = nil
+
+                bookings_of_select_day.each do |b|
+                  if b[0] == h.to_s + ":00"
+                    h00 = true
+                    if b[1] >= z.fifteen_allow
+                      h00_data = [1, h.to_s + ":00", b[1]]              # [[gray],[time],[booking_people]]  1 = gray
+                    elsif b[1] < z.fifteen_allow
+                      h00_data = [0, h.to_s + ":00", b[1]]
+                    end
+                  elsif b[0] == h.to_s + ":15"
+                    h15 = true
+                    if b[1] >= z.fifteen_allow
+                      h15_data = [1, h.to_s + ":15", b[1]]
+                    elsif b[1] < z.fifteen_allow
+                      h15_data = [0, h.to_s + ":15", b[1]]
+                    end
+                  elsif b[0] == h.to_s + ":30"
+                    h30 = true
+                    if b[1] >= z.fifteen_allow
+                      h30_data = [1, h.to_s + ":30", b[1]]
+                    elsif b[1] < z.fifteen_allow
+                      h30_data = [0, h.to_s + ":30", b[1]]
+                    end
+                  elsif b[0] == h.to_s + ":45"
+                    h45 = true
+                    if b[1] >= z.fifteen_allow
+                      h45_data = [1, h.to_s + ":45", b[1]]
+                    elsif b[1] < z.fifteen_allow
+                      h45_data = [0, h.to_s + ":45", b[1]]
+                    end
+                  end
+                end
+
+                if h00 == true
+                  zone_option_of_time.push(h00_data)
+                elsif h00 == false
+                  zone_option_of_time.push([0, h.to_s + ":00", 0])
+                end
+
+                if h15 == true
+                  zone_option_of_time.push(h15_data)
+                elsif h15 == false
+                  zone_option_of_time.push([0, h.to_s + ":15", 0])
+                end
+
+                if h30 == true
+                  zone_option_of_time.push(h30_data)
+                elsif h30 == false
+                  zone_option_of_time.push([0, h.to_s + ":30", 0])
+                end
+
+                if h45 == true
+                  zone_option_of_time.push(h45_data)
+                elsif h45 == false
+                  zone_option_of_time.push([0, h.to_s + ":45", 0])
+                end
+
+                #zone_option_of_time.push([0,h.to_s + ":00"])
+                #zone_option_of_time.push([0,h.to_s + ":15"])
+                #zone_option_of_time.push([0,h.to_s + ":30"])
+                #zone_option_of_time.push([0,h.to_s + ":45"])
               end
             end
             # end add ========
