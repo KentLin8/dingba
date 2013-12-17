@@ -87,15 +87,12 @@ class HomeController < ApplicationController
 
   def get_user
     begin
+      @booker = User.new
       if !current_user.blank?
         if current_user.role == '0'   # restaurant
-          manage_restaurants = RestaurantUser.where(:user_id => current_user.id)
-          if !manage_restaurants.blank?         # system error
-            target = manage_restaurants.first   # let user choose restaurant to mange, in phase 2
-          end
-          @booker = User.new
+          redirect_to confirmation_getting_started_path
         elsif current_user.role == '1'  # booker
-          @booker = current_user
+          @booker = User.find(current_user.id)
         end
       end
     rescue => e
