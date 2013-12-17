@@ -127,6 +127,30 @@ $ ->
         area = $('#restaurant_area')
         area.html ("""<option value="#{t}">#{t}</option>""" for t in data).join('')
         area.val(area.data('value'))
+    # 日曆標色
+    if document.getElementById 'calendar'
+      ids = []
+      # 日曆文字顏色
+      color = [
+        '#82d790'
+        '#bb6c63'
+        '#b5e0e7'
+        '#c0de69'
+        '#6081e9'
+        '#e091b2'
+        '#f6ec80'
+        '#f0d462'
+      ]
+      $('#calendar td').each ->
+        id = $(this).data('id')
+        ids.push(id) unless id in ids
+      color_bind = {}
+      for id, index in ids
+        color_bind[id] = color[index]
+      $('#calendar td').each ->
+        _this = $(this)
+        _this.css('color', color_bind[_this.data('id')])
+      $('#show').html("""<div class="show" style="color: #{color_bind[id]}">#{name}</div>""" for id, name of id_with_name)
 
   refresh = (html) ->
     form_place.html $.parseHTML(html, document, true)

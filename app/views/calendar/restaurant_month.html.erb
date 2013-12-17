@@ -41,8 +41,7 @@
 
       <%= tag('tr') if i % 7 == 0 %>
 
-        <td id ="<%= x.con_id %>">
-
+        <td data-id="<%= x.con_id %>">
           <% if x.day != 0 %>
           <div class="date"><%= @month %>/<%= x.day %></div>
           <% end %>
@@ -66,5 +65,12 @@
   <% end %>
 
 </table>
+<div id="show"></div>
+<script>
+  id_with_name = {
+    15: 'name',
+    32: '喵'
+  };
+</script>
 
 

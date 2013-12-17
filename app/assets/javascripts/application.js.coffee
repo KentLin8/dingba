@@ -19,7 +19,7 @@ window.validate = (form) ->
       unless this.value.match(/[\w|.]+@[\w|.]+$/)
         _this.addClass('invalid')
         check = false
-    if _this.attr('type') is 'date'
+    if _this.data('type') is 'date'
       if (new Date(this.value)).toString() == 'Invalid Date'
         _this.addClass('invalid')
         check = false
@@ -69,9 +69,12 @@ window.validate = (form) ->
     dayNames: ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'],
     dayNamesShort: ['周日','周一','周二','周三','周四','周五','周六'],
     dayNamesMin: ['日','一','二','三','四','五','六'],
-    dayStatus: '設定每周第一天', dateStatus: '選擇 m月 d日, DD',
-    dateFormat: 'yy-mm-dd', firstDay: 1,
-    initStatus: '請選擇日期', isRTL: false
+    dayStatus: '設定每周第一天',
+    dateStatus: '選擇 m月 d日, DD',
+    dateFormat: 'yy-mm-dd',
+    firstDay: 1,
+    initStatus: '請選擇日期',
+    isRTL: false
   };
 
   $.datepicker.setDefaults($.datepicker.regional['zh-TW']);
