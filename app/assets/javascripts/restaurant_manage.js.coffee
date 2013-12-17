@@ -233,6 +233,8 @@ $ ->
           $('#tabs').tabs(active: 0)
           $('#tab_time').html($.parseHTML(response, document, true))
           $('.ans').tooltip()
+          $('select').each ->
+            $(this).val $(this).data('value')
       )
     .fail( -> alert '資料傳遞失敗' )
     false
