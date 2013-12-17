@@ -40,7 +40,7 @@ class HomeController < ApplicationController
     if !@restaurant.blank?
       @booking_condition = Home.get_condition(@restaurant, booking_day)
 
-      result = {:success => true, :attachmentPartial => render_to_string('home/booking_zone', :layout => false, :locals => { :booking_condition => @booking_condition })}
+      result = {:success => true, :attachmentPartial => render_to_string('home/_booking_zone', :layout => false, :locals => { :booking_condition => @booking_condition })}
       render json: result
     end
   end
