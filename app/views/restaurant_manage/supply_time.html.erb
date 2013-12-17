@@ -25,13 +25,14 @@
     <tr>
       <td>每周可提供訂位日</td>
       <td>
-        <label class="checkbox inline"><input type="checkbox" name="condition[week1]" value="1">星期一</label>
-        <label class="checkbox inline"><input type="checkbox" name="condition[week2]" value="2">星期二</label>
-        <label class="checkbox inline"><input type="checkbox" name="condition[week3]" value="3">星期三</label>
-        <label class="checkbox inline"><input type="checkbox" name="condition[week4]" value="4">星期四</label>
-        <label class="checkbox inline"><input type="checkbox" name="condition[week5]" value="5">星期五</label>
-        <label class="checkbox inline"><input type="checkbox" name="condition[week6]" value="6">星期六</label>
-        <label class="checkbox inline"><input type="checkbox" name="condition[week7]" value="0">星期日</label>
+        <% week = @supply_time.available_week.split(',') %>
+        <label class="checkbox inline"><input type="checkbox" name="condition[week1]" value="1" <%= week.include?('1') ? 'checked="checked"' : '' %>>星期一</label>
+        <label class="checkbox inline"><input type="checkbox" name="condition[week2]" value="2" <%= week.include?('2') ? 'checked="checked"' : '' %>>星期二</label>
+        <label class="checkbox inline"><input type="checkbox" name="condition[week3]" value="3" <%= week.include?('3') ? 'checked="checked"' : '' %>>星期三</label>
+        <label class="checkbox inline"><input type="checkbox" name="condition[week4]" value="4" <%= week.include?('4') ? 'checked="checked"' : '' %>>星期四</label>
+        <label class="checkbox inline"><input type="checkbox" name="condition[week5]" value="5" <%= week.include?('5') ? 'checked="checked"' : '' %>>星期五</label>
+        <label class="checkbox inline"><input type="checkbox" name="condition[week6]" value="6" <%= week.include?('6') ? 'checked="checked"' : '' %>>星期六</label>
+        <label class="checkbox inline"><input type="checkbox" name="condition[week7]" value="0" <%= week.include?('0') ? 'checked="checked"' : '' %>>星期日</label>
       </td>
     </tr>
   </table>
