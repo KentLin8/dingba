@@ -3,7 +3,7 @@
   <% if @booking_condition.error == true %>
   <tr>
     <td colspan="2">
-      <%= @booking_condition.message %>
+      <div class="alert"><%= @booking_condition.message %></div>
     </td>
   </tr>
   <% end %>

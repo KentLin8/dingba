@@ -14,14 +14,16 @@
 $ ->
   not_finish = ($('#booking_form').length > 0)
 
-  $("#datepicker").datepicker(
-    dateFormat: "yy-mm-dd"
-  ).change ->
-    $.getJSON('/home/get_condition', {booking_day: this.value, id: location.href.split('/').pop()})
-      .done( (response) ->
-        $('#get_info').html response
-      )
-      .fail( -> alert 'gg' )
+  do bind = ->
+    $("#datepicker").datepicker(
+      dateFormat: "yy-mm-dd"
+    ).change ->
+      $.getJSON('/home/get_condition', {booking_day: this.value, id: location.href.split('/').pop()})
+        .done( (response) ->
+          $('#get_info').html $.parseHTML response.attachmentPartial
+          bind()
+        )
+        .fail( -> alert 'gg' )
 
   $(document).on 'click', '#time_select .btn:not(.btn-inverse)', ->
     $('#time').val(this.value)
