@@ -209,7 +209,7 @@ class RestaurantManageController < ApplicationController
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/controllers/restaurant_manage_controller.rb  ,Action:modify_booking"
     end
 
-    render 'restaurant_manage/_modify_booking'#, :layout => false
+    render 'restaurant_manage/_modify_booking', :layout => false
   end
 
   # ====== Code Check: 2013/12/08 ====== [ panda: TODO: wait Front-end engineering ]

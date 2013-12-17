@@ -252,7 +252,7 @@ $ ->
         alert 'validate fail'
         return false
       $.post(this.action, $(this).serialize())
-        .done( (response) ->
+        .done( (response) =>
           if typeof response is 'string'
             refresh response
           else if typeof response is 'object'
@@ -260,7 +260,8 @@ $ ->
               if response.attachmentPartial
                 refresh response.attachmentPartial
               alert response.data
-              $('#lightbox_wrap').hide()
+              if this.id is 'modify_booking' or this.id is 'cancel_booking'
+                $(this).parent().animate {height: 0}, -> $(this).parents('tr').remove()
             else if response.error
               alert response.message
         )
@@ -371,6 +372,35 @@ $ ->
           alert('發生未預期的回應，請告知CoDream小組處理!')
       )
       .fail( -> alert('oops! 出現錯誤了!') )
+
+  $(document).on 'click', '.daily_info .modify', (e) ->
+    e.preventDefault()
+    _this = $(this)
+    tr = _this.parents('tr')
+    id = tr.data('id')
+    # 讀取修改訂位界面
+    $.get('/restaurant_manage/modify_booking', {booking_id: id}, 'html')
+      .done( (response) ->
+        new_tr = $($.parseHTML(response, document, true))
+        tr.after(new_tr)
+        new_tr.find('#wrapper').animate(height: 450)
+      )
+      .fail( -> alert '讀取失敗' )
+
+  $(document).on 'click', '.daily_info .delete', (e) ->
+    e.preventDefault()
+    _this = $(this)
+    tr = _this.parents('tr')
+    id = tr.data('id')
+    # 讀取修改訂位界面
+    $.get('/restaurant_manage/delete_booking', {id: id}, 'html')
+      .done( (response) ->
+        new_tr = $($.parseHTML(response, document, true))
+        tr.after(new_tr)
+        new_tr.find('#wrapper').animate(height: 300)
+      )
+      .fail( -> alert '讀取失敗' )
+
 
 
 

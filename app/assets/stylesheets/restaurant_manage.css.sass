@@ -91,6 +91,10 @@
     line-height: 24px
     margin: 8px 0
 
+#wrapper
+  height: 0
+  overflow: hidden
+
 #sub_choice, #sub_choice2
   border: 1px solid rgb(190,190,190)
   width: 90px
@@ -186,14 +190,22 @@
   margin: 100px auto auto 100px
   background-color: #ffffff
   border: 2px solid rgb(190,190,190)
-  width: 800px
+  width: 900px
   // height: 80%
   // padding: 10px
   overflow: auto
 
-#daily_info
+.daily_info
+  position: relative
+  margin: 30px 0
   th
     text-align: left
+  .mark1, .mark2
+    position: absolute
+    top: 0
+    left: 0
+    height: 38px
+    width: 5px
   .mark1
     background-color: rgb(190,138,131)
   .mark2
