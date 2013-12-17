@@ -176,7 +176,7 @@ $ ->
     check = true
     periods = []
     # 檢查日期前後順序
-    [from, to] = $('input[type=date]').get()
+    [from, to] = $('input[data-type=date]').get()
     if from.value > to.value
       check = false
       $([from, to]).addClass('invalid')
