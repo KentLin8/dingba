@@ -10,9 +10,29 @@ class SessionsController < Devise::SessionsController
   end
 
   def new(sign_in_params)
-    self.resource = resource_class.new(sign_in_params)
-    clean_up_passwords(resource)
-    respond_with(resource, serialize_options(resource))
+
+    if !current_user.blank?
+      if current_user.role == '0'
+        restaurant_users = RestaurantUser.where(:user_id => current_user.id)
+        restaurant = Restaurant.find(restaurant_users.first.restaurant_id)
+
+        if RestaurantManage.check_restaurant_info(restaurant)
+          if RestaurantManage.check_supply_condition(restaurant.id)
+            redirect_to '/restaurant#/calendar/restaurant_month'
+          else
+            redirect_to '/restaurant#/restaurant_manage/supply_condition'
+          end
+        else
+          redirect_to confirmation_getting_started_path
+        end
+      else
+        redirect_to booker_manage_index_path
+      end
+    else
+      self.resource = resource_class.new(sign_in_params)
+      clean_up_passwords(resource)
+      respond_with(resource, serialize_options(resource))
+    end
   end
 
   # POST /resource/sign_in
