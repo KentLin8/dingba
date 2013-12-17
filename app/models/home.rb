@@ -150,6 +150,7 @@ class Home
             temp_end_hour = temp_end_hour.to_i  # add
 
             zone_option_of_time = []
+            hour_total_people = 0
 
             # add gray
             temp_begin_hour = temp_begin_hour.to_i
@@ -169,6 +170,7 @@ class Home
                 bookings_of_select_day.each do |b|
                   if b[0] == h.to_s + ":00"
                     h00 = true
+                    hour_total_people = hour_total_people + b[1]
                     if b[1] >= z.fifteen_allow
                       h00_data = [1, h.to_s + ":00", b[1]]              # [[gray],[time],[booking_people]]  1 = gray
                     elsif b[1] < z.fifteen_allow
@@ -176,6 +178,7 @@ class Home
                     end
                   elsif b[0] == h.to_s + ":15"
                     h15 = true
+                    hour_total_people = hour_total_people + b[1]
                     if b[1] >= z.fifteen_allow
                       h15_data = [1, h.to_s + ":15", b[1]]
                     elsif b[1] < z.fifteen_allow
@@ -183,6 +186,7 @@ class Home
                     end
                   elsif b[0] == h.to_s + ":30"
                     h30 = true
+                    hour_total_people = hour_total_people + b[1]
                     if b[1] >= z.fifteen_allow
                       h30_data = [1, h.to_s + ":30", b[1]]
                     elsif b[1] < z.fifteen_allow
@@ -190,6 +194,7 @@ class Home
                     end
                   elsif b[0] == h.to_s + ":45"
                     h45 = true
+                    hour_total_people = hour_total_people + b[1]
                     if b[1] >= z.fifteen_allow
                       h45_data = [1, h.to_s + ":45", b[1]]
                     elsif b[1] < z.fifteen_allow
@@ -240,15 +245,19 @@ class Home
                 bookings_of_select_day.each do |b|
                   if b[0] == h.to_s + ":00"
                     h00 = true
+                    hour_total_people = hour_total_people + b[1]
                     h00_data = [1, h.to_s + ":00", b[1]]
                   elsif b[0] == h.to_s + ":15"
                     h15 = true
+                    hour_total_people = hour_total_people + b[1]
                     h15_data = [1, h.to_s + ":15", b[1]]
                   elsif b[0] == h.to_s + ":30"
                     h30 = true
+                    hour_total_people = hour_total_people + b[1]
                     h30_data = [1, h.to_s + ":30", b[1]]
                   elsif b[0] == h.to_s + ":45"
                     h45 = true
+                    hour_total_people = hour_total_people + b[1]
                     h45_data = [1, h.to_s + ":45", b[1]]
                   end
                 end
@@ -281,6 +290,12 @@ class Home
                 #zone_option_of_time.push([1,h.to_s + ":15"])
                 #zone_option_of_time.push([1,h.to_s + ":30"])
                 #zone_option_of_time.push([1,h.to_s + ":45"])
+              end
+            end
+
+            if hour_total_people >= z.total_allow
+              zone_option_of_time.each do |zt|
+                zt[0] = 1
               end
             end
             # end add ========
@@ -404,6 +419,7 @@ class Home
             booking_condition.option_of_people.push(zone_option_of_people)
 
             zone_option_of_time = []
+            hour_total_people = 0
             # add gray
             temp_begin_hour = temp_begin_hour.to_i
             temp_end_hour = temp_end_hour.to_i
@@ -423,15 +439,19 @@ class Home
                 bookings_of_select_day.each do |b|
                   if b[0] == h.to_s + ":00"
                     h00 = true
+                    hour_total_people = hour_total_people + b[1]
                     h00_data = [1, h.to_s + ":00", b[1]]
                   elsif b[0] == h.to_s + ":15"
                     h15 = true
+                    hour_total_people = hour_total_people + b[1]
                     h15_data = [1, h.to_s + ":15", b[1]]
                   elsif b[0] == h.to_s + ":30"
                     h30 = true
+                    hour_total_people = hour_total_people + b[1]
                     h30_data = [1, h.to_s + ":30", b[1]]
                   elsif b[0] == h.to_s + ":45"
                     h45 = true
+                    hour_total_people = hour_total_people + b[1]
                     h45_data = [1, h.to_s + ":45", b[1]]
                   end
                 end
@@ -476,6 +496,7 @@ class Home
                 bookings_of_select_day.each do |b|
                   if b[0] == h.to_s + ":00"
                     h00 = true
+                    hour_total_people = hour_total_people + b[1]
                     if b[1] >= z.fifteen_allow
                       h00_data = [1, h.to_s + ":00", b[1]]              # [[gray],[time],[booking_people]]  1 = gray
                     elsif b[1] < z.fifteen_allow
@@ -483,6 +504,7 @@ class Home
                     end
                   elsif b[0] == h.to_s + ":15"
                     h15 = true
+                    hour_total_people = hour_total_people + b[1]
                     if b[1] >= z.fifteen_allow
                       h15_data = [1, h.to_s + ":15", b[1]]
                     elsif b[1] < z.fifteen_allow
@@ -490,6 +512,7 @@ class Home
                     end
                   elsif b[0] == h.to_s + ":30"
                     h30 = true
+                    hour_total_people = hour_total_people + b[1]
                     if b[1] >= z.fifteen_allow
                       h30_data = [1, h.to_s + ":30", b[1]]
                     elsif b[1] < z.fifteen_allow
@@ -497,6 +520,7 @@ class Home
                     end
                   elsif b[0] == h.to_s + ":45"
                     h45 = true
+                    hour_total_people = hour_total_people + b[1]
                     if b[1] >= z.fifteen_allow
                       h45_data = [1, h.to_s + ":45", b[1]]
                     elsif b[1] < z.fifteen_allow
@@ -533,6 +557,12 @@ class Home
                 #zone_option_of_time.push([0,h.to_s + ":15"])
                 #zone_option_of_time.push([0,h.to_s + ":30"])
                 #zone_option_of_time.push([0,h.to_s + ":45"])
+              end
+            end
+
+            if hour_total_people >= z.total_allow
+              zone_option_of_time.each do |zt|
+                zt[0] = 1
               end
             end
             # end add ========
