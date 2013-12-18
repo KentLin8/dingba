@@ -156,44 +156,62 @@
     function show_zone(num_of_people){
         $('#select_zone').empty();
 
-        var first_zone_id = null
+        var zone_id = null
         <% if @booking_condition.error != true %>
             <% @booking_condition.option_of_people.each do |ofp| %>
             if ('<%= ofp[0] %>' >= num_of_people) {
                 $("#select_zone").append(new Option('<%= ofp[2] %>', '<%= ofp[1] %>'))
 
-                if (first_zone_id == null)
-                    first_zone_id = '<%= ofp[1] %>';
+                if (zone_id == null)
+                    zone_id = '<%= ofp[1] %>';
             }
             <% end %>
         <% end %>
 
-        if (first_zone_id != null){
-            set_time_button(first_zone_id);
+        if (zone_id != null){
+            set_time_button(zone_id, num_of_people);
         }
     };
 
     $('#select_zone').change(function(){
         var zone_id = $(this).val();
-        set_time_button(zone_id);
+        var num_of_people = $('#select_people').val();
+        set_time_button(zone_id, num_of_people);
     });
 
-    function set_time_button(zone_id){
+    function set_time_button(zone_id, num_of_people){
         $('#time_select').empty();
 
         <% if @booking_condition.error != true %>
             <% @booking_condition.option_of_time.each do |oft| %>
+
             if ('<%= oft[0] %>' == zone_id){
-                <% (oft.length - 1).times do |i| %>
-                    <% if oft[i + 1][0] == 0 %>
-                    var btn = $("<input type=\"button\"  value=\"" + '<%= oft[i + 1][1] %>' + "\" class=\"btn\" />");
-                    $("#time_select").append(btn)
-                    <% elsif oft[i + 1][0] == 1 %>
-                    var btn = $("<input type=\"button\"  value=\"" + '<%= oft[i + 1][1] %>' + "\" class=\"btn btn-inverse\" />");
-                    $("#time_select").append(btn)
+
+                if ((parseInt('<%= oft[3] %>') + parseInt(num_of_people)) > parseInt('<%= oft[2] %>')) {
+                    <% (oft.length - 4).times do |i| %>
+                        var btn = $("<input type=\"button\"  value=\"" + '<%= oft[i + 4][1] %>' + "\" data-value=\"" + '<%= oft[0] %>' + "\" class=\"btn btn-inverse\" />");
+                        $("#time_select").append(btn)
                     <% end %>
-                <% end %>
-                return
+                    return
+                }
+                else {
+                    <% (oft.length - 4).times do |i| %>
+
+                        if ((parseInt('<%= oft[i + 4][2] %>') + parseInt(num_of_people)) > parseInt('<%= oft[1] %>')){
+                            var btn = $("<input type=\"button\"  value=\"" + '<%= oft[i + 4][1] %>' + "\" data-value=\"" + '<%= oft[0] %>' + "\" class=\"btn btn-inverse\" />");
+                            $("#time_select").append(btn)
+                        }
+                        else if ('<%= oft[i + 4][0]%>' == 0) {
+                            var btn = $("<input type=\"button\"  value=\"" + '<%= oft[i + 4][1] %>' + "\" data-value=\"" + '<%= oft[0] %>' + "\" class=\"btn\" />");
+                            $("#time_select").append(btn)
+                        }else if ('<%= oft[i + 4][0]%>' == 1) {
+                            var btn = $("<input type=\"button\"  value=\"" + '<%= oft[i + 4][1] %>' + "\" data-value=\"" + '<%= oft[0] %>' + "\"class=\"btn btn-inverse\" />");
+                            $("#time_select").append(btn)
+                        }
+
+                    <% end %>
+                    return
+                }
             }
             <% end %>
         <% end %>

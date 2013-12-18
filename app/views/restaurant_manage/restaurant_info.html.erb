@@ -74,10 +74,9 @@
       <tr>
         <td>付款方式</td>
         <td>
-          <% pay_type = @restaurant.pay_type.split(',') %>
-          <label class="checkbox inline"><input type="checkbox" value="1" name="restaurant[pay_type_cash]" <%= pay_type.include?('1') ? 'checked' : '' %>>現金</label>
-          <label class="checkbox inline"><input type="checkbox" value="2" name="restaurant[pay_type_CreditCard]" <%= pay_type.include?('2') ? 'checked' : '' %>>信用卡</label>
-          <label class="checkbox inline"><input type="checkbox" value="3" name="restaurant[pay_type_EasyCard]" <%= pay_type.include?('3') ? 'checked' : '' %>>悠遊卡</label>
+          <label class="checkbox inline"><input type="checkbox" value="1" name="restaurant[pay_type_cash]" <%= @pay_type.include?('1') ? 'checked' : '' %>>現金</label>
+          <label class="checkbox inline"><input type="checkbox" value="2" name="restaurant[pay_type_CreditCard]" <%= @pay_type.include?('2') ? 'checked' : '' %>>信用卡</label>
+          <label class="checkbox inline"><input type="checkbox" value="3" name="restaurant[pay_type_EasyCard]" <%= @pay_type.include?('3') ? 'checked' : '' %>>悠遊卡</label>
         </td>
       </tr>
       <tr>

@@ -237,12 +237,21 @@ class RestaurantManageController < ApplicationController
         flash.now[:alert] = '您還沒登入喔!~~ '
         redirect_to home_path
       else
-        manage_restaurants = RestaurantUser.where(:user_id => current_user.id)
-        if !manage_restaurants.blank?         # system error
-          target = manage_restaurants.first   # let user choose restaurant to mange, in phase 2
+        if current_user.role == '0'
+          manage_restaurants = RestaurantUser.where(:user_id => current_user.id)
+          if !manage_restaurants.blank?         # system error
+            target = manage_restaurants.first   # let user choose restaurant to mange, in phase 2
 
-          @restaurant = Restaurant.find(target.restaurant_id)
-          @res_url = APP_CONFIG['domain'] + @restaurant.res_url.to_s
+            @restaurant = Restaurant.find(target.restaurant_id)
+            @res_url = APP_CONFIG['domain'] + @restaurant.res_url.to_s
+
+            @pay_type = []
+            if !@restaurant.pay_type.blank?
+              @pay_type = @restaurant.pay_type.split(',')
+            end
+          end
+        elsif current_user.role == '1'
+          redirect_to booker_manage_index_path
         end
       end
     rescue => e

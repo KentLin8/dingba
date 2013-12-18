@@ -46,6 +46,7 @@ ActiveRecord::Schema.define(version: 20131115013217) do
     t.integer  "zone4"
     t.integer  "zone5"
     t.integer  "zone6"
+    t.integer  "other"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -113,6 +114,7 @@ ActiveRecord::Schema.define(version: 20131115013217) do
     t.integer  "sequence"
     t.string   "status",         limit: 1
     t.string   "is_special",     limit: 1
+    t.string   "is_vacation",    limit: 1
     t.datetime "created_at"
     t.datetime "updated_at"
   end
