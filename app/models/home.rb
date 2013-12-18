@@ -74,7 +74,6 @@ class Home
         #return {:error => true, :message => '目前這個時段，餐廳沒有開放的訂位，請選擇較後面的日期查看喲!'}
       end
       #=========================================================================
-
       if !restaurant.available_type.blank? && restaurant.available_type == '0'
         limit_hour = restaurant.available_hour
       elsif !restaurant.available_type.blank? && restaurant.available_type == '1'
@@ -86,13 +85,13 @@ class Home
         is_today = true
       end
 
-      #if is_today && !limit_day_time.blank?
-      #  booking_condition = BookingCondition.new
-      #  booking_condition.error = true
-      #  booking_condition.message = '目前這個時段，餐廳沒有開放的訂位，請選擇較後面的日期查看喲!'
-      #  return booking_condition
-      #  #return {:error => true, :message => '目前這個時段，餐廳沒有開放的訂位，請選擇較後面的日期查看喲!'}
-      #end
+      if is_today && !limit_day_time.blank?
+        booking_condition = BookingCondition.new
+        booking_condition.error = true
+        booking_condition.message = '目前這個時段，餐廳沒有開放的訂位，請選擇較後面的日期查看喲!'
+        return booking_condition
+        #return {:error => true, :message => '目前這個時段，餐廳沒有開放的訂位，請選擇較後面的日期查看喲!'}
+      end
       #=========================================================================
 
       booking_condition = BookingCondition.new
