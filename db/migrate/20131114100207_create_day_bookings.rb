@@ -9,6 +9,7 @@ class CreateDayBookings < ActiveRecord::Migration
       t.integer :zone4
       t.integer :zone5
       t.integer :zone6
+      t.integer :other
 
       t.timestamps
     end

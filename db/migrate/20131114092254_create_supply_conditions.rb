@@ -9,6 +9,7 @@ class CreateSupplyConditions < ActiveRecord::Migration
       t.integer :sequence
       t.string :status                  , :limit => 1
       t.string :is_special              , :limit => 1
+      t.string :is_vacation             , :limit => 1
 
       t.timestamps
     end
