@@ -96,7 +96,8 @@ class HomeController < ApplicationController
       @booker = User.new
       if !current_user.blank?
         if current_user.role == '0'   # restaurant
-          redirect_to confirmation_getting_started_path
+          #signed_out = (Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name))
+          #redirect_to confirmation_getting_started_path
         elsif current_user.role == '1'  # booker
           @booker = User.find(current_user.id)
         end

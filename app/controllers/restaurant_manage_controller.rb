@@ -236,7 +236,7 @@ class RestaurantManageController < ApplicationController
     begin
       if current_user.blank?
         flash.now[:alert] = '您還沒登入喔!~~ '
-        redirect_to home_path
+        redirect_to res_session_new_path
       else
         if current_user.role == '0'
           manage_restaurants = RestaurantUser.where(:user_id => current_user.id)
@@ -258,7 +258,7 @@ class RestaurantManageController < ApplicationController
     rescue => e
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/controllers/restaurant_manage_controller.rb  ,Filter:get_restaurant"
       flash.now[:alert] = 'oops! 出現錯誤了!'
-      redirect_to home_path
+      redirect_to res_session_new_path
     end
   end
 
