@@ -92,6 +92,7 @@ class RestaurantManageController < ApplicationController
         @supply_time.range_end = @supply_time.range_end.strftime("%Y-%m-%d")
       else
         @supply_time = SupplyCondition.new
+        @supply_time.available_week = '0,1,2,3,4,5,6'
       end
     rescue => e
       # in this condition is that user change the condition_id

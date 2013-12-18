@@ -40,7 +40,7 @@
                         ]), {}, {:class => 'input-medium','data-value' => @restaurant.city }) %>
           區域
           <%= f.select(:area,
-          options_for_select([['請選擇區域','']]), {}, {:class => 'input-medium','data-value' => @restaurant.area}) %>
+          options_for_select([['請選擇區域','']]), {}, {:class => 'input-medium','data-value' => @restaurant.area}) %><br><br>
           <%= f.text_field :address, required: true %>
         </td>
       </tr>

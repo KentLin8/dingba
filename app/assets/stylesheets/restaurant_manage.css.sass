@@ -144,13 +144,9 @@
       left: 0
       right: 0
   .icon-remove
-    bottom: 0
-    left: 0
-    margin: auto
-    position: absolute
-    right: 0
-    top: 0
-    display: none
+    margin: 5px auto
+    position: relative
+    display: block
 
 #period_set
   border: 2px solid rgb(190,190,190)
@@ -171,9 +167,13 @@
 
 #calendar
   margin: 12px 0
+  table-layout: fixed
   .date
     font-size: 12px
     color: #bbbbbb
+  td
+    width: 14%
+    text-overflow: ellipsis
 
 #lightbox_wrap
   position: fixed

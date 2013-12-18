@@ -5,7 +5,7 @@ class Home
       return Restaurant.where(:res_url => restaurant_url).first
     rescue => e
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/Models/home.rb  ,Method:get_restaurant(restaurant_url)"
-      return nil
+      return Restaurant.new
     end
   end
 
@@ -96,6 +96,7 @@ class Home
       #=========================================================================
 
       booking_condition = BookingCondition.new
+      booking_condition.error = false
       booking_condition.option_max_people = []    # [1, 2, 3, 4 ....]
       booking_condition.option_of_people = []     # [zone.each_allow, zone.id, zone.name], [....]
       booking_condition.option_of_time = []       # ['12:00', '12:15' ....]
