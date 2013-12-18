@@ -2,36 +2,44 @@ class SessionsController < Devise::SessionsController
   layout 'restaurant_manage'
 
   def restaurant_new
-    new(sign_in_params)
+    new(sign_in_params, '0')
   end
 
   def booker_new
-    new(sign_in_params)
+    new(sign_in_params, '1')
   end
 
-  def new(sign_in_params)
+  def new(sign_in_params, role)
+    begin
+      if !current_user.blank?
+        if current_user.role == '0'
+          restaurant_users = RestaurantUser.where(:user_id => current_user.id)
+          restaurant = Restaurant.find(restaurant_users.first.restaurant_id)
 
-    if !current_user.blank?
-      if current_user.role == '0'
-        restaurant_users = RestaurantUser.where(:user_id => current_user.id)
-        restaurant = Restaurant.find(restaurant_users.first.restaurant_id)
-
-        if RestaurantManage.check_restaurant_info(restaurant)
-          if RestaurantManage.check_supply_condition(restaurant.id)
-            redirect_to '/restaurant#/calendar/restaurant_month'
+          if RestaurantManage.check_restaurant_info(restaurant)
+            if RestaurantManage.check_supply_condition(restaurant.id)
+              redirect_to '/restaurant#/calendar/restaurant_month'
+            else
+              redirect_to '/restaurant#/restaurant_manage/supply_condition'
+            end
           else
-            redirect_to '/restaurant#/restaurant_manage/supply_condition'
+            redirect_to confirmation_getting_started_path
           end
         else
-          redirect_to confirmation_getting_started_path
+          redirect_to booker_manage_index_path
         end
       else
-        redirect_to booker_manage_index_path
+        self.resource = resource_class.new(sign_in_params)
+        clean_up_passwords(resource)
+        respond_with(resource, serialize_options(resource))
       end
-    else
-      self.resource = resource_class.new(sign_in_params)
-      clean_up_passwords(resource)
-      respond_with(resource, serialize_options(resource))
+    rescue => e
+      Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/controllers/sessions_controller.rb  ,Method:new(sign_in_params)"
+      if role == '0'
+        redirect_to res_session_new_path
+      else
+        redirect_to booker_session_new_path
+      end
     end
   end
 

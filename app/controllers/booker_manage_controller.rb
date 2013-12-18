@@ -19,20 +19,19 @@ class BookerManageController < ApplicationController
     begin
       if current_user.blank?
         flash.now[:alert] = '您還沒登入喔!~~ '
-        redirect_to home_path
+        redirect_to booker_session_new_path
       else
         @booker = User.where(:id => current_user.id, :role => '1').first
 
         if @booker.blank?
           Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/controllers/booker_manage_controller.rb  ,Filter:get_booker"
-          flash.now[:alert] = 'oops! 出現錯誤了!'
-          redirect_to home_path
+          redirect_to booker_session_new_path
         end
       end
     rescue => e
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/controllers/booker_manage_controller.rb  ,Filter:get_booker"
       flash.now[:alert] = 'oops! 出現錯誤了!'
-      redirect_to home_path
+      redirect_to booker_session_new_path
     end
   end
 
