@@ -8,11 +8,11 @@
       <div class="placeholder  <%= @restaurant.front_cover == i.to_s ? 'cover' : '' %>">
         <% if pic_name = @restaurant.method("pic_name#{i}".to_sym).call %>
           <img src="/res/<%= @restaurant.id %>/images/<%= pic_name %>">
-        <% else %>
-          <img src="">
         <% end %>
       </div>
-      <i class="icon-remove"></i>
+      <% if pic_name %>
+        <i class="icon-remove"></i>
+      <% end %>
     </div>
   <% end %>
   <div class="clear"></div>

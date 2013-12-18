@@ -45,9 +45,13 @@ Date::formatDate = -> "#{this.getFullYear()}-#{this.getMonth() + 1}-#{this.getDa
 $ ->
 
   show_cover = (data) ->
-    $('.placeholder img').each (index) ->
-      this.src = data[index+1] || ''
-      return
+    $('.icon-remove').remove()
+    $('.placeholder img').remove()
+    $('.placeholder').each (index) ->
+      _this = $(this)
+      if d = data[index+1]
+        _this.append("""<img src="#{d}" alt="">""")
+        _this.after('<i class="icon-remove"></i>')
 
   hook_event = ->
     # require 提示
