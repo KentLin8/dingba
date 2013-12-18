@@ -28,6 +28,9 @@
 .btn-primary:focus
   background-color: rgb(127,23,0)
 
+td.title
+  text-align: right
+
 .cover
   border: 1px solid #FF0000 !important
 
@@ -90,6 +93,9 @@
     display: block
     font-size: 16px
     line-height: 35px
+    text-decoration: none
+  > a:hover
+    text-decoration: none
   > a:before
     content: '• '
 #wrapper
@@ -101,6 +107,7 @@
   width: 90px
   text-align: center
   overflow: hidden
+  margin: 0 8px
   .now
     background-color: rgb(127,23,0)
     color: #FFFFFF
@@ -184,9 +191,16 @@
   .date
     font-size: 12px
     color: #bbbbbb
-  td
+  > td
     width: 14%
     text-overflow: ellipsis
+  .clean-table
+    border: none
+    width: 100%
+    font-size: 12px
+    td
+      border: none
+      padding: 0
 
 #lightbox_wrap
   position: fixed

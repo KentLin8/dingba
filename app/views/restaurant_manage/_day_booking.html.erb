@@ -1,4 +1,5 @@
-<input type="text" name="" id="show_day" class="datepicker" value="<%= @show_select_date %>">
+<input type="text" name="" id="show_day" class="datepicker input-small" value="<%= @show_select_date %>"><br>
+<span style="color: rgb(127,23,0)"><%= @special_day %></span> 的訂位資料為
 <br>
 <% @zones_books.each do |z| %>
   <table class="table daily_info">
@@ -18,7 +19,7 @@
 
     <% z.books.each do |b| %>
     <tr data-id="<%= b.id %>">
-      <td><%= b.booking_time %></td>
+      <td><%= b.booking_time.strftime('%Y/%m/%d %H:%M') %></td>
       <td><%= b.num_of_people %></td>
       <td><%= b.name %></td>
       <td><%= b.phone %></td>

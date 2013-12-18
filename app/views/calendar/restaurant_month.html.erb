@@ -48,12 +48,16 @@
             <% if x.con_id == 0 %>
                 不提供訂位
             <% else %>
-                <% if !x.n1.blank?%> <%= x.n1 %> <%= @books[i].zone1 %>/ <%= x.z1 %> </br> <% end %>
-                <% if !x.n2.blank?%> <%= x.n2 %> <%= @books[i].zone2 %>/ <%= x.z2 %> </br> <% end %>
-                <% if !x.n3.blank?%> <%= x.n3 %> <%= @books[i].zone3 %>/ <%= x.z3 %> </br> <% end %>
-                <% if !x.n4.blank?%> <%= x.n4 %> <%= @books[i].zone4 %>/ <%= x.z4 %> </br> <% end %>
-                <% if !x.n5.blank?%> <%= x.n5 %> <%= @books[i].zone5 %>/ <%= x.z5 %> </br> <% end %>
-                <% if !x.n6.blank?%> <%= x.n6 %> <%= @books[i].zone6 %>/ <%= x.z6 %> </br> <% end %>
+              <table class="clean-table">
+                <% (1..6).each do |i| %>
+                  <% unless x.method("n#{i}".to_sym).call.blank? %>
+                    <tr>
+                      <td><%= x.method("n#{i}".to_sym).call %></td>
+                      <td><%= @books[i].method("zone#{i}".to_sym).call %>/ <%= x.method("z#{i}".to_sym).call %></td>
+                    </tr>
+                  <% end %>
+                <% end %>
+              </table>
             <% end %>
           </div>
         </td>

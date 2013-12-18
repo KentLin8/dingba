@@ -74,7 +74,6 @@ class RestaurantManageController < ApplicationController
     if @conditions.blank?
       redirect_to res_manage_supply_time_path
     else
-      # @conditions = @conditions.to_a
       @special_conditions = @conditions.select { |x| x.is_special == 't' }
       @normal_conditions = @conditions.select { |x| x.is_special != 't' }
       render 'restaurant_manage/supply_condition', :layout => false
@@ -125,7 +124,9 @@ class RestaurantManageController < ApplicationController
     end
 
     @conditions = SupplyCondition.where(:restaurant_id => @restaurant.id).order('sequence ASC')
-    result[:attachmentPartial] = render_to_string('restaurant_manage/supply_condition', :layout => false, :locals => { :conditions => @conditions })
+    @special_conditions = @conditions.select { |x| x.is_special == 't' }
+    @normal_conditions = @conditions.select { |x| x.is_special != 't' }
+    result[:attachmentPartial] = render_to_string('restaurant_manage/supply_condition', :layout => false, :locals => { :normal_conditions => @normal_conditions, :special_conditions => @special_conditions })
     render json: result
   end
 
@@ -149,7 +150,9 @@ class RestaurantManageController < ApplicationController
   def destroy_condition
     result = RestaurantManage.destroy_condition(params[:condition_id])
     @conditions = SupplyCondition.where(:restaurant_id => @restaurant.id).order('sequence ASC')
-    result[:attachmentPartial] = render_to_string('restaurant_manage/supply_condition', :layout => false, :locals => { :conditions => @conditions })
+    @special_conditions = @conditions.select { |x| x.is_special == 't' }
+    @normal_conditions = @conditions.select { |x| x.is_special != 't' }
+    result[:attachmentPartial] = render_to_string('restaurant_manage/supply_condition', :layout => false, :locals => { :normal_conditions => @normal_conditions, :special_conditions => @special_conditions })
     render json: result
   end
 
@@ -176,7 +179,9 @@ class RestaurantManageController < ApplicationController
 
     result =  RestaurantManage.special_create(zones, params[:special_day], @restaurant.id)
     @conditions = SupplyCondition.where(:restaurant_id => @restaurant.id).order('sequence ASC')
-    result[:attachmentPartial] = render_to_string('restaurant_manage/supply_condition', :layout => false, :locals => { :conditions => @conditions })
+    @special_conditions = @conditions.select { |x| x.is_special == 't' }
+    @normal_conditions = @conditions.select { |x| x.is_special != 't' }
+    result[:attachmentPartial] = render_to_string('restaurant_manage/supply_condition', :layout => false, :locals => { :normal_conditions => @normal_conditions, :special_conditions => @special_conditions })
     render json: result
   end
 
@@ -185,6 +190,7 @@ class RestaurantManageController < ApplicationController
   # =========================================================================
   def day_booking
     @zones_books = RestaurantManage.get_day_books(@restaurant.id, params[:special_day])
+    @special_day = params[:special_day]
     render 'restaurant_manage/_day_booking', :layout => false
   end
 
