@@ -74,6 +74,9 @@ class RestaurantManageController < ApplicationController
     if @conditions.blank?
       redirect_to res_manage_supply_time_path
     else
+      # @conditions = @conditions.to_a
+      @special_conditions = @conditions.select { |x| x.is_special == 't' }
+      @normal_conditions = @conditions.select { |x| x.is_special != 't' }
       render 'restaurant_manage/supply_condition', :layout => false
     end
   end
@@ -210,7 +213,7 @@ class RestaurantManageController < ApplicationController
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/controllers/restaurant_manage_controller.rb  ,Action:modify_booking"
     end
 
-    render 'restaurant_manage/_modify_booking'#, :layout => false
+    render 'restaurant_manage/_modify_booking', :layout => false
   end
 
   # ====== Code Check: 2013/12/08 ====== [ panda: TODO: wait Front-end engineering ]

@@ -37,7 +37,7 @@ class HomeController < ApplicationController
 
   def get_condition
     restaurant_url = params[:id]
-    booking_day = params[:booking_day]
+    @booking_day = params[:booking_day]
 
     @restaurant = Restaurant.new
     @restaurant = Home.get_restaurant(restaurant_url)

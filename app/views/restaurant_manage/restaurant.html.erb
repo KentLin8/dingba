@@ -43,25 +43,34 @@
 //            alert("PRESSED TAB!");
 //        }
 //    });
+  (tab_change = function (tab_index) {
+    if(1 == tab_index){
+      $.get("restaurant_manage/day_booking", {special_day: $("#tab_time [name='special_day']").val()}, 'html').done(function (data) {
+        $("#tab_day_booking").html($.parseHTML(data));
+        $("#show_day").datepicker({
+          dateFormat: "yy-mm-dd",
+          showOn: 'both',
+          buttonText: '<i class="icon-calendar"></i>'
+        }).change(function() {
+          return $.get('/calendar/restaurant_day', {
+            select_date: this.value
+          }, 'html').done(function(response) {
+            return refresh(response);
+          }).fail(function() {
+            return alert('fail');
+          });
+        });
+      }).fail(function () {
+        alert('loading fail');
+      })
+    };
+  })();
 
   $("#tabs").on("tabsactivate", function(event, ui) {
     //alert('pressed tab! ,solution 2')
     tab_change(ui.newTab.index())
   });
 
-  tab_change()
-  function tab_change(tab_index) {
-    if(1 == tab_index){
-      $.ajax({
-        url: "restaurant_manage/day_booking",
-        type: "get",
-        data: {special_day:$("#tab_time [name='special_day']").val()},
-        success: function (data) {
-            $("#tab_day_booking").html(data);
-        }
-      });
-    };
-  }
 </script>
 
 

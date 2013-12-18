@@ -17,9 +17,9 @@
 ###
 
 cities =
-  '臺北市':['松山區','信義區','大安區','中山區','中正區','大同區','萬華區','文山區','南港區','內湖區','士林區','北投區']
-  '高雄市':['鹽埕區','鼓山區','左營區','楠梓區','三民區','新興區','前金區','苓雅區','前鎮區','旗津區','小港區','鳳山區','林園區','大寮區','大樹區','大社區','仁武區','鳥松區','岡山區','橋頭區','燕巢區','田寮區','阿蓮區','路竹區','湖內區','茄萣區','永安區','彌陀區','梓官區','旗山區','美濃區','六龜區','甲仙區','杉林區','內門區','茂林區','桃源區','那瑪夏']
-  '新北市':["板橋區", "新莊區", "泰山區", "林口區", "淡水區", "金山區", "八里區", "萬里區", "石門區", "三芝區", "瑞芳區", "汐止區", "平溪區", "貢寮區", "雙溪區", "深坑區", "石碇區", "新店區", "坪林區", "烏來區", "中和區", "永和區", "土城區", "三峽區", "樹林區", "鶯歌區", "三重區", "蘆洲區", "五股區"]
+  '臺北市': ['松山區','信義區','大安區','中山區','中正區','大同區','萬華區','文山區','南港區','內湖區','士林區','北投區']
+  '高雄市': ['鹽埕區','鼓山區','左營區','楠梓區','三民區','新興區','前金區','苓雅區','前鎮區','旗津區','小港區','鳳山區','林園區','大寮區','大樹區','大社區','仁武區','鳥松區','岡山區','橋頭區','燕巢區','田寮區','阿蓮區','路竹區','湖內區','茄萣區','永安區','彌陀區','梓官區','旗山區','美濃區','六龜區','甲仙區','杉林區','內門區','茂林區','桃源區','那瑪夏']
+  '新北市': ["板橋區", "新莊區", "泰山區", "林口區", "淡水區", "金山區", "八里區", "萬里區", "石門區", "三芝區", "瑞芳區", "汐止區", "平溪區", "貢寮區", "雙溪區", "深坑區", "石碇區", "新店區", "坪林區", "烏來區", "中和區", "永和區", "土城區", "三峽區", "樹林區", "鶯歌區", "三重區", "蘆洲區", "五股區"]
   '臺中市':["中區", "東區", "南區", "西區", "北區", "北屯區", "西屯區", "南屯區", "太平區", "大里區", "霧峰區", "烏日區", "豐原區", "后里區", "東勢區", "石岡區", "新社區", "和平區", "神岡區", "潭子區", "大雅區", "大肚區", "龍井區", "沙鹿區", "梧棲區", "清水區", "大甲區", "外埔區", "大安區"]
   "臺南市": ["中西區", "東區", "南區", "北區", "安平區", "安南區", "永康區", "歸仁區", "新化區", " 左鎮區", "玉井區", "楠西區", "南化區", "仁德區", "關廟區", "龍崎區", "官田區", "麻豆區", " 佳里區", "西港區", "七股區", "將軍區", "學甲區", "北門區", "新營區", "後壁區", "白河區", " 東山區", "六甲區", "下營區", "柳營區", "鹽水區", "善化區", "大內區", "山上區", "新市區", "安定區"]
   "宜蘭縣": ["宜蘭市", "羅東鎮", "蘇澳鎮", "頭城鎮", "礁溪鄉", "壯圍鄉", "員山鄉", "冬山鄉", "五結鄉", "三星鄉", "大同鄉", "南澳鄉"]
@@ -45,9 +45,13 @@ Date::formatDate = -> "#{this.getFullYear()}-#{this.getMonth() + 1}-#{this.getDa
 $ ->
 
   show_cover = (data) ->
-    $('.placeholder img').each (index) ->
-      this.src = data[index+1] || ''
-      return
+    $('.icon-remove').remove()
+    $('.placeholder img').remove()
+    $('.placeholder').each (index) ->
+      _this = $(this)
+      if d = data[index+1]
+        _this.append("""<img src="#{d}" alt="">""")
+        _this.after('<i class="icon-remove"></i>')
 
   hook_event = ->
     # require 提示
@@ -132,14 +136,14 @@ $ ->
       ids = []
       # 日曆文字顏色
       color = [
+        '#9f735e'
         '#82d790'
-        '#bb6c63'
-        '#b5e0e7'
-        '#c0de69'
+        '#5ea862'
+        '#d93e22'
         '#6081e9'
         '#e091b2'
-        '#f6ec80'
-        '#f0d462'
+        '#e47836'
+        '#9a73e3'
       ]
       $('#calendar td').each ->
         id = $(this).data('id')
@@ -252,7 +256,7 @@ $ ->
         alert 'validate fail'
         return false
       $.post(this.action, $(this).serialize())
-        .done( (response) ->
+        .done( (response) =>
           if typeof response is 'string'
             refresh response
           else if typeof response is 'object'
@@ -260,7 +264,8 @@ $ ->
               if response.attachmentPartial
                 refresh response.attachmentPartial
               alert response.data
-              $('#lightbox_wrap').hide()
+              if this.id is 'modify_booking' or this.id is 'cancel_booking'
+                $(this).parent().animate {height: 0}, -> $(this).parents('tr').remove()
             else if response.error
               alert response.message
         )
@@ -320,22 +325,18 @@ $ ->
       .fail( -> alert '封面設定失敗' )
 
   # 刪除圖片
-  $(document).on 'click', '#pics img, #pics .icon-remove', -> unless $(this).parent().children('img').attr('src') is ''
-    $.getJSON('restaurant_manage/image_destroy', {pic_id: $(this).parents('.float').data('id')})
-    .done( (response) ->
-      if response.success
-        show_cover response.image_path
-      else if response.error
-        alert "封面設定失敗，原因：#{response.message}"
-      else
-        alert '封面設定失敗'
-    )
-    .fail( -> alert '圖片刪除失敗' )
-
-  $(document).on 'mouseover', '#pics .placeholder', -> unless $(this).find('img').attr('src') is ''
-    $(this).find('.icon-remove').show()
-
-  $(document).on 'mouseout', '#pics .placeholder', -> $('#pics .icon-remove').hide()
+  $(document).on 'click', '#pics .icon-remove', ->
+    if $(this).parents('.float').find('img').attr('src') isnt '' and confirm '您確定要刪除這張圖片嗎？'
+      $.getJSON('restaurant_manage/image_destroy', {pic_id: $(this).parents('.float').data('id')})
+      .done( (response) ->
+        if response.success
+          show_cover response.image_path
+        else if response.error
+          alert "封面設定失敗，原因：#{response.message}"
+        else
+          alert '封面設定失敗'
+      )
+      .fail( -> alert '圖片刪除失敗' )
 
   $(document).on 'change', '#restaurant_city', ->
     data = cities[$(this).val()]
@@ -371,6 +372,35 @@ $ ->
           alert('發生未預期的回應，請告知CoDream小組處理!')
       )
       .fail( -> alert('oops! 出現錯誤了!') )
+
+  $(document).on 'click', '.daily_info .modify', (e) ->
+    e.preventDefault()
+    _this = $(this)
+    tr = _this.parents('tr')
+    id = tr.data('id')
+    # 讀取修改訂位界面
+    $.get('/restaurant_manage/modify_booking', {booking_id: id}, 'html')
+      .done( (response) ->
+        new_tr = $($.parseHTML(response, document, true))
+        tr.after(new_tr)
+        new_tr.find('#wrapper').animate(height: 450)
+      )
+      .fail( -> alert '讀取失敗' )
+
+  $(document).on 'click', '.daily_info .delete', (e) ->
+    e.preventDefault()
+    _this = $(this)
+    tr = _this.parents('tr')
+    id = tr.data('id')
+    # 讀取修改訂位界面
+    $.get('/restaurant_manage/delete_booking', {id: id}, 'html')
+      .done( (response) ->
+        new_tr = $($.parseHTML(response, document, true))
+        tr.after(new_tr)
+        new_tr.find('#wrapper').animate(height: 300)
+      )
+      .fail( -> alert '讀取失敗' )
+
 
 
 
