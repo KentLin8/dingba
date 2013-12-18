@@ -74,6 +74,9 @@ class RestaurantManageController < ApplicationController
     if @conditions.blank?
       redirect_to res_manage_supply_time_path
     else
+      # @conditions = @conditions.to_a
+      @special_conditions = @conditions.select { |x| x.is_special == 't' }
+      @normal_conditions = @conditions.select { |x| x.is_special != 't' }
       render 'restaurant_manage/supply_condition', :layout => false
     end
   end

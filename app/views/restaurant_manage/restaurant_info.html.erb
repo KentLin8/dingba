@@ -2,6 +2,10 @@
 <%= form_for :restaurant ,:url => "restaurant_manage/restaurant_info_save" do |f| %>      <!-- @res, :url => res_mange_info_save_path-->
     <%= f.hidden_field :id %>
     <table class="table">
+      <colgroup>
+        <col style="width: 140px">
+        <col>
+      </colgroup>
       <tr>
         <td>餐廳名稱<i class="required">*</i></td>
         <td><%= f.text_field :name, required: true %>
@@ -11,10 +15,10 @@
         <td>餐廳地址<i class="required">*</i></td>
         <td>
 
-          縣市
+          縣市&nbsp;
           <%= f.select(:city,
                        options_for_select([
-                          ['請選擇縣市',''],
+                          ['選擇縣市',''],
                           ['新北市','新北市'],
                           ['臺北市','臺北市'],
                           ['臺中市','臺中市'],
@@ -37,10 +41,10 @@
                           ['嘉義市','嘉義市'],
                           ['金門縣','金門縣'],
                           ['連江縣','連江縣']
-                        ]), {}, {:class => 'input-medium','data-value' => @restaurant.city }) %>
-          區域
+                        ]), {}, {:class => 'input-small','data-value' => @restaurant.city }) %>
+          區域&nbsp;
           <%= f.select(:area,
-          options_for_select([['請選擇區域','']]), {}, {:class => 'input-medium','data-value' => @restaurant.area}) %><br><br>
+          options_for_select([['選擇區域','']]), {}, {:class => 'input-small','data-value' => @restaurant.area}) %><br><br>
           <%= f.text_field :address, required: true %>
         </td>
       </tr>
@@ -85,7 +89,7 @@
       </tr>
       <tr>
         <td>供位E-mail<i class="required">*</i></td>
-        <td><%= f.email_field :supply_email, required: true %></td>
+        <td><%= f.text_field :supply_email, required: true %></td>
       </tr>
       <tr>
         <td>網址名稱1</td>

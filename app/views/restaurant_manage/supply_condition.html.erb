@@ -1,42 +1,68 @@
-
-<div class="btn btn-primary" style="font-size: 13px" id="new_condition">
-  <i class="icon-plus icon-white"></i>
-  新增一組可供訂位的時間
+<div style="color: rgb(127,23,0)">
+  機動性時間為“專屬日曆”中“月設定管理”針對個別日期所做的“修改供位設定”調整。<br>
+  預設值以當天日期命名，臨時設定的內容為絕對優先(大於下方訂位的常態設定)。
 </div>
 
-<br>已設立時間：<br>
-
-<table>
-  <tbody id="period_set">
-  <% @conditions.each_with_index do |c, index|%>
-      <tr class="sortable" data-sort="<%= index %>">
-        <td>
-          <div class="dropdown">
-            <input name="con_id" type="hidden" value="<%= c.id %>">
-            <a class="dropdown-toggle" data-toggle="dropdown" href="#"><%= c.name %><b class="caret pull-right"></b></a>
-            <ul class="dropdown-menu" role="menu">
-              <li><a data-id="<%= c.id %>" class="edit_condition">編輯</a></li>
-              <li><a data-id="<%= c.id %>" class="destroy_condition">刪除</a></li>
-            </ul>
-          </div>
-        </td>
-        <td>
-            <label class="radio inline">
-              <input type="radio" name="con_status<%= index %>" value="t" <%= c.status == 't' ? 'checked="checked"' : '' %>>
-              開啓
-            </label>
-        </td>
-        <td>
-            <label class="radio inline">
-              <input type="radio" name="con_status<%= index %>" value="f" <%= c.status == 'f' ? 'checked="checked"' : '' %>>
-              關閉
-            </label>
-        </td>
-      </tr>
+<div id="special_time">
+  <% @special_conditions.each do |c| %>
+    <div>
+      <div class="dropdown">
+        <input name="con_id" type="hidden" value="<%= c.id %>">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><%= c.name %><b class="caret pull-right"></b></a>
+        <ul class="dropdown-menu" role="menu">
+          <li><a data-id="<%= c.id %>" class="edit_condition">編輯</a></li>
+          <li><a data-id="<%= c.id %>" class="destroy_condition">刪除</a></li>
+        </ul>
+      </div>
+      &nbsp;
+      <label class="radio inline">
+        <input type="radio" name="con_status<%= c.id %>" value="t" <%= c.status == 't' ? 'checked="checked"' : '' %>>
+        開啓
+      </label>
+      &nbsp;
+      <label class="radio inline">
+        <input type="radio" name="con_status<%= c.id %>" value="f" <%= c.status == 'f' ? 'checked="checked"' : '' %>>
+        關閉
+      </label>
+    </div>
   <% end %>
-  </tbody>
-</table>
+</div>
+<br><br>
+<div class="btn btn-primary" style="font-size: 13px" id="new_condition">
+  <i class="icon-plus icon-white"></i>
+  新增一組可提供訂位的常態時間
+</div>
 
+<div style="color: rgb(127,23,0)">
+  因特別時段 / 節慶設定的供位時間會與日常供位設定發生時間重疊，<br>
+  請餐廳經營者設立優先順序(以滑鼠拖曳方式，最上面為首)。
+</div>
+常態設定：
+<div id="period_set">
+  <% @normal_conditions.each_with_index do |c, index|%>
+    <div class="sortable" data-sort="<%= index %>">
+      <div class="dropdown">
+        <input name="con_id" type="hidden" value="<%= c.id %>">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><%= c.name %><b class="caret pull-right"></b></a>
+        <ul class="dropdown-menu" role="menu">
+          <li><a data-id="<%= c.id %>" class="edit_condition">編輯</a></li>
+          <li><a data-id="<%= c.id %>" class="destroy_condition">刪除</a></li>
+        </ul>
+      </div>
+      &nbsp;
+      <label class="radio inline">
+        <input type="radio" name="con_status<%= c.id %>" value="t" <%= c.status == 't' ? 'checked="checked"' : '' %>>
+        開啓
+      </label>
+      &nbsp;
+      <label class="radio inline">
+        <input type="radio" name="con_status<%= c.id %>" value="f" <%= c.status == 'f' ? 'checked="checked"' : '' %>>
+        關閉
+      </label>
+    </div>
+  <% end %>
+</div>
+<br>
 <table id="reserve_table">
     <tr>
       <td>最晚接受訂位期間</td>
@@ -101,11 +127,11 @@
         var ids = ''
         var status = ''
 
-        $("#period_set [name='con_id']").each(function(){
+        $("#form_place [name='con_id']").each(function(){
             ids = ids + ',' + $(this).val();
         });
 
-        $('#period_set input:radio:checked').each(function(){
+        $('#form_place input:radio:checked').each(function(){
             status = status + ',' + $(this).val();
         });
 
