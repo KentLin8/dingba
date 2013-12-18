@@ -42,8 +42,8 @@ DingBa::Application.configure do
       :openssl_verify_mode  => 'none'
   }
 end
-class NilClass
-  def method_missing *args
-    nil
-  end
-end
+#class NilClass
+#  def method_missing *args
+#    nil
+#  end
+#end
