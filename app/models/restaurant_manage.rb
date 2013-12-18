@@ -197,6 +197,7 @@ class RestaurantManage
           target_zones.push(TimeZone.new)
         end
         time_zone_save(origin_zones, condition_id, target_zones)
+        calculate_day_booking(condition_id)
 
         return {:success => true, :data => '新增供位條件成功!'}
       end
@@ -480,6 +481,15 @@ class RestaurantManage
 
         conditions = SupplyCondition.where(:restaurant_id => restaurant_id).where(:status => 't').where('range_begin <= ?', special_day_begin).where('range_end >= ?',special_day_begin).order('sequence ASC')
 
+        if conditions.blank?
+          zones_books = []
+          zone_booking = ZoneBooking.new
+          zone_booking.name = '今日訂位資訊'
+          zone_booking.books = day_books
+          zones_books.push(zone_booking)
+          return zones_books
+        end
+
         effect_conditions = nil
         conditions.each do |c|
           if c.available_week.split(',').include?(special_day.wday.to_s)
@@ -595,8 +605,6 @@ class RestaurantManage
         end
 
         day_begin = Time.parse(booking.booking_time.strftime("%Y-%m-%d") + " 00:00")
-
-        #要不要抓t 條件和時間區段 問題 問kent
         conditions = SupplyCondition.where(:restaurant_id => booking.restaurant_id, :status => 't').where('range_begin <= ?', day_begin).where('range_end >= ?',day_begin).order('sequence ASC')
 
         if conditions.blank?
@@ -636,6 +644,44 @@ class RestaurantManage
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/models/restaurant_manage.rb  ,Method:cancel_booking(origin_booking)"
       return {:error => true, :message => '阿! 發生錯誤了! 取消訂位失敗!'}
     end
+  end
+
+
+  def calculate_day_booking(condition_id)
+    # no begin please ,it will affect the transaction
+    origin_condition = SupplyCondition.find(condition_id)
+    if origin_condition.blank?
+      return false
+    end
+
+    day_bookings = DayBooking.where(:restaurant_id => origin_condition.restaurant_id).where('day >= ?', origin_condition.range_begin).where('day <= ?', origin_condition.range_end).order('sequence day')
+    if day_bookings.blank?
+      return
+    end
+
+    #day_begin = Time.parse(booking.booking_time.strftime("%Y-%m-%d") + " 00:00")
+    conditions = SupplyCondition.where(:restaurant_id => origin_condition.restaurant_id, :status => 't').where('range_begin <= ?', origin_condition.range_begin).where('range_end >= ?',origin_condition.range_end).order('sequence ASC')
+
+    temp_bookings = Booking.where(:restaurant_id => origin_condition.restaurant_id).where('booking_time >= ?',  origin_condition.range_begin).where('booking_time <= ?',  origin_condition.range_end).group('booking_time').sum(:num_of_people)
+
+    bookings_of_select_day = []
+    temp_bookings.each do |b|
+      b[0] = b[0].strftime("%Y-%m-%d %H:%M")       #把相同時段的]人數統計出來
+      bookings_of_select_day.push(b)
+    end
+
+    if conditions.blank?
+      #把所有bookings 直接以other 丟到day_booking
+    end
+
+    conditions.each do |c|
+      bookings_of_select_day.each do |b|
+
+      end
+    end
+
+    # not complete
+
   end
 
 

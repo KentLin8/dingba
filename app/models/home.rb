@@ -109,7 +109,7 @@ class Home
         #booking_day_end = (booking_day + 1.days).strftime("%Y-%m-%d ")
         booking_day_begin = Time.parse(booking_day.strftime("%Y-%m-%d") + " 00:00")
         booking_day_end = Time.parse(booking_day.strftime("%Y-%m-%d") + " 23:59")
-        temp_bookings = Booking.where('booking_time >= ?', booking_day_begin).where('booking_time <= ?', booking_day_end).group('booking_time').sum(:num_of_people)
+        temp_bookings = Booking.where(:restaurant_id => restaurant.id).where('booking_time >= ?', booking_day_begin).where('booking_time <= ?', booking_day_end).group('booking_time').sum(:num_of_people)
 
         bookings_of_select_day = []
 
@@ -367,7 +367,7 @@ class Home
 
         booking_day_begin = Time.parse(booking_day.strftime("%Y-%m-%d") + " 00:00")
         booking_day_end = Time.parse(booking_day.strftime("%Y-%m-%d") + " 23:59")
-        temp_bookings = Booking.where('booking_time >= ?', booking_day_begin).where('booking_time <= ?', booking_day_end).group('booking_time').sum(:num_of_people)
+        temp_bookings = Booking.where(:restaurant_id => restaurant.id).where('booking_time >= ?', booking_day_begin).where('booking_time <= ?', booking_day_end).group('booking_time').sum(:num_of_people)
 
         bookings_of_select_day = []
 
