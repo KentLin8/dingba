@@ -1,14 +1,14 @@
-
+修改 <span style="color: rgb(127,23,0)"><%= @select_date %></span> 的供位設定爲<br>
 <table class="period table table-bordered">
-  <tr>
-    <td style="width:5%">啟用</td>
-    <td style="width:15%">時段名稱</td>
-    <td style="width:40%">時段區間</td>
-    <td style="width:15%">總供位</td>
-    <td style="width:10%">單次</br>供位 <a class="ans" title="該時段餐廳能提供給單批客人桌椅的最大數量限制。">?</a></td>
-    <td style="width:15%">15分鐘</br>總供位 <a class="ans" title="為避免餐廳無法在短時間接待太大量的客人，因此設定每15分鐘內的總訂位客人不超過一定的數量，以保持良好的服務品質。">?</a></td>
+<tr>
+    <td style="width:8%">啟用</td>
+    <td style="width:14%">時段名稱</td>
+    <td style="width:33%;">時段區間</td>
+    <td style="width:13%">總供位</td>
+    <td style="width:13%">單次供位 <a data-original-title="該時段餐廳能提供給單批客人桌椅的最大數量限制。" class="ans" title="">?</a></td>
+    <td style="width:19%">15分鐘總供位 <a data-original-title="為避免餐廳無法在短時間接待太大量的客人，因此設定每15分鐘內的總訂位客人不超過一定的數量，以保持良好的服務品質。" class="ans" title="">?</a></td>
   </tr>
-  <input name="special_day" type="hidden" value="<%= @special_day %>">
+  <input name="special_day" type="hidden" value="<%= @select_date %>">
 
     <% @time_zones.each_with_index do |t, index|%>
         <tr>

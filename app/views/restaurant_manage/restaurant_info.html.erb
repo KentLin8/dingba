@@ -7,12 +7,12 @@
         <col>
       </colgroup>
       <tr>
-        <td>餐廳名稱<i class="required">*</i></td>
+        <td class="title"><i class="required">*</i>餐廳名稱</td>
         <td><%= f.text_field :name, :required => true, :class => 'input-xxlarge' %>
         </td>
       </tr>
       <tr>
-        <td>餐廳地址<i class="required">*</i></td>
+        <td class="title"><i class="required">*</i>餐廳地址</td>
         <td>
 
           縣市&nbsp;
@@ -41,19 +41,20 @@
                           ['嘉義市','嘉義市'],
                           ['金門縣','金門縣'],
                           ['連江縣','連江縣']
-                        ]), {}, {:class => 'input-small','data-value' => @restaurant.city }) %>
+                        ]), {}, {'data-value' => @restaurant.city, :style => 'width: 100px' }) %>
           區域&nbsp;
           <%= f.select(:area,
-          options_for_select([['選擇區域','']]), {}, {:class => 'input-small','data-value' => @restaurant.area}) %><br>
+          options_for_select([['選擇區域','']]), {}, {:style => 'width: 100px', 'data-value' => @restaurant.area}) %>
+          <div style="margin: 5px"></div>
           <%= f.text_field :address, {:required => true, :class => 'input-xxlarge'} %>
         </td>
       </tr>
       <tr>
-        <td>餐廳電話</td>
+        <td class="title">餐廳電話</td>
         <td><%= f.phone_field :phone, :class => 'input-xxlarge' %></td>
       </tr>
       <tr>
-        <td>餐廳類別</td>
+        <td class="title">餐廳類別</td>
         <td><%= f.select(:res_type,
                          options_for_select(
                                  [['請選擇','0'],['台菜海鮮','1'],['美式料理','2'],
@@ -68,15 +69,15 @@
 
       </tr>
       <tr>
-        <td>餐廳特色</td>
+        <td class="title">餐廳特色</td>
         <td><%= f.text_area :feature, :class => 'input-xxlarge' %></td>
       </tr>
       <tr>
-        <td>營業時間<i class="required">*</i></td>
+        <td class="title"><i class="required">*</i>營業時間</td>
         <td><%= f.text_area :business_hours, :required => true, :class => 'input-xxlarge' %></td>
       </tr>
       <tr>
-        <td>付款方式</td>
+        <td class="title">付款方式</td>
         <td>
           <label class="checkbox inline"><input type="checkbox" value="1" name="restaurant[pay_type_cash]" <%= @pay_type.include?('1') ? 'checked' : '' %>>現金</label>
           <label class="checkbox inline"><input type="checkbox" value="2" name="restaurant[pay_type_CreditCard]" <%= @pay_type.include?('2') ? 'checked' : '' %>>信用卡</label>
@@ -84,35 +85,35 @@
         </td>
       </tr>
       <tr>
-        <td>供位聯絡人<i class="required">*</i></td>
+        <td class="title"><i class="required">*</i>供位聯絡人</td>
         <td><%= f.text_field :supply_person, :required => true, :class => 'input-xxlarge' %></td>
       </tr>
       <tr>
-        <td>供位E-mail<i class="required">*</i></td>
+        <td class="title"><i class="required">*</i>供位E-mail</td>
         <td><%= f.text_field :supply_email, :required => true, :class => 'input-xxlarge' %></td>
       </tr>
       <tr>
-        <td>網址名稱1</td>
+        <td class="title">網址名稱1</td>
         <td><%= f.text_field :info_url1, :required => true, :class => 'input-xxlarge' %></td>
       </tr>
       <tr>
-        <td>餐廳網址1</td>
+        <td class="title">餐廳網址1</td>
         <td><%= f.text_field :url1, :required => true, :class => 'input-xxlarge' %></td>
       </tr>
       <tr>
-        <td>網址名稱2</td>
+        <td class="title">網址名稱2</td>
         <td><%= f.text_field :info_url2, :required => true, :class => 'input-xxlarge' %></td>
       </tr>
       <tr>
-        <td>餐廳網址2</td>
+        <td class="title">餐廳網址2</td>
         <td><%= f.text_field :url2, :required => true, :class => 'input-xxlarge' %></td>
       </tr>
       <tr>
-        <td>網址名稱3</td>
+        <td class="title">網址名稱3</td>
         <td><%= f.text_field :info_url3, :required => true, :class => 'input-xxlarge' %></td>
       </tr>
       <tr>
-        <td>餐廳網址3</td>
+        <td class="title">餐廳網址3</td>
         <td><%= f.text_field :url3, :required => true, :class => 'input-xxlarge' %></td>
       </tr>
       <tr>

@@ -28,8 +28,14 @@
 .btn-primary:focus
   background-color: rgb(127,23,0)
 
+td.title
+  text-align: right
+
 .cover
   border: 1px solid #FF0000 !important
+
+#tab_day_booking
+  font-size: 14px
 
 #copyright
   text-align: center
@@ -90,6 +96,9 @@
     display: block
     font-size: 16px
     line-height: 35px
+    text-decoration: none
+  > a:hover
+    text-decoration: none
   > a:before
     content: '• '
 #wrapper
@@ -101,6 +110,7 @@
   width: 90px
   text-align: center
   overflow: hidden
+  margin: 0 8px
   .now
     background-color: rgb(127,23,0)
     color: #FFFFFF
@@ -180,13 +190,18 @@
 
 #calendar
   margin: 12px 0
-  table-layout: fixed
   .date
     font-size: 12px
     color: #bbbbbb
-  td
+  > td
     width: 14%
-    text-overflow: ellipsis
+  .clean-table
+    border: none
+    width: 100%
+    font-size: 12px
+    td
+      border: none
+      padding: 0
 
 #lightbox_wrap
   position: fixed
@@ -204,13 +219,14 @@
   background-color: #ffffff
   border: 2px solid rgb(190,190,190)
   width: 900px
-  // height: 80%
-  // padding: 10px
   overflow: auto
 
 .daily_info
   position: relative
   margin: 30px 0
+  font-size: 12px
+  .btn
+    font-size: 12px
   th
     text-align: left
   .mark1, .mark2
