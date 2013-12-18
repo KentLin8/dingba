@@ -53,7 +53,7 @@
                   <% unless x.method("n#{i}".to_sym).call.blank? %>
                     <tr>
                       <td><%= x.method("n#{i}".to_sym).call %></td>
-                      <td><%= @books[i].method("zone#{i}".to_sym).call %>/ <%= x.method("z#{i}".to_sym).call %></td>
+                      <td style="text-align: right"><%= @books[i].method("zone#{i}".to_sym).call %>/ <%= x.method("z#{i}".to_sym).call %></td>
                     </tr>
                   <% end %>
                 <% end %>

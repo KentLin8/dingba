@@ -160,7 +160,7 @@ class RestaurantManageController < ApplicationController
   # GET ==== Function: show special time view
   # =========================================================================
   def special_time
-    @special_day = params[:special_day]
+    @select_date = params[:special_day]
     @time_zones = RestaurantManage.get_time_zones(params[:condition_id])
     render 'restaurant_manage/_time_zones', :layout => false
   end
@@ -190,7 +190,7 @@ class RestaurantManageController < ApplicationController
   # =========================================================================
   def day_booking
     @zones_books = RestaurantManage.get_day_books(@restaurant.id, params[:special_day])
-    @special_day = params[:special_day]
+    @select_date = params[:special_day]
     render 'restaurant_manage/_day_booking', :layout => false
   end
 

@@ -311,7 +311,7 @@ $ ->
   # 設定封面
   $(document).on 'click', '#pics :radio', ->
     p = $(this).parents('.float')
-    return false if p.find('img').attr('src') is ''
+    return false unless p.find('img').attr('src')
     $.getJSON('restaurant_manage/image_cover_save', {cover_id: p.data('id')})
       .done( (response) ->
         if response.success

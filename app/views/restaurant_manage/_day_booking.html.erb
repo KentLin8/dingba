@@ -1,6 +1,9 @@
-<input type="text" name="" id="show_day" class="datepicker input-small" value="<%= @show_select_date %>"><br>
-<span style="color: rgb(127,23,0)"><%= @special_day %></span> 的訂位資料為
+<input type="text" name="" id="show_day" class="datepicker input-small" value="<%= @select_date %>"><br>
+<span style="color: rgb(127,23,0)"><%= @select_date %></span> 的訂位資料為：
 <br>
+<% if @zones_books.length == 0 %>
+  目前無人訂位
+<% end %>
 <% @zones_books.each do |z| %>
   <table class="table daily_info">
     <tr>
@@ -23,7 +26,7 @@
       <td><%= b.num_of_people %></td>
       <td><%= b.name %></td>
       <td><%= b.phone %></td>
-      <td><%= b.email %></td>
+      <td><a href="mailto:<%= b.email %>"><%= b.email %></a></td>
       <td><%= b.remark %></td>
       <td><a href="" class="btn modify">修改</a></td>
       <td><a href="" class="btn delete">刪除</a></td>
@@ -32,3 +35,42 @@
     <tr><td colspan="7"></td></tr>
   </table>
 <% end %>
+<style>
+  .daily_info {
+    table-layout: fixed;
+  }
+</style>
+<table class="table daily_info">
+  <tr>
+    <td style="width: 10%"></td>
+    <td style="width: 10%"></td>
+    <td style="width: 15%"></td>
+    <td style="width: 15%"></td>
+    <td style="width: 15%"></td>
+    <td style="width: 15%"></td>
+    <td style="width: 10%"></td>
+    <td style="width: 10%"></td>
+  </tr>
+  <tr>
+    <th colspan="8"><div class="mark1"></div>&nbsp;gggggg</th>
+  </tr>
+  <tr>
+    <td>時間</td>
+    <td>人數</td>
+    <td>訂位人大名</td>
+    <td>訂位人電話</td>
+    <td>訂位人EMail</td>
+    <td>備註</td>
+    <td></td>
+    <td></td>
+  <tr>
+    <td>2013/12/18<br>19:00</td>
+    <td>3</td>
+    <td>囧囧囧</td>
+    <td>0398-887-999</td>
+    <td><a href="mailto:<%= 'b.email' %>"><%= 'b.email' %></a></td>
+    <td>很長很長很長很長很長很長很長很長很長很長很長很長很長很長很長很長很長很長很長很長很長很長很長很長很長很長很長很長很長很長很長很長很長很長很長很長很長很長很長很長很長很長很長很長</td>
+    <td><a href="" class="btn modify">修改</a></td>
+    <td><a href="" class="btn delete">刪除</a></td>
+  </tr>
+</table>
