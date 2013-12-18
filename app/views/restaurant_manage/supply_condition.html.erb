@@ -5,7 +5,7 @@
 
 <div id="special_time">
   <% @special_conditions.each do |c| %>
-    <div>
+    <div class="row">
       <div class="dropdown">
         <input name="con_id" type="hidden" value="<%= c.id %>">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#"><%= c.name %><b class="caret pull-right"></b></a>
