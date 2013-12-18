@@ -39,7 +39,7 @@
 
       <%= tag('tr') if i % 7 == 0 %>
 
-        <td data-id="<%= x.con_id %>">
+        <td data-id="<%= x.con_id %>" class="cell">
           <% if x.day != 0 %>
           <div class="date"><%= @month %>/<%= x.day %></div>
           <% end %>

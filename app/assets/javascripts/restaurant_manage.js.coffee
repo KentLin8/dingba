@@ -145,13 +145,13 @@ $ ->
         '#e47836'
         '#9a73e3'
       ]
-      $('#calendar td').each ->
+      $('#calendar .cell').each ->
         id = $(this).data('id')
         ids.push(id) unless id in ids
       color_bind = {}
       for id, index in ids
         color_bind[id] = color[index]
-      $('#calendar td').each ->
+      $('#calendar .cell').each ->
         _this = $(this)
         _this.css('color', color_bind[_this.data('id')])
       $('#show').html("""<div class="show" style="color: #{color_bind[id]}">#{name}</div>""" for id, name of id_with_name)
@@ -230,7 +230,7 @@ $ ->
 
   $('#lightbox_wrap').click (e) -> $(this).hide() if e.target is this
 
-  $(document).on 'click', '#calendar td', ->
+  $(document).on 'click', '#calendar .cell', ->
     $.get('restaurant_manage/special_time', {condition_id: $(this).data('id'), special_day: $('#year').val() + '/' + $(this).find('.date').html()})
     .done( (response) ->
         if typeof response is 'string'
@@ -377,6 +377,7 @@ $ ->
     e.preventDefault()
     _this = $(this)
     tr = _this.parents('tr')
+    tr.next().remove() if tr.next().hasClass('form')
     id = tr.data('id')
     # 讀取修改訂位界面
     $.get('/restaurant_manage/modify_booking', {booking_id: id}, 'html')
@@ -391,6 +392,7 @@ $ ->
     e.preventDefault()
     _this = $(this)
     tr = _this.parents('tr')
+    tr.next().remove() if tr.next().hasClass('form')
     id = tr.data('id')
     # 讀取修改訂位界面
     $.get('/restaurant_manage/delete_booking', {id: id}, 'html')
