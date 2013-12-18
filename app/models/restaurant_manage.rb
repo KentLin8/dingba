@@ -568,8 +568,8 @@ class RestaurantManage
       booking.name = origin_booking[:name]
       booking.phone = origin_booking[:phone]
       booking.email = origin_booking[:email]
-      booking.booking_time = origin_booking[:booking_time]
-      booking.num_of_people = origin_booking[:num_of_people]
+      booking.booking_time = Time.parse(origin_booking[:booking_time].to_s)
+      booking.num_of_people = origin_booking[:num_of_people].to_i
       booking.remark = origin_booking[:remark]
       booking.save
 
@@ -582,14 +582,56 @@ class RestaurantManage
 
   def self.cancel_booking(origin_booking)
     begin
-      booking = Booking.find(origin_booking[:id].to_i)
-      booking.status = origin_booking[:status]
-      booking.cancel_note = origin_booking[:cancel_note] if booking.status == '6'
-      booking.save
+        Booking.transaction do
+        booking = Booking.find(origin_booking[:id].to_i)
+        booking.status = origin_booking[:status]
+        booking.cancel_note = origin_booking[:cancel_note] if booking.status == '6'
+        booking.save
 
-      MyMailer.cancel_booking(booking.email ,booking).deliver
+        daybooking = DayBooking.where(:restaurant_id => booking.restaurant_id, :day => Date.parse(booking.booking_time.to_s))
+        if daybooking.blank?
+          Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/models/restaurant_manage.rb  ,Method:cancel_booking(origin_booking)"
+          return {:error => true, :message => '阿! 發生錯誤了! 取消訂位失敗!'}
+        end
 
-      return {:success => true, :data => '已取消訂位!'}
+        day_begin = Time.parse(booking.booking_time.strftime("%Y-%m-%d") + " 00:00")
+
+        #要不要抓t 條件和時間區段 問題 問kent
+        conditions = SupplyCondition.where(:restaurant_id => booking.restaurant_id, :status => 't').where('range_begin <= ?', day_begin).where('range_end >= ?',day_begin).order('sequence ASC')
+
+        if conditions.blank?
+          daybooking.other = daybooking.zone1 + daybooking.zone2 + daybooking.zone3 + daybooking.zone4 + daybooking.zone5 + daybooking.zone6
+          daybooking.save
+          return {:success => true, :data => '已取消訂位!'}
+        end
+
+        condition = conditions.first
+        zones = TimeZone.where(:supply_condition_id => condition.id, :status => 't')
+        zones.each do |z|
+          if z.range_begin <= booking.booking_time && z.range_end > booking.booking_time
+            if z.sequence == 0
+              daybooking.zone1 = daybooking.zone1 - booking.num_of_people
+            elsif z.sequence == 1
+              daybooking.zone2 = daybooking.zone2 - booking.num_of_people
+            elsif z.sequence == 2
+              daybooking.zone3 = daybooking.zone3 - booking.num_of_people
+            elsif z.sequence == 3
+              daybooking.zone4 = daybooking.zone4 - booking.num_of_people
+            elsif z.sequence == 4
+              daybooking.zone5 = daybooking.zone5 - booking.num_of_people
+            elsif z.sequence == 5
+              daybooking.zone6 = daybooking.zone6 - booking.num_of_people
+            end
+            break;
+          end
+        end
+
+        daybooking.save
+
+        MyMailer.cancel_booking(booking.email ,booking).deliver
+
+        return {:success => true, :data => '已取消訂位!'}
+      end
     rescue => e
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/models/restaurant_manage.rb  ,Method:cancel_booking(origin_booking)"
       return {:error => true, :message => '阿! 發生錯誤了! 取消訂位失敗!'}
