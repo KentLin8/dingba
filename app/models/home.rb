@@ -5,7 +5,7 @@ class Home
       return Restaurant.where(:res_url => restaurant_url).first
     rescue => e
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/Models/home.rb  ,Method:get_restaurant(restaurant_url)"
-      return nil
+      return Restaurant.new
     end
   end
 
@@ -74,7 +74,6 @@ class Home
         #return {:error => true, :message => '目前這個時段，餐廳沒有開放的訂位，請選擇較後面的日期查看喲!'}
       end
       #=========================================================================
-
       if !restaurant.available_type.blank? && restaurant.available_type == '0'
         limit_hour = restaurant.available_hour
       elsif !restaurant.available_type.blank? && restaurant.available_type == '1'
@@ -86,16 +85,17 @@ class Home
         is_today = true
       end
 
-      #if is_today && !limit_day_time.blank?
-      #  booking_condition = BookingCondition.new
-      #  booking_condition.error = true
-      #  booking_condition.message = '目前這個時段，餐廳沒有開放的訂位，請選擇較後面的日期查看喲!'
-      #  return booking_condition
-      #  #return {:error => true, :message => '目前這個時段，餐廳沒有開放的訂位，請選擇較後面的日期查看喲!'}
-      #end
+      if is_today && !limit_day_time.blank?
+        booking_condition = BookingCondition.new
+        booking_condition.error = true
+        booking_condition.message = '目前這個時段，餐廳沒有開放的訂位，請選擇較後面的日期查看喲!'
+        return booking_condition
+        #return {:error => true, :message => '目前這個時段，餐廳沒有開放的訂位，請選擇較後面的日期查看喲!'}
+      end
       #=========================================================================
 
       booking_condition = BookingCondition.new
+      booking_condition.error = false
       booking_condition.option_max_people = []    # [1, 2, 3, 4 ....]
       booking_condition.option_of_people = []     # [zone.each_allow, zone.id, zone.name], [....]
       booking_condition.option_of_time = []       # ['12:00', '12:15' ....]
