@@ -28,6 +28,8 @@ DingBa::Application.routes.draw do
   get  'home/get_condition'
   get  'home/notice_friend'
   get  'home/cancel_booking'
+
+  post 'home/save_booking'
   post 'home/save_cancel_booking'
 
   #==========================================================================

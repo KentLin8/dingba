@@ -656,49 +656,65 @@ class Home
       is_pass = false
       restaurant = Restaurant.find(origin_booking[:restaurant_id].to_i)
 
-      if origin_booking[:booker_id].blank? && !booker.blank?
+      booker_id = nil
+
+      if booker.id.blank?
         is_pass = true
+        booker_id = nil
       elsif booker.id != origin_booking[:booker_id].to_i       # check null params value can to_i ?
         return {:error => true, :message => '阿! 發生錯誤了! 訂位失敗!'}
       elsif booker.id == origin_booking[:booker_id].to_i
         is_pass = true
+        booker_id = booker.id
       end
 
       if is_pass == true
         Booking.transaction do
           booking = Booking.new
-          booking.user_id = booker.id
-          booking.restaurant_id = restaurant_id
+          booking.user_id = booker_id
+          booking.restaurant_id = restaurant.id
           booking.res_url = restaurant.res_url
           booking.restaurant_name = restaurant.name
           booking.restaurant_address = restaurant.city + restaurant.area + restaurant.address
           booking.booking_time = Time.parse(origin_booking[:booking_time].to_s)
-          booking.num_of_people = origin_booking[:num_of_people].to_i
+          booking.num_of_people = origin_booking[:booking_people].to_i
           booking.name = origin_booking[:booker_name]
           booking.phone = origin_booking[:booker_phone]
           booking.email = origin_booking[:booker_email]
-          booking.remark = origin_booking[:booker_remark]
+          booking.remark = origin_booking[:remark]
+          booking.status = '0'
           booking.save
 
           time_zone = TimeZone.find( origin_booking[:time_zone_id].to_i)
-          day_booking = DayBooking.where(:restaurant_id => restaurant_id, :day => Date.parse(booking.booking_time.to_s)).first
+
+          day_booking = DayBooking.where(:restaurant_id => restaurant, :day => Date.parse(booking.booking_time.to_s)).first
 
           if day_booking.blank?
             day_booking = DayBooking.new
+            day_booking.restaurant_id = restaurant.id
+            day_booking.day = Date.parse(booking.booking_time.to_s)
+            day_booking.zone1 = 0
+            day_booking.zone2 = 0
+            day_booking.zone3 = 0
+            day_booking.zone4 = 0
+            day_booking.zone5 = 0
+            day_booking.zone6 = 0
+            day_booking.other = 0
+
           end
 
           if time_zone.sequence == 0
             day_booking.zone1 = day_booking.zone1 + booking.num_of_people
           elsif time_zone.sequence == 1
-            day_booking.zone1 = day_booking.zone2 + booking.num_of_people
+            day_booking.zone2 = day_booking.zone2 + booking.num_of_people
           elsif time_zone.sequence == 2
-            day_booking.zone1 = day_booking.zone3 + booking.num_of_people
+            day_booking.zone3 = day_booking.zone3 + booking.num_of_people
           elsif time_zone.sequence == 3
-            day_booking.zone1 = day_booking.zone4 + booking.num_of_people
+            day_booking.zone4 = day_booking.zone4 + booking.num_of_people
           elsif time_zone.sequence == 4
-            day_booking.zone1 = day_booking.zone5 + booking.num_of_people
+            day_booking.zone5 = day_booking.zone5 + booking.num_of_people
           elsif time_zone.sequence == 5
-            day_booking.zone1 = day_booking.zone6 + booking.num_of_people
+            day_booking.zone6 = day_booking.zone6 + booking.num_of_people
           end
           day_booking.save
 

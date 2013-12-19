@@ -32,6 +32,8 @@ class HomeController < ApplicationController
     if !@restaurant.blank?
       @booking_condition = BookingCondition.new
       @booking_condition = Home.get_condition(@restaurant, booking_day)
+    else
+      redirect_to home_path
     end
   end
 
@@ -46,21 +48,17 @@ class HomeController < ApplicationController
       @booking_condition = BookingCondition.new
       @booking_condition = Home.get_condition(@restaurant, @booking_day)
 
-      result = {:success => true, :attachmentPartial => render_to_string('home/_booking_zone', :layout => false, :locals => { :booking_condition => @booking_condition, :booking_day => @booking_day })}
+      result = {:success => true, :attachmentPartial => render_to_string('home/_booking_zone', :layout => false, :locals => { :booking_condition => @booking_condition, :booking_day => @booking_day, :restaurant => @restaurant, :booker => @booker })}
       render json: result
+    else
+      return {:error => true, :message => '沒有此家餐廳!'}
     end
   end
 
   def save_booking
-    #restaurant_id =  params[:restaurant_id]
-    #booking_time = params[:booking_time]
-    #num_of_people = params[:num_of_people]
-    #booker_name = params[:booker_name]
-    #booker_phone = params[:booker_phone]
-    #booker_email = params[:booker_email]
-    #booker_remark = params[:booker_remark]
-
     result = Home.save_booking(@booker, params[:booking])
+
+    #result = {:success => true, :attachmentPartial => render_to_string('home/_booking_zone', :layout => false, :locals => { :booking_condition => @booking_condition, :booking_day => @booking_day, :restaurant => @restaurant, :booker => @booker })}
     render json: result
   end
 

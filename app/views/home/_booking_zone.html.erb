@@ -10,7 +10,9 @@
   <tr>
     <td>用餐日期</td>
     <td>
-      <input type="text" name="" id="datepicker" value="<%= @booking_day %>">
+      <input name="restaurant_id" type="hidden" value="<%= @restaurant.id %>">
+      <input name="booker_id" type="hidden" value="<%= @booker.id %>">
+      <input type="text" name="" id="booking_date" value="<%= @booking_day %>">
     </td>
   </tr>
   <tr>
@@ -36,5 +38,3 @@
     </td>
   </tr>
 </table>
-
-

@@ -61,14 +61,15 @@
           </table>
         </div>
       </div>
-      <form action="padding_url" id="booking_form">
         <div class="row-fluid" id="booking_form_content">
           <div class="span12" style="background-color: rgb(230,230,230)">
             步驟一 => 步驟二
           </div>
           <div class="row-fluid">
-            <form action="padding_url">
+            <form action="home/save_booking" id="booking_form" method="post">
+
               <div class="span6" id="get_info">
+
                 <%= render :partial => 'booking_zone', :locals => {:booking_condition => @booking_condition}  %>
               </div>
               <div class="span6">
@@ -99,7 +100,6 @@
             </form>
           </div>
         </div>
-      </form>
     </div>
 
     <div id="finish" class="container">
@@ -141,6 +141,76 @@
 
 
 <script>
+    $("#booking_date").datepicker({
+        dateFormat: 'yy-mm-dd',
+        changeMonth: true
+    }).val(getTodaysDate()); // For current date;
+
+    function getTodaysDate () {
+        var t = new Date;
+        var year = t.getFullYear();
+        var day = t.getDate()
+        if (day < 10) {day = '0' + day;}
+
+        var month = t.getMonth() + 1;
+        if ( month < 10){month = '0' + month;}
+
+        return (year + '-' + month + '-' + day);
+    }
+
+    $(window).ready(function(){
+        bind_event();
+    });
+
+    function bind_event(){
+        $("#booking_date").live("click", function(){
+            $("#booking_date").datepicker({
+                dateFormat: 'yy-mm-dd',
+                changeMonth: true,
+                showOn:'focus'
+            }).focus();
+        });
+
+        $('#select_people').live('change', function(){
+            var num_of_people = $(this).val();
+            show_zone(num_of_people)
+        });
+
+        $('#select_zone').live('change', function(){
+            var zone_id = $(this).val();
+            var num_of_people = $('#select_people').val();
+            set_time_button(zone_id, num_of_people);
+        });
+    }
+
+    $("#booking_date").change(function(){
+        //e.preventDefault()
+
+        $.ajax({
+            url: "/home/get_condition",
+            type: 'get',
+            data: {booking_day: this.value, id: location.href.split('/').pop()},
+            cache: false,
+            async: false,
+            success: function(response){
+                if (response.success) {
+                    $('#get_info').html($.parseHTML(response.attachmentPartial))
+                    //$('#get_info').html($.parseHTML(response.attachmentPartial))
+                    //instance var jquey area can't reload
+                    var num_of_people = '1'
+                    $('#select_people').val(num_of_people)
+                    show_zone(num_of_people)
+                }
+                else if (response.error)
+                    alert(response.message)
+                else
+                    alert('發生未預期的回應，請告知CoDream小組處理!')
+            },
+            error: function(){
+                alert('oops! 出現錯誤了!');
+            }
+        });
+    });
 
     $(function(){
         var num_of_people = '1'
@@ -148,10 +218,50 @@
         show_zone(num_of_people)
     });
 
-    $('#select_people').change(function(){
-        var num_of_people = $(this).val();
-        show_zone(num_of_people)
+    $('#booking_form').submit(function(e){
+        e.preventDefault()
+
+        var booker_data = $(this).serializeArray();
+        var booking = {};
+
+        for(item in booker_data){
+            booking[booker_data[item]['name']] = booker_data[item]['value']
+        }
+
+        var no_select = true
+        $(".btn.checked").each(function(){
+            no_select = false
+            booking['booking_time'] = $("#booking_date").val() + " " + $(this).val() ;
+            booking['time_zone_id'] = $(".btn.checked").data('value')
+        });
+
+        if (no_select) {
+            alert("訂位時間還沒有選擇喔~!")
+            return false
+        }
+        //JSON.stringify(booking)
+        //alert(booking)
+
+        $.ajax({
+            url: "/home/save_booking",
+            type: 'POST',
+            data:  {booking: $.parseJSON(JSON.stringify(booking))},
+            cache: false,
+            async: false,
+            success: function(response){
+                if (response.success)
+                    alert(response.data)
+                else if (response.error)
+                    alert(response.message)
+                else
+                    alert('發生未預期的回應，請告知CoDream小組處理!')
+            },
+            error: function(){
+                alert('oops! 出現錯誤了!');
+            }
+        });
     });
+
 
     function show_zone(num_of_people){
         $('#select_zone').empty();
@@ -172,12 +282,6 @@
             set_time_button(zone_id, num_of_people);
         }
     };
-
-    $('#select_zone').change(function(){
-        var zone_id = $(this).val();
-        var num_of_people = $('#select_people').val();
-        set_time_button(zone_id, num_of_people);
-    });
 
     function set_time_button(zone_id, num_of_people){
         $('#time_select').empty();
