@@ -197,7 +197,7 @@ class RestaurantManage
           target_zones.push(TimeZone.new)
         end
         time_zone_save(origin_zones, condition_id, target_zones)
-        calculate_day_booking(condition_id)
+        #calculate_day_booking(condition_id)
 
         return {:success => true, :data => '新增供位條件成功!'}
       end
@@ -659,15 +659,35 @@ class RestaurantManage
       return
     end
 
-    #day_begin = Time.parse(booking.booking_time.strftime("%Y-%m-%d") + " 00:00")
     conditions = SupplyCondition.where(:restaurant_id => origin_condition.restaurant_id, :status => 't').where('range_begin <= ?', origin_condition.range_begin).where('range_end >= ?',origin_condition.range_end).order('sequence ASC')
 
-    temp_bookings = Booking.where(:restaurant_id => origin_condition.restaurant_id).where('booking_time >= ?',  origin_condition.range_begin).where('booking_time <= ?',  origin_condition.range_end).group('booking_time').sum(:num_of_people)
+    temp_bookings = Booking.where(:restaurant_id => origin_condition.restaurant_id).where('booking_time >= ?',  origin_condition.range_begin).where('booking_time <= ?',  origin_condition.range_end).order('booking_time').group('booking_time').sum(:num_of_people)
 
-    bookings_of_select_day = []
-    temp_bookings.each do |b|
-      b[0] = b[0].strftime("%Y-%m-%d %H:%M")       #把相同時段的]人數統計出來
-      bookings_of_select_day.push(b)
+    # temp_booking , [time,sum(people)]
+
+    day_booking_mix = []
+    day_bookings.each do |db|
+      db.zone1 = nil
+      db.zone2 = nil
+      db.zone3 = nil
+      db.zone4 = nil
+      db.zone5 = nil
+      db.zone6 = nil
+      day_booking_mix.push(db)
+      db_begin = Time.parse(db.day("%Y-%m-%d") + " 00:00")
+      db_end = Time.parse(db.day("%Y-%m-%d") + " 23:59")
+
+      bookings_of_group = []
+      temp_bookings.each do |b|
+        if db_begin <= b[0] && db_end >= b[0]
+          #b[0] = b[0].strftime("%Y-%m-%d %H:%M")       # 把相同時段的]人數統計出來
+          b.push(b[0].strftime("%H:%M"))                # [time,sum(num_of_people),'11:00']
+        else
+          break;
+        end
+      end
+
+      day_booking_mix.push(bookings_of_group)           # [day_booking, bookings_of_group]
     end
 
     if conditions.blank?
@@ -675,9 +695,51 @@ class RestaurantManage
     end
 
     conditions.each do |c|
-      bookings_of_select_day.each do |b|
+      zones = TimeZone.where(:supply_condition_id => c.id, :status => 't').order('sequence ASC')
 
+      #range_begin = c.range_begin.strftime("%Y-%m-%d")
+      #range_end = c.range_end.strftime("%Y-%m-%d")
+
+      day_booking_mix.each do |mix|
+        if c.range_begin <= mix[0] && c.range_end >= mix[0]
+          zones.each do |z|
+            mix[1].each do |books|
+              if z.range_begin <= books[2] && z.range_end > books[2]
+                if z.sequence == 0
+                  mix[0].other = mix[0].zone1 + books[1]
+                elsif z.sequence == 1
+                  mix[0].other = mix[0].zone2 + books[1]
+                elsif z.sequence == 2
+                  mix[0].other = mix[0].zone3 + books[1]
+                elsif z.sequence == 3
+                  mix[0].other = mix[0].zone4 + books[1]
+                elsif z.sequence == 4
+                  mix[0].other = mix[0].zone5 + books[1]
+                elsif z.sequence == 5
+                else
+                  mix[0].other = mix[0].other + books[1]
+                end
+
+              end
+            end
+          end
+        end
       end
+
+      #bookings_of_select_day.each do |b|
+      #  if c.range_begin <= b[0] && c.range_end >= b[0]
+      #    zones.each do |z|
+      #      if z.range_begin <= b[2] && z.range_end > b[2]
+      #
+      #        # z.sequence
+      #        bookings_of_select_day.delete b
+      #      end
+      #    end
+      #  end
+      #
+      #end
+
+
     end
 
     # not complete
