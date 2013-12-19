@@ -39,28 +39,28 @@
 
       <%= tag('tr') if i % 7 == 0 %>
 
-        <td data-id="<%= x.con_id %>" class="cell">
-          <% if x.day != 0 %>
-          <div class="date"><%= @month %>/<%= x.day %></div>
-          <% end %>
+      <td data-id="<%= x.con_id %>" class="cell">
+        <% if x.day != 0 %>
+            <div class="date"><%= @month %>/<%= x.day %></div>
+        <% end %>
 
-          <div class="info">
-            <% if x.con_id == 0 %>
-                不提供訂位
-            <% else %>
+        <div class="info">
+          <% if x.con_id == 0 %>
+              不提供訂位
+          <% else %>
               <table class="clean-table">
-                <% (1..6).each do |i| %>
-                  <% unless x.method("n#{i}".to_sym).call.blank? %>
-                    <tr>
-                      <td><%= x.method("n#{i}".to_sym).call %></td>
-                      <td style="text-align: right"><%= @books[i].method("zone#{i}".to_sym).call %>/ <%= x.method("z#{i}".to_sym).call %></td>
-                    </tr>
-                  <% end %>
+                <% (1..6).each do |j| %>
+                    <% unless x.method("n#{j}".to_sym).call.blank? %>
+                        <tr>
+                          <td><%= x.method("n#{j}".to_sym).call %></td>
+                          <td style="text-align: right"><%= @books[i].method("zone#{j}".to_sym).call %>/ <%= x.method("z#{j}".to_sym).call %></td>
+                        </tr>
+                    <% end %>
                 <% end %>
               </table>
-            <% end %>
-          </div>
-        </td>
+          <% end %>
+        </div>
+      </td>
 
       <%= tag('/tr') if i % 7 == 6 %>
 
