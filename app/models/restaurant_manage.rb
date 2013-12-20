@@ -283,13 +283,14 @@ class RestaurantManage
     return true
   end
 
-  def self.destroy_condition(condition_id)
+  def self.destroy_condition(condition_id, restaurant_id)
     if !condition_id.blank?
       begin
         condition_id = condition_id.to_i
         SupplyCondition.transaction do
           SupplyCondition.find(condition_id).destroy
           TimeZone.where(:supply_condition_id => condition_id).destroy_all
+          calculate_day_booking_all(restaurant_id)
           return {:success => true, :data => '刪除成功!' }
         end
       rescue => e

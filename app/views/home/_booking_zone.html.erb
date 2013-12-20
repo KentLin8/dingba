@@ -12,6 +12,7 @@
     <td>
       <input name="restaurant_id" type="hidden" value="<%= @restaurant.id %>">
       <input name="booker_id" type="hidden" value="<%= @booker.id %>">
+      <input id="bbb" type="hidden" value="<%= @booking_condition.option_of_time %>">
       <input type="text" name="" id="booking_date" value="<%= @booking_day %>">
     </td>
   </tr>
@@ -26,15 +27,75 @@
   <tr>
     <td>用餐時段</td>
     <td>
-      <select id="select_zone">
-      </select>
+      <% if @booking_condition.error != true %>
+          <%= select_tag(:booking_zone, options_for_select(@booking_condition.option_of_zone) , id:'select_zone') %>
+      <% end %>
     </td>
   </tr>
   <tr>
     <td colspan="2">用餐時間<input type="hidden" name="time" id="time"> <!-- 放置選擇時間的結果 --></td>
   </tr>
   <tr>
-    <td id="time_select" colspan="2">
+
+    <td id="time_select1" class="t_select" colspan="2" style="display:none">
+      <% @booking_condition.option_of_time.each do |oft| %>
+          <% if oft[5] == 0 %>
+              <% (oft.length - 6).times do |i| %>
+              <input type="button" value='<%= oft[i + 6][1] %>' data-value='<%= oft[0] %>' class='btn' />
+              <% end %>
+          <% end %>
+      <% end %>
     </td>
+
+    <td id="time_select2" class="t_select" colspan="2" style="display:none">
+      <% @booking_condition.option_of_time.each do |oft| %>
+          <% if oft[5] == 1 %>
+              <% (oft.length - 6).times do |i| %>
+                  <input type="button" value='<%= oft[i + 6][1] %>' data-value='<%= oft[0] %>' class='btn' />
+              <% end %>
+          <% end %>
+      <% end %>
+    </td>
+
+    <td id="time_select3" class="t_select" colspan="2" style="display:none">
+      <% @booking_condition.option_of_time.each do |oft| %>
+          <% if oft[5] == 2 %>
+              <% (oft.length - 6).times do |i| %>
+                  <input type="button" value='<%= oft[i + 6][1] %>' data-value='<%= oft[0] %>' class='btn' />
+              <% end %>
+          <% end %>
+      <% end %>
+    </td>
+
+    <td id="time_select4" class="t_select" colspan="2" style="display:none">
+      <% @booking_condition.option_of_time.each do |oft| %>
+          <% if oft[5] == 3 %>
+              <% (oft.length - 6).times do |i| %>
+                  <input type="button" value='<%= oft[i + 6][1] %>' data-value='<%= oft[0] %>' class='btn' />
+              <% end %>
+          <% end %>
+      <% end %>
+    </td>
+
+    <td id="time_select5" class="t_select" colspan="2" style="display:none">
+      <% @booking_condition.option_of_time.each do |oft| %>
+          <% if oft[5] == 4 %>
+              <% (oft.length - 6).times do |i| %>
+                  <input type="button" value='<%= oft[i + 6][1] %>' data-value='<%= oft[0] %>' class='btn' />
+              <% end %>
+          <% end %>
+      <% end %>
+    </td>
+
+    <td id="time_select6" class="t_select" colspan="2" style="display:none">
+      <% @booking_condition.option_of_time.each do |oft| %>
+          <% if oft[5] == 5 %>
+              <% (oft.length - 6).times do |i| %>
+                  <input type="button" value='<%= oft[i + 6][1] %>' data-value='<%= oft[0] %>' class='btn' />
+              <% end %>
+          <% end %>
+      <% end %>
+    </td>
+
   </tr>
 </table>

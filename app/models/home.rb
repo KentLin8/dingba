@@ -99,6 +99,7 @@ class Home
       booking_condition.option_max_people = []    # [1, 2, 3, 4 ....]
       booking_condition.option_of_people = []     # [zone.each_allow, zone.id, zone.name], [....]
       booking_condition.option_of_time = []       # ['12:00', '12:15' ....]
+      booking_condition.option_of_zone = []
 
       use_type = 0
       if !is_today && !limit_day_time.blank?      # =========================================
@@ -119,6 +120,10 @@ class Home
         end
 
         zones.each do |z|
+          option_of_z_item = []
+          option_of_z_item.push(z.name)
+          option_of_z_item.push(z.sequence)
+          booking_condition.option_of_zone.push(option_of_z_item)
           if limit_day_time >= z.range_begin
             zone_option_of_people = []
             zone_option_of_people.push(z.each_allow)
@@ -331,7 +336,7 @@ class Home
             #  zone_option_of_time.delete_at(zone_option_of_time.length - 1)
             #end
 
-            zone_option_of_time.unshift(z.id, z.fifteen_allow, z.total_allow, zone_total_people)
+            zone_option_of_time.unshift(z.id, z.fifteen_allow, z.total_allow, zone_total_people, z.each_allow, z.sequence)
             booking_condition.option_of_time.push(zone_option_of_time)
           end
 
@@ -347,7 +352,7 @@ class Home
           end
 
           if booking_condition.option_of_time.length != (i + 1)
-            booking_condition.option_of_time[i] = booking_condition.option_of_time[i][0..3] + (booking_condition.option_of_time[i][4..booking_condition.option_of_time[i].length] - booking_condition.option_of_time[i + 1][4..booking_condition.option_of_time[i + 1].length])
+            booking_condition.option_of_time[i] = booking_condition.option_of_time[i][0..5] + (booking_condition.option_of_time[i][6..booking_condition.option_of_time[i].length] - booking_condition.option_of_time[i + 1][6..booking_condition.option_of_time[i + 1].length])
           end
         end
 
@@ -377,7 +382,10 @@ class Home
         end
 
         zones.each do |z|
-
+          option_of_z_item = []
+          option_of_z_item.push(z.name)
+          option_of_z_item.push(z.sequence)
+          booking_condition.option_of_zone.push(option_of_z_item)
           all_block = false    # add gray
           is_effect = false
           range_begin = Time.parse(temp_booking_day + z.range_begin)
@@ -399,6 +407,8 @@ class Home
             temp_end_minute = range_end.strftime("%M")
             is_effect = true
           else
+            temp_begin_hour = effect_time_begin.strftime("%H")
+            temp_begin_minute = effect_time_begin.strftime("%M")
             all_block = true
             is_effect = true # add gray
           end
@@ -615,7 +625,7 @@ class Home
             #  zone_option_of_time.delete_at(zone_option_of_time.length - 1)
             #end
 
-            zone_option_of_time.unshift(z.id, z.fifteen_allow, z.total_allow, zone_total_people)
+            zone_option_of_time.unshift(z.id, z.fifteen_allow, z.total_allow, zone_total_people, z.each_allow, z.sequence)
             booking_condition.option_of_time.push(zone_option_of_time)
           end
         end
@@ -630,7 +640,7 @@ class Home
           end
 
           if booking_condition.option_of_time.length != (i + 1)
-            booking_condition.option_of_time[i] = booking_condition.option_of_time[i][0..3] + (booking_condition.option_of_time[i][4..booking_condition.option_of_time[i].length] - booking_condition.option_of_time[i + 1][4..booking_condition.option_of_time[i + 1].length])
+            booking_condition.option_of_time[i] = booking_condition.option_of_time[i][0..5] + (booking_condition.option_of_time[i][6..booking_condition.option_of_time[i].length] - booking_condition.option_of_time[i + 1][6..booking_condition.option_of_time[i + 1].length])
           end
         end
 

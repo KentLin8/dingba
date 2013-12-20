@@ -148,7 +148,7 @@ class RestaurantManageController < ApplicationController
   # GET ==== Function: destroy condition
   # =========================================================================
   def destroy_condition
-    result = RestaurantManage.destroy_condition(params[:condition_id])
+    result = RestaurantManage.destroy_condition(params[:condition_id], @restaurant.id)
     @conditions = SupplyCondition.where(:restaurant_id => @restaurant.id).order('sequence ASC')
     @special_conditions = @conditions.select { |x| x.is_special == 't' }
     @normal_conditions = @conditions.select { |x| x.is_special != 't' }

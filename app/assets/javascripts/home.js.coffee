@@ -27,9 +27,9 @@ $ ->
 #        )
 #      .fail( -> alert 'gg' )
 
-  $(document).on 'click', '#time_select .btn:not(.btn-inverse)', ->
+  $(document).on 'click', '.t_select .btn:not(.btn-inverse)', ->
     $('#time').val(this.value)
-    $('#time_select .btn').removeClass('checked')
+    $('.t_select .btn').removeClass('checked')
     $(this).addClass('checked')
 
 #  $('#booking_form').submit (e) ->
