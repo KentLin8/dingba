@@ -61,8 +61,7 @@ class CalendarController < ApplicationController
       @id_with_name = {}
       # set condition to calendar
       conditions.each do |con|
-        @id_with_name["#{con.id}".to_sym]= con.name
-
+        @id_with_name[con.id]= con.name
 
         week = con.available_week.split(',')
         week = week.collect{|e| e.to_i}
