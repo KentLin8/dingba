@@ -1,4 +1,4 @@
-<select name="" id="year" class="month_picker input-small" data-value="<%= @year %>">
+<select name="" id="year" class="month_picker" style="width: 70px" data-value="<%= @year %>">
   <option value="2012">2012</option>
   <option value="2013">2013</option>
   <option value="2014">2014</option>
@@ -6,7 +6,7 @@
   <option value="2016">2016</option>
 </select>
 年
-<select name="" id="month" class="month_picker input-small" data-value="<%= @month %>">
+<select name="" id="month" class="month_picker" style="width: 55px" data-value="<%= @month %>">
   <option value="1">1</option>
   <option value="2">2</option>
   <option value="3">3</option>
@@ -65,16 +65,10 @@
       <%= tag('/tr') if i % 7 == 6 %>
 
   <% end %>
-
 </table>
 <div id="show"></div>
 <script>
-
-  id_with_name = '<%= @id_with_name%>'
-//  id_with_name = {
-//    15: 'name',
-//    32: '喵'
-//  };
+  id_with_name = <%= raw @id_with_name.to_json %>
 </script>
 
 

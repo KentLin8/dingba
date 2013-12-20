@@ -34,4 +34,8 @@ class ViewtestController < ApplicationController
   def mail2
     render layout: false
   end
+
+  def delete_form
+    render layout: false
+  end
 end

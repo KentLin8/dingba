@@ -1,8 +1,8 @@
-<div style="color: rgb(127,23,0)">
+<div>
   機動性時間為“專屬日曆”中“月設定管理”針對個別日期所做的“修改供位設定”調整。<br>
   預設值以當天日期命名，臨時設定的內容為絕對優先(大於下方訂位的常態設定)。
 </div>
-
+<div class="base_blue" style="margin-top: 12px">臨時設定：</div>
 <div id="special_time">
   <% @special_conditions.each do |c| %>
     <div class="row">
@@ -27,17 +27,19 @@
     </div>
   <% end %>
 </div>
-<br><br>
-<div class="btn btn-primary" style="font-size: 13px" id="new_condition">
+<div style="border: 1px dotted #CCCCCC; margin: 20px 0"></div>
+
+
+<div class="btn btn-primary" style="width: 275px; font-size: 13px; background-color: rgb(127,23,0); border: #ac381e;margin-bottom: 12px" id="new_condition">
   <i class="icon-plus icon-white"></i>
   新增一組可提供訂位的常態時間
 </div>
 
-<div style="color: rgb(127,23,0)">
+<div>
   因特別時段 / 節慶設定的供位時間會與日常供位設定發生時間重疊，<br>
-  請餐廳經營者設立優先順序(以滑鼠拖曳方式，最上面為首)。
+  請餐廳經營者設立優先順序(<span class="base_blue">以滑鼠拖曳方式，最上面為首</span>)。
 </div>
-常態設定：
+<div class="base_blue" style="margin-top: 12px">常態設定：</div>
 <div id="period_set">
   <% @normal_conditions.each_with_index do |c, index|%>
     <div class="sortable" data-sort="<%= index %>">
@@ -62,21 +64,22 @@
     </div>
   <% end %>
 </div>
-<br>
 <table id="reserve_table">
     <tr>
-      <td>最晚接受訂位期間</td>
+      <td rowspan="2">最晚接受訂位期間</td>
       <td>
         <label class="radio inline">
           <input type="radio" name="reserve_type" value="0">開放預約到
         </label>
 
-        <input class="input-small" type="text" id="reserve_hour" value="<%= @restaurant.available_hour %>">小時之前的時間&nbsp;
+        <input style="width: 30px; text-align: right" type="text" id="reserve_hour" value="<%= @restaurant.available_hour %>">小時之前的時間&nbsp;
         <a class="ans" title="為確保訂位人數，建議餐廳設定最晚的訂位時間，爲該用餐時段前的幾個小時。">?</a>
-        <br>
-
+      </td>
+    </tr>
+    <tr>
+      <td>
         <label class="radio inline"><input type="radio" name="reserve_type" value="1">開放預約到前一天</label>
-        <select class="input-small" id="reserve_previous_hour" data-value="<%= @restaurant.available_date %>">
+        <select style="width: 60px" id="reserve_previous_hour" data-value="<%= @restaurant.available_date %>">
           <option value="1:00">1</option>
           <option value="2:00">2</option>
           <option value="3:00">3</option>
@@ -110,10 +113,6 @@
 
 <a href="#" id="period_save" class="btn btn-primary">確定修改</a>
 <a href="#" id="period_reset" class="btn">取消</a>
-<br><br>
-因特別時段 / 節慶設定的供位時間會與日常供位時間發生重疊，<br>
-請餐廳經營者設定時間的優先順序(以滑鼠拖曳方式，最上面為首)。<br><br>
-
 
 <script>
     //===========================================================================
