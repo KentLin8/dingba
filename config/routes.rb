@@ -96,6 +96,8 @@ DingBa::Application.routes.draw do
   get 'test/front/mail2', :to => 'front#mail2'
   get 'test/front/mail3', :to => 'front#mail3'
 
+  get 'test/delete_form', :to => 'viewtest#delete_form'
+
 
 
   # mail template

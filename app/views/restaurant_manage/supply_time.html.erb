@@ -4,6 +4,10 @@
     <input name="condition[id]" type="hidden" value="<%= @supply_time.id %>">
   <% end %>
   <table class="table">
+    <colgroup>
+      <col style="width: 140px">
+      <col>
+    </colgroup>
     <tr>
       <td class="title"><i class="required">*</i>設立名稱</td>
       <% if @supply_time.id != '' %>
@@ -57,6 +61,8 @@
             dateFormat: 'yy-mm-dd',
             //defaultDate: "+1w",
             changeMonth: true,
+            showOn: 'both',
+            buttonText: '<i class="icon-calendar"></i>',
             onClose: function( selectedDate ) {
                 $("#to").datepicker( "option", "minDate", selectedDate );
             }
@@ -66,6 +72,8 @@
             dateFormat: 'yy-mm-dd',
             //defaultDate: "+1w",
             changeMonth: true,
+            showOn: 'both',
+            buttonText: '<i class="icon-calendar"></i>',
             onClose: function( selectedDate ) {
                 $("#from").datepicker( "option", "maxDate", selectedDate );
             }

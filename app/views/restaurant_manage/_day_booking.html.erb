@@ -5,7 +5,17 @@
   目前無人訂位
 <% end %>
 <% @zones_books.each do |z| %>
-  <table class="table daily_info">
+  <table class="table table-bordered daily_info">
+    <colgroup>
+      <col style="width: 10%">
+      <col style="width: 6%">
+      <col style="width: 11%">
+      <col style="width: 11%">
+      <col style="width: 26%">
+      <col style="width: 26%">
+      <col style="width: 5%">
+      <col style="width: 5%">
+    </colgroup>
     <tr>
       <th colspan="8"><div class="mark1"></div>&nbsp;<%= z.name %></th>
     </tr>
@@ -22,16 +32,21 @@
 
     <% z.books.each do |b| %>
     <tr data-id="<%= b.id %>">
-      <td><%= b.booking_time.strftime('%Y/%m/%d %H:%M') %></td>
+      <td><%= b.booking_time.strftime('%H:%M') %></td>
       <td><%= b.num_of_people %></td>
       <td><%= b.name %></td>
       <td><%= b.phone %></td>
       <td><a href="mailto:<%= b.email %>"><%= b.email %></a></td>
       <td><%= b.remark %></td>
-      <td><a href="" class="btn modify">修改</a></td>
-      <td><a href="" class="btn delete">刪除</a></td>
+      <td>
+        <i class="icon-pencil modify" title="修改"></i>
+        <!-- <a href="" class="btn">修改</a> -->
+      </td>
+      <td>
+        <i class="icon-remove-circle delete" title="刪除"></i>
+        <!-- <a href="" class="btn">刪除</a> -->
+      </td>
     </tr>
     <% end %>
-    <tr><td colspan="7"></td></tr>
   </table>
 <% end %>

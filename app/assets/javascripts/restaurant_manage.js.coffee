@@ -154,7 +154,7 @@ $ ->
       $('#calendar .cell').each ->
         _this = $(this)
         _this.css('color', color_bind[_this.data('id')])
-      $('#show').html("""<div class="show" style="color: #{color_bind[id]}">#{name}</div>""" for id, name of id_with_name)
+      $('#show').html(("""<span style="color: #{color_bind[id]}">#{name}</span>""" for id, name of id_with_name).join(',&nbsp;'))
 
   refresh = (html) ->
     form_place.html $.parseHTML(html, document, true)
@@ -244,11 +244,6 @@ $ ->
     false
     $('#lightbox_wrap').show()
 
-  if location.href.match('#')
-    url = location.href.split('#').pop()
-    load_page url unless url is ''
-
-
   if document.getElementById 'res_header'
     $(document).on 'submit', 'form', (e) ->
       e.preventDefault()
@@ -291,20 +286,20 @@ $ ->
   $('#step1').click ->
     $('#step1_mark').addClass('now')
     $('#sub_choice').children().eq(0).addClass('now')
-    $('#sub_choice').animate(height: 66, 'border-width': 1)
-    $('#sub_choice2').animate(height: 0, 'border-width': 0)
+    $('#sub_choice').animate(height: 66, 'border-width': 1, 'margin-bottom': 10)
+    $('#sub_choice2').animate(height: 0, 'border-width': 0, 'margin-bottom': 0)
   $('#step2').click ->
     $('#step2_mark').addClass('now')
-    $('#sub_choice').animate(height: 0, 'border-width': 0)
-    $('#sub_choice2').animate(height: 0, 'border-width': 0)
+    $('#sub_choice').animate(height: 0, 'border-width': 0, 'margin-bottom': 0)
+    $('#sub_choice2').animate(height: 0, 'border-width': 0, 'margin-bottom': 0)
   $('#step3').click ->
     $('#step3_mark').addClass('now')
     $('#sub_choice2').children().eq(0).addClass('now')
-    $('#sub_choice').animate(height: 0, 'border-width': 0)
-    $('#sub_choice2').animate(height: 44, 'border-width': 1)
+    $('#sub_choice').animate(height: 0, 'border-width': 0, 'margin-bottom': 0)
+    $('#sub_choice2').animate(height: 44, 'border-width': 1, 'margin-bottom': 10)
   $('#step4').click ->
-    $('#sub_choice').animate(height: 0, 'border-width': 0)
-    $('#sub_choice2').animate(height: 0, 'border-width': 0)
+    $('#sub_choice').animate(height: 0, 'border-width': 0, 'margin-bottom': 0)
+    $('#sub_choice2').animate(height: 0, 'border-width': 0, 'margin-bottom': 0)
 
   $('#lightbox').draggable()
 
@@ -373,36 +368,51 @@ $ ->
       )
       .fail( -> alert('oops! 出現錯誤了!') )
 
-  $(document).on 'click', '.daily_info .modify', (e) ->
-    e.preventDefault()
-    _this = $(this)
-    tr = _this.parents('tr')
-    tr.next().remove() if tr.next().hasClass('form')
+  show_delete_form = (tr) ->
     id = tr.data('id')
-    # 讀取修改訂位界面
+    $.get('test/delete_form', {id: id}, 'html')
+      .done( (response) ->
+        new_tr = $($.parseHTML(response, document, true))
+        tr.after(new_tr)
+        new_tr.find('#wrapper').animate(height: 160)
+      )
+      .fail( -> alert '讀取失敗' )
+
+  show_modify_form = (tr) ->
+    id = tr.data('id')
     $.get('/restaurant_manage/modify_booking', {booking_id: id}, 'html')
       .done( (response) ->
         new_tr = $($.parseHTML(response, document, true))
         tr.after(new_tr)
-        new_tr.find('#wrapper').animate(height: 450)
+        new_tr.find('#wrapper').animate(height: 210)
       )
       .fail( -> alert '讀取失敗' )
+
+
+  $(document).on 'click', '.daily_info .modify', (e) ->
+    e.preventDefault()
+    _this = $(this)
+    tr = _this.parents('tr')
+    next = tr.next()
+    if next.hasClass('form')
+      next.find('#wrapper').animate(height: 0, -> next.remove())
+      if next.hasClass('delete')
+        show_modify_form(tr)
+    else
+      show_modify_form(tr)
 
   $(document).on 'click', '.daily_info .delete', (e) ->
     e.preventDefault()
     _this = $(this)
     tr = _this.parents('tr')
-    tr.next().remove() if tr.next().hasClass('form')
-    id = tr.data('id')
-    # 讀取修改訂位界面
-    $.get('/restaurant_manage/delete_booking', {id: id}, 'html')
-      .done( (response) ->
-        new_tr = $($.parseHTML(response, document, true))
-        tr.after(new_tr)
-        new_tr.find('#wrapper').animate(height: 300)
-      )
-      .fail( -> alert '讀取失敗' )
+    next = tr.next()
+    if next.hasClass('form')
+      next.find('#wrapper').animate(height: 0, -> next.remove())
+      unless next.hasClass('delete')
+        show_delete_form(tr)
+    else
+      show_delete_form(tr)
 
-
-
-
+  if location.href.match('#')
+    url = location.href.split('#').pop()
+    $("""a[href='#{url}']""").click()
