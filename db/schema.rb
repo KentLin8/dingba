@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131115013217) do
+ActiveRecord::Schema.define(version: 20131223140828) do
 
   create_table "bookings", force: true do |t|
     t.integer  "user_id"
@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(version: 20131115013217) do
     t.string   "feedback",           limit: 200
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "restaurant_pic"
   end
 
   add_index "bookings", ["booking_time"], name: "index_bookings_on_booking_time", using: :btree

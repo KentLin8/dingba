@@ -73,9 +73,9 @@ DingBa::Application.routes.draw do
   #==========================================================================
   # booker_manage controller
   #==========================================================================
-  get 'booker_manage/index', :as => 'booker_manage_index'
-  get 'booker_manage/booking_record'
-
+  get  'booker_manage/index', :as => 'booker_manage_index'
+  get  'booker_manage/booking_record'
+  post 'booker_manage/feedback'
 
 
   # 暫時用來展示畫面的routes

@@ -1,6 +1,6 @@
 class BookerManageController < ApplicationController
   layout 'booker_manage'
-  before_action :get_booker, :only => [:index, :booking_record, :feedback, :account]
+  before_action :get_booker, :only => [:index, :my_dingba, :booking_record, :feedback, :account]
 
   def index
     @books = Booking.where(:user_id => @booker.id).order('booking_time DESC')

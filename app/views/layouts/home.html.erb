@@ -31,7 +31,13 @@
             </div>
           </div>
           <div class="span6" id="log_info">
-            登入資訊 <a href="" id="my_dingba">我的訂吧</a>
+            <% if @booker.id.blank? %>
+                <%= link_to "登入", "/sessions/booker_new", :class => 'navbar-link' %> |
+                <%= link_to "註冊", "/registrations/booker_new", :class => 'navbar-link' %>
+            <% elsif !@booker.id.blank? %>
+                Hi <%= @booker.name %> 你好 </br>
+                <a href="/booker_manage/index" id="my_dingba" class="navbar-link">我的訂吧</a>
+            <% end %>
           </div>
         </div>
       </div>

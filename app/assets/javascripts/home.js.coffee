@@ -82,11 +82,13 @@ $ ->
     e.preventDefault()
     if not_finish
       return unless confirm('你的訂位尚未完成，請問要離開這個頁面嗎？')
-    $.get('/my_dingba', {}, 'html')
-    .done( (response) ->
-        $('#main').html response
-      )
-    .fail( -> alert '載入失敗')
+    window.location.href = '/booker_manage/index';
+    return
+#    $.get('/booker_manage/my_dingba', {}, 'html')
+#    .done( (response) ->
+#        $('#main').html response
+#      )
+#    .fail( -> alert '載入失敗')
 
   $('#tabs').tabs()
 

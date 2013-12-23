@@ -1,6 +1,6 @@
 class HomeController < ApplicationController
   layout 'home'
-  before_action :get_user, :only => [:booking_restaurant, :get_condition, :save_booking]
+  before_action :get_user, :only => [:index, :booking_restaurant, :get_condition, :save_booking, :notice_friend, :cancel_booking, :save_cancel_booking]
   #before_action :get_restaurant, :only => [:booking_restaurant]
 
   # =========================================================================

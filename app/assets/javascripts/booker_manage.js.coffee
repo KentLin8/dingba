@@ -6,6 +6,7 @@
 #= require jquery_ujs
 #= require jquery.ui.datepicker
 #= require jquery.ui.tabs
+#= require bootstrap-modal
 #= require application
 #= require_self
 
@@ -69,15 +70,15 @@ $ ->
 
   $('#lightbox').click (e) -> $(this).hide() if e.target is this
 
-  $('#my_dingba').click (e) ->
-    e.preventDefault()
-    if not_finish
-      return unless confirm('你的訂位尚未完成，請問要離開這個頁面嗎？')
-    $.get('/my_dingba', {}, 'html')
-    .done( (response) ->
-        $('#main').html response
-      )
-    .fail( -> alert '載入失敗')
+#  $('#my_dingba').click (e) ->
+#    e.preventDefault()
+#    if not_finish
+#      return unless confirm('你的訂位尚未完成，請問要離開這個頁面嗎？')
+#    $.get('/my_dingba', {}, 'html')
+#    .done( (response) ->
+#        $('#main').html response
+#      )
+#    .fail( -> alert '載入失敗')
 
   $('#tabs').tabs()
 

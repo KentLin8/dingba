@@ -536,42 +536,42 @@ class Home
                   end
                 end
 
-                if h00 == true
-                  zone_option_of_time.push(h00_data)
-                elsif h00 == false
-                  if h == temp_begin_hour && temp_begin_minute > 0
-                    zone_option_of_time.push([1, h.to_s + ":00", 0])
-                  else
+                if h == temp_begin_hour && temp_begin_minute > 0
+                  zone_option_of_time.push([1, h.to_s + ":00", 0])
+                else
+                  if h00 == true
+                    zone_option_of_time.push(h00_data)
+                  elsif h00 == false
                     zone_option_of_time.push([0, h.to_s + ":00", 0])
                   end
                 end
 
-                if h15 == true
-                  zone_option_of_time.push(h15_data)
-                elsif h15 == false
-                  if h == temp_begin_hour && temp_begin_minute >= 15
-                    zone_option_of_time.push([1, h.to_s + ":15", 0])
-                  else
+                if h == temp_begin_hour && temp_begin_minute >= 15
+                  zone_option_of_time.push([1, h.to_s + ":15", 0])
+                else
+                  if h15 == true
+                    zone_option_of_time.push(h15_data)
+                  elsif h15 == false
                     zone_option_of_time.push([0, h.to_s + ":15", 0])
                   end
                 end
 
-                if h30 == true
-                  zone_option_of_time.push(h30_data)
-                elsif h30 == false
-                  if h == temp_begin_hour && temp_begin_minute >= 30
-                    zone_option_of_time.push([1, h.to_s + ":30", 0])
-                  else
+                if h == temp_begin_hour && temp_begin_minute >= 30
+                  zone_option_of_time.push([1, h.to_s + ":30", 0])
+                else
+                  if h30 == true
+                    zone_option_of_time.push(h30_data)
+                  elsif h30 == false
                     zone_option_of_time.push([0, h.to_s + ":30", 0])
                   end
                 end
 
-                if h45 == true
-                  zone_option_of_time.push(h45_data)
-                elsif h45 == false
-                  if h == temp_begin_hour && temp_begin_minute >= 45
-                    zone_option_of_time.push([1, h.to_s + ":45", 0])
-                  else
+                if h == temp_begin_hour && temp_begin_minute >= 45
+                  zone_option_of_time.push([1, h.to_s + ":45", 0])
+                else
+                  if h45 == true
+                    zone_option_of_time.push(h45_data)
+                  elsif h45 == false
                     zone_option_of_time.push([0, h.to_s + ":45", 0])
                   end
                 end
