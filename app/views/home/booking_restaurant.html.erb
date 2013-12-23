@@ -73,22 +73,21 @@
             <form action="home/save_booking" id="booking_form" method="post">
 
               <div class="span6" id="get_info">
-
                 <%= render :partial => 'booking_zone', :locals => {:booking_condition => @booking_condition}  %>
               </div>
               <div class="span6">
                 <table>
                   <tr>
                     <td>訂位者大名：</td>
-                    <td><input type="text" name="booker_name" value="<%= @booker.name %>"></td>
+                    <td><input type="text" id="b_name" name="booker_name" value="<%= @booker.name %>"></td>
                   </tr>
                   <tr>
                     <td>訂位者電話：</td>
-                    <td><input type="text" name="booker_phone" value="<%= @booker.phone %>"></td>
+                    <td><input type="text" id="b_phone" name="booker_phone" value="<%= @booker.phone %>"></td>
                   </tr>
                   <tr>
                     <td>訂位E-mail：</td>
-                    <td><input type="text" name="booker_email" value="<%= @booker.email %>"></td>
+                    <td><input type="text" id="b_email" name="booker_email" value="<%= @booker.email %>"></td>
                   </tr>
                   <tr>
                     <td colspan="2"><textarea style="width: 100%" placeholder="留言給餐廳" name="remark"></textarea></td>
@@ -186,7 +185,7 @@
 
                         var num_of_people = '1'
                         $('#select_people').val(num_of_people)
-                        set_time_button($('#select_zone').val(), num_of_people);
+                        set_time_button($('#select_zone').val());
                     }
                     else if (response.error)
                         alert(response.message)
@@ -207,14 +206,14 @@
         $('#select_zone').live('change', function(){
             var zone_sequence = $(this).val();
             var num_of_people = $('#select_people').val();
-            set_time_button(zone_sequence, num_of_people);
+            set_time_button(zone_sequence);
         });
     }
 
     $(function(){
         var num_of_people = '1'
         $('#select_people').val(num_of_people)
-        set_time_button($('#select_zone').val(), num_of_people)
+        set_time_button($('#select_zone').val())
         //show_zone(num_of_people)
     });
 
@@ -225,7 +224,7 @@
         var booking = {};
 
         for(item in booker_data){
-            booking[booker_data[item]['name']] = booker_data[item]['value']
+            booking[booker_data[item]['name']] = $.trim(booker_data[item]['value'])
         }
 
         var no_select = true
@@ -237,6 +236,25 @@
 
         if (no_select) {
             alert("訂位時間還沒有選擇喔~!")
+            return false
+        }
+
+        if ($.trim($('#b_name').val()) == ''){
+            alert("訂位者姓名不能為空喔!")
+            return false
+        }
+
+        if ($.trim($('#b_phone').val()) == ''){
+            alert("訂位者電話不能為空喔!")
+            return false
+        }
+
+        if ($.trim($('#b_email').val()) == ''){
+            alert("訂位者姓名不能為空喔!")
+            return false
+        }
+        else if (!$.trim($('#b_email').val()).match(/\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/)){
+            alert("email不符規則!")
             return false
         }
 
@@ -260,76 +278,31 @@
         });
     });
 
+    function set_time_button(zone_value){
 
-    function set_time_buttonx(zone_id, num_of_people){
-        $('#time_select').empty();
+        $('.t_select .btn').removeClass('checked')
+        $('.t_select:visible').hide();
 
-        <% if @booking_condition.error != true %>
-        <% @booking_condition.option_of_time.each do |oft| %>
-
-        if ('<%= oft[0] %>' == zone_id){
-
-            if ((parseInt('<%= oft[3] %>') + parseInt(num_of_people)) > parseInt('<%= oft[2] %>')) {
-                <% (oft.length - 6).times do |i| %>
-                var btn = $("<input type=\"button\"  value=\"" + '<%= oft[i + 6][1] %>' + "\" data-value=\"" + '<%= oft[0] %>' + "\" class=\"btn btn-inverse\" />");
-                $("#time_select").append(btn)
-                <% end %>
-                return
-            }
-            else {
-                <% (oft.length - 6).times do |i| %>
-
-                if (parseInt(num_of_people) > parseInt('<%= oft[4] %>')){
-                    var btn = $("<input type=\"button\"  value=\"" + '<%= oft[i + 6][1] %>' + "\" data-value=\"" + '<%= oft[0] %>' + "\" class=\"btn btn-inverse\" />");
-                    $("#time_select").append(btn)
-                }
-                else if ((parseInt('<%= oft[i + 6][2] %>') + parseInt(num_of_people)) > parseInt('<%= oft[1] %>')){
-                    var btn = $("<input type=\"button\"  value=\"" + '<%= oft[i + 6][1] %>' + "\" data-value=\"" + '<%= oft[0] %>' + "\" class=\"btn btn-inverse\" />");
-                    $("#time_select").append(btn)
-                }
-                else if ('<%= oft[i + 6][0]%>' == 0) {
-                    var btn = $("<input type=\"button\"  value=\"" + '<%= oft[i + 6][1] %>' + "\" data-value=\"" + '<%= oft[0] %>' + "\" class=\"btn\" />");
-                    $("#time_select").append(btn)
-                }else if ('<%= oft[i + 6][0]%>' == 1) {
-                    var btn = $("<input type=\"button\"  value=\"" + '<%= oft[i + 6][1] %>' + "\" data-value=\"" + '<%= oft[0] %>' + "\"class=\"btn btn-inverse\" />");
-                    $("#time_select").append(btn)
-                }
-
-                <% end %>
-                return
-            }
-        }
-        <% end %>
-        <% end %>
-    };
-
-
-    function set_time_button(zone_value, num_of_people){
         if (zone_value == 0) {
-           $('.t_select:visible').hide();
            $('#time_select1').show();
         }
         else if (zone_value == 1) {
-           $('.t_select:visible').hide();
            $('#time_select2').show();
         }
         else if (zone_value == 2) {
-           $('.t_select:visible').hide();
            $('#time_select3').show();
         }
         else if (zone_value == 3) {
-           $('.t_select:visible').hide();
            $('#time_select4').show();
         }
         else if (zone_value == 4) {
-           $('.t_select:visible').hide();
            $('#time_select5').show();
         }
         else if (zone_value == 5) {
-           $('.t_select:visible').hide();
            $('#time_select6').show();
         }
     };
+
 
 </script>
 

@@ -99,7 +99,7 @@ class Home
       booking_condition.option_max_people = []    # [1, 2, 3, 4 ....]
       booking_condition.option_of_people = []     # [zone.each_allow, zone.id, zone.name], [....]
       booking_condition.option_of_time = []       # ['12:00', '12:15' ....]
-      booking_condition.option_of_zone = []
+      booking_condition.option_of_zone = []       # ['zone name', 'zone sequence']
 
       use_type = 0
       if !is_today && !limit_day_time.blank?      # =========================================
@@ -360,9 +360,6 @@ class Home
           booking_condition.option_max_people.push(i + 1)
         end
 
-
-
-
         return booking_condition
 
       elsif !limit_hour.blank?                  # =========================================
@@ -433,6 +430,7 @@ class Home
             # add gray
             temp_begin_hour = temp_begin_hour.to_i
             temp_end_hour = temp_end_hour.to_i
+            temp_begin_minute = temp_begin_minute.to_i
             origin_begin_hour = origin_begin_hour.to_i
             origin_end_hour = origin_end_hour.to_i
             (origin_begin_hour..origin_end_hour).each do |h|
@@ -447,19 +445,19 @@ class Home
                 h45_data = nil
 
                 bookings_of_select_day.each do |b|
-                  if b[0] == h.to_s + ":00"
+                  if b[0] == (h.to_s + ":00")
                     h00 = true
                     zone_total_people = zone_total_people + b[1]
                     h00_data = [1, h.to_s + ":00", b[1]]
-                  elsif b[0] == h.to_s + ":15"
+                  elsif b[0] == (h.to_s + ":15")
                     h15 = true
                     zone_total_people = zone_total_people + b[1]
                     h15_data = [1, h.to_s + ":15", b[1]]
-                  elsif b[0] == h.to_s + ":30"
+                  elsif b[0] == (h.to_s + ":30")
                     h30 = true
                     zone_total_people = zone_total_people + b[1]
                     h30_data = [1, h.to_s + ":30", b[1]]
-                  elsif b[0] == h.to_s + ":45"
+                  elsif b[0] == (h.to_s + ":45")
                     h45 = true
                     zone_total_people = zone_total_people + b[1]
                     h45_data = [1, h.to_s + ":45", b[1]]
@@ -502,7 +500,6 @@ class Home
                 h15_data = nil
                 h30_data = nil
                 h45_data = nil
-
                 bookings_of_select_day.each do |b|
                   if b[0] == h.to_s + ":00"
                     h00 = true
@@ -542,25 +539,41 @@ class Home
                 if h00 == true
                   zone_option_of_time.push(h00_data)
                 elsif h00 == false
-                  zone_option_of_time.push([0, h.to_s + ":00", 0])
+                  if h == temp_begin_hour && temp_begin_minute > 0
+                    zone_option_of_time.push([1, h.to_s + ":00", 0])
+                  else
+                    zone_option_of_time.push([0, h.to_s + ":00", 0])
+                  end
                 end
 
                 if h15 == true
                   zone_option_of_time.push(h15_data)
                 elsif h15 == false
-                  zone_option_of_time.push([0, h.to_s + ":15", 0])
+                  if h == temp_begin_hour && temp_begin_minute >= 15
+                    zone_option_of_time.push([1, h.to_s + ":15", 0])
+                  else
+                    zone_option_of_time.push([0, h.to_s + ":15", 0])
+                  end
                 end
 
                 if h30 == true
                   zone_option_of_time.push(h30_data)
                 elsif h30 == false
-                  zone_option_of_time.push([0, h.to_s + ":30", 0])
+                  if h == temp_begin_hour && temp_begin_minute >= 30
+                    zone_option_of_time.push([1, h.to_s + ":30", 0])
+                  else
+                    zone_option_of_time.push([0, h.to_s + ":30", 0])
+                  end
                 end
 
                 if h45 == true
                   zone_option_of_time.push(h45_data)
                 elsif h45 == false
-                  zone_option_of_time.push([0, h.to_s + ":45", 0])
+                  if h == temp_begin_hour && temp_begin_minute >= 45
+                    zone_option_of_time.push([1, h.to_s + ":45", 0])
+                  else
+                    zone_option_of_time.push([0, h.to_s + ":45", 0])
+                  end
                 end
 
                 #zone_option_of_time.push([0,h.to_s + ":00"])
@@ -663,75 +676,120 @@ class Home
 
   def self.save_booking(booker, origin_booking)
     begin
-      is_pass = false
       restaurant = Restaurant.find(origin_booking[:restaurant_id].to_i)
-
       booker_id = nil
 
       if booker.id.blank?
-        is_pass = true
         booker_id = nil
       elsif booker.id != origin_booking[:booker_id].to_i       # check null params value can to_i ?
         return {:error => true, :message => '阿! 發生錯誤了! 訂位失敗!'}
       elsif booker.id == origin_booking[:booker_id].to_i
-        is_pass = true
         booker_id = booker.id
       end
 
-      if is_pass == true
-        Booking.transaction do
-          booking = Booking.new
-          booking.user_id = booker_id
-          booking.restaurant_id = restaurant.id
-          booking.res_url = restaurant.res_url
-          booking.restaurant_name = restaurant.name
-          booking.restaurant_address = restaurant.city + restaurant.area + restaurant.address
-          booking.booking_time = Time.parse(origin_booking[:booking_time].to_s)
-          booking.num_of_people = origin_booking[:booking_people].to_i
-          booking.name = origin_booking[:booker_name]
-          booking.phone = origin_booking[:booker_phone]
-          booking.email = origin_booking[:booker_email]
-          booking.remark = origin_booking[:remark]
-          booking.status = '0'
-          booking.save
+      booking_people = origin_booking[:booking_people].to_i
+      time_zone_id = origin_booking[:time_zone_id].to_i
+      booking_time = Time.parse(origin_booking[:booking_time].to_s)
+      day_booking = DayBooking.where(:restaurant_id => restaurant, :day => Date.parse(booking_time.to_s)).first
+      time_zone = TimeZone.find(time_zone_id)
 
-          time_zone = TimeZone.find( origin_booking[:time_zone_id].to_i)
+      # ========================= validation
+      if (booking_people > time_zone.each_allow)
+        return {:error => true, :message => '你的訂位人數已經超過該餐廳此時段一次接待客人的數量喔，大量人數訂位請直洽餐廳喔!'}
+      end
 
-          day_booking = DayBooking.where(:restaurant_id => restaurant, :day => Date.parse(booking.booking_time.to_s)).first
+      if Time.now > booking_time
+        return {:error => true, :message => '訂位時間必須大於現在時間喔!'}
+      end
 
-          if day_booking.blank?
-            day_booking = DayBooking.new
-            day_booking.restaurant_id = restaurant.id
-            day_booking.day = Date.parse(booking.booking_time.to_s)
-            day_booking.zone1 = 0
-            day_booking.zone2 = 0
-            day_booking.zone3 = 0
-            day_booking.zone4 = 0
-            day_booking.zone5 = 0
-            day_booking.zone6 = 0
-            day_booking.other = 0
-
-          end
-
-          if time_zone.sequence == 0
-            day_booking.zone1 = day_booking.zone1 + booking.num_of_people
-          elsif time_zone.sequence == 1
-            day_booking.zone2 = day_booking.zone2 + booking.num_of_people
-          elsif time_zone.sequence == 2
-            day_booking.zone3 = day_booking.zone3 + booking.num_of_people
-          elsif time_zone.sequence == 3
-            day_booking.zone4 = day_booking.zone4 + booking.num_of_people
-          elsif time_zone.sequence == 4
-            day_booking.zone5 = day_booking.zone5 + booking.num_of_people
-          elsif time_zone.sequence == 5
-            day_booking.zone6 = day_booking.zone6 + booking.num_of_people
-          end
-          day_booking.save
-
-          send_mail_result = MyMailer.booking_success(booking.email, booking).deliver   # Send mail fail may be the email problem, check time out
-
-          return {:success => true, :data => '訂位成功!', :booking_id => booking.id }
+      if time_zone.sequence == 0
+        if (day_booking.zone1 + booking_people) > time_zone.total_allow
+          return {:error => true, :message => '你的訂位人數已經超過該餐廳此時段還可提供訂位的人數，請電話詢問餐廳是否還有位子，以確保權益!'}
         end
+      elsif time_zone.sequence == 1
+        if (day_booking.zone2 + booking_people) > time_zone.total_allow
+          return {:error => true, :message => '你的訂位人數已經超過該餐廳此時段還可提供訂位的人數，請電話詢問餐廳是否還有位子，以確保權益!'}
+        end
+      elsif time_zone.sequence == 2
+        if (day_booking.zone3 + booking_people) > time_zone.total_allow
+          return {:error => true, :message => '你的訂位人數已經超過該餐廳此時段還可提供訂位的人數，請電話詢問餐廳是否還有位子，以確保權益!'}
+        end
+      elsif time_zone.sequence == 3
+        if (day_booking.zone4 + booking_people) > time_zone.total_allow
+          return {:error => true, :message => '你的訂位人數已經超過該餐廳此時段還可提供訂位的人數，請電話詢問餐廳是否還有位子，以確保權益!'}
+        end
+      elsif time_zone.sequence == 4
+        if (day_booking.zone5 + booking_people) > time_zone.total_allow
+          return {:error => true, :message => '你的訂位人數已經超過該餐廳此時段還可提供訂位的人數，請電話詢問餐廳是否還有位子，以確保權益!'}
+        end
+      elsif time_zone.sequence == 5
+        if (day_booking.zone6 + booking_people) > time_zone.total_allow
+          return {:error => true, :message => '你的訂位人數已經超過該餐廳此時段還可提供訂位的人數，請電話詢問餐廳是否還有位子，以確保權益!'}
+        end
+      end
+
+      time_fifteen_sum = Booking.where(:restaurant_id => restaurant.id).where(:booking_time => Date.parse(booking_time.to_s)).sum(:num_of_people)
+
+      if (time_fifteen_sum + booking_people) > time_zone.fifteen_allow
+        return {:error => true, :message => '你的訂位人數已經超過該餐廳此時段還可提供訂位的人數，請電話詢問餐廳是否還有位子，以確保權益!'}
+      end
+      # ========================= end of validation
+
+      Booking.transaction do
+        booking = Booking.new
+        booking.user_id = booker_id
+        booking.restaurant_id = restaurant.id
+        booking.res_url = restaurant.res_url
+        booking.restaurant_name = restaurant.name
+        booking.restaurant_address = restaurant.city + restaurant.area + restaurant.address
+        booking.booking_time = booking_time
+        booking.num_of_people = booking_people
+        booking.name = origin_booking[:booker_name]
+        booking.phone = origin_booking[:booker_phone]
+        booking.email = origin_booking[:booker_email]
+        booking.remark = origin_booking[:remark]
+        booking.status = '0'
+        booking.save
+
+        time_zone = TimeZone.find( origin_booking[:time_zone_id].to_i)
+
+        day_booking = DayBooking.where(:restaurant_id => restaurant, :day => Date.parse(booking.booking_time.to_s)).first
+
+        if day_booking.blank?
+          day_booking = DayBooking.new
+          day_booking.restaurant_id = restaurant.id
+          day_booking.day = Date.parse(booking.booking_time.to_s)
+          day_booking.zone1 = 0
+          day_booking.zone2 = 0
+          day_booking.zone3 = 0
+          day_booking.zone4 = 0
+          day_booking.zone5 = 0
+          day_booking.zone6 = 0
+          day_booking.other = 0
+        end
+
+        if time_zone.sequence == 0
+          day_booking.zone1 = day_booking.zone1 + booking.num_of_people
+        elsif time_zone.sequence == 1
+          day_booking.zone2 = day_booking.zone2 + booking.num_of_people
+        elsif time_zone.sequence == 2
+          day_booking.zone3 = day_booking.zone3 + booking.num_of_people
+        elsif time_zone.sequence == 3
+          day_booking.zone4 = day_booking.zone4 + booking.num_of_people
+        elsif time_zone.sequence == 4
+          day_booking.zone5 = day_booking.zone5 + booking.num_of_people
+        elsif time_zone.sequence == 5
+          day_booking.zone6 = day_booking.zone6 + booking.num_of_people
+        end
+        day_booking.save
+
+        if !booking.email.blank? && !(booking.email =~ /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/).blank?
+          send_mail_result = MyMailer.booking_success(booking.email, booking).deliver   # Send mail fail may be the email problem, check time out
+        else
+          email_not_allow =  'true'
+        end
+
+        return {:success => true, :data => '訂位成功!', :booking_id => booking.id }
       end
     rescue => e
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/Models/home.rb  ,Method:save_booking(user_id, booking)"
