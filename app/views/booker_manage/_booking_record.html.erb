@@ -35,9 +35,18 @@
     <div style="width: 15%; font-size: 16px; text-align: right;float: left; margin-top: -10px; margin-bottom: 5px">
       消費感想：
     </div>
-    <div style="width: 85%; font-size: 16px; text-align: left;float: right; margin-top: -10px; margin-bottom: 5px">
-      <%= booking.feedback %>
-      <a href="#myModal" role="button" data-toggle="modal" name="showModal" data-value="<%= booking.id %>" id="feedback_btn" style="font-size: 16px;color: blue;padding-left: 10px">輸入感想</a>
+    <div name="feedback_div" style="width: 85%; font-size: 16px; text-align: left;float: right; margin-top: -10px; margin-bottom: 5px">
+
+      <label name="feedback_label"><%= booking.feedback %></label>
+      <textarea name="feedback_area" style="display: none"><%= booking.feedback %></textarea>
+      <a href="#" name="showEdit" data-value="<%= booking.id %>" style="font-size: 16px;color: blue;padding-left: 10px">輸入感想</a>
+
+      <div name="btn_div" style="display: none">
+        <button class="btn" name='save_feedback'>確定</button>
+        <button class="btn" name='close_edit'>關閉</button>
+      </div>
+
+      <!--<a href="#myModal" role="button" data-toggle="modal" name="showModal" data-value="<% booking.id %>" id="feedback_btn" style="font-size: 16px;color: blue;padding-left: 10px">輸入感想</a>-->
     </div>
 
   </div>

@@ -51,7 +51,7 @@ class HomeController < ApplicationController
       result = {:success => true, :attachmentPartial => render_to_string('home/_booking_zone', :layout => false, :locals => { :booking_condition => @booking_condition, :booking_day => @booking_day, :restaurant => @restaurant, :booker => @booker })}
       render json: result
     else
-      return {:error => true, :message => '沒有此家餐廳!'}
+      render json: {:error => true, :message => '沒有此家餐廳!'}
     end
   end
 
@@ -63,14 +63,25 @@ class HomeController < ApplicationController
   end
 
   def notice_friend
-    params[:booking_id]
-    params[:email]
+    begin
+      booking_id = params[:booking_id].to_i
+      notice_emails = params[:notice_emails].strip
 
-    if params[:booking_id].blank? || params[:email].blank?
-      return {:error => true, :message => '阿! 發生錯誤了! 通知失敗!'}
+      if booking_id.blank? || notice_emails.blank?
+        render json: {:error => true, :message => '阿! 發生錯誤了! 通知失敗!'}
+      end
+
+      result = MyMailer.notify_friend(notice_emails, booking_id).deliver
+
+      if result.perform_deliveries
+        render json: {:success => true, :data => '通知成功!' }
+      else
+        render json: {:error => true, :message => '阿! 發生錯誤了! 通知失敗!'}
+      end
+
+    rescue => e
+      render json: {:error => true, :message => '阿! 發生錯誤了! 通知失敗!'}
     end
-
-    MyMailer.notify_friend(params[:email], params[:booking_id]).deliver
   end
 
   def cancel_booking
@@ -80,7 +91,7 @@ class HomeController < ApplicationController
       @restaurant = Restaurant.find(@booking.restaurant_id)
     rescue => e
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/controllers/home_controller.rb ,Action:cancel_booking"
-      return {:error => true, :message => '阿! 發生錯誤了! 資料異常!'}
+      render json: {:error => true, :message => '阿! 發生錯誤了! 資料異常!'}
     end
   end
 

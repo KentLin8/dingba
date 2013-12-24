@@ -142,6 +142,65 @@
   <img class="content" src="/assets/booker/blog.jpg" alt="">
 </div>
 
+<div id="bookingModal" class="modal hide fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <input id="booking_id_hidden" type="hidden" value="">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" name="close_bookingModal">×</button>
+    <h4>訂位成功</h4>
+  </div>
+  <div class="modal-body" style="font-size: 16px">
+    我們已經收到你的訂位，<div id="has_mail_div" style="font-size: 16px">並且已經發送E-Mail 提醒您。</div>謝謝你使用DingBa提供的訂位服務。
+    <textarea id="notice_emails" placeholder="直接輸入E-mail, 並以”,”區分不同收件者"></textarea>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" id="noticeFriend">通知好友</button>
+    <button class="btn" data-dismiss="modal" aria-hidden="true" name='close_bookingModal'>關閉</button>
+  </div>
+</div>
+
+
+
+<script>
+    $('[name=bookingModal]').click(function(){
+        $('#bookingModal').show();
+    });
+
+    $('[name=close_bookingModal]').click(function(){
+        $('#bookingModal').hide();
+        window.location.href = '/booker_manage/index';
+    });
+
+    $('#noticeFriend').click(function(){
+        var notice_emails = $('#notice_emails').val()
+        var booking_id = $('#booking_id_hidden').val()
+
+        $.ajax({
+            url: "/home/notice_friend",
+            type: 'POST',
+            data:  {booking_id: booking_id, notice_emails: notice_emails},
+            cache: false,
+            async: false,
+            success: function(response){
+                $('#bookingModal').hide();
+
+                if (response.success)
+                    alert(response.data)
+                else if (response.error)
+                    alert(response.message)
+                else
+                    alert('發生未預期的回應，請告知CoDream小組處理!')
+
+                window.location.href = '/booker_manage/index';
+            },
+            error: function(){
+                $('#bookingModal').hide();
+                alert('oops! 出現錯誤了!');
+
+                window.location.href = '/booker_manage/index';
+            }
+        });
+    });
+</script>
 
 <script type='text/javascript'>
     $("#booking_date").datepicker({
@@ -251,15 +310,6 @@
             return false
         }
 
-        if ($.trim($('#b_email').val()) == ''){
-            alert("訂位者姓名不能為空喔!")
-            return false
-        }
-        else if (!$.trim($('#b_email').val()).match(/\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/)){
-            alert("email不符規則!")
-            return false
-        }
-
         $.ajax({
             url: "/home/save_booking",
             type: 'POST',
@@ -267,8 +317,19 @@
             cache: false,
             async: false,
             success: function(response){
-                if (response.success)
-                    alert(response.data)
+                if (response.success){
+                    $('#booking_id_hidden').val(response.booking_id);
+
+                    if (response.booking_notice_type == 'one'){
+                        $('#noticeFriend').hide();
+                        $('#notice_emails').hide();
+                    }
+
+                    if (response.has_mail == false){
+                        $('#has_mail_div').hide();
+                    }
+                    $('#bookingModal').show();
+                }
                 else if (response.error)
                     alert(response.message)
                 else

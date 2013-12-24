@@ -92,11 +92,11 @@ $ ->
 
   $('#tabs').tabs()
 
-  $(document).on 'click', '.add_comment', (e) ->
-    e.preventDefault()
-    $('#comment').show().offset($(this).offset()).find(':hidden').val($(this).data('id'))
-
-  $(document).on 'submit', '.#comment form', (e) ->
-    $.post('padding_url', $(this).serialize())
-    .done( -> alert '發訊完成' )
-    .fail( -> alert '發訊失敗' )
+#  $(document).on 'click', '.add_comment', (e) ->
+#    e.preventDefault()
+#    $('#comment').show().offset($(this).offset()).find(':hidden').val($(this).data('id'))
+#
+#  $(document).on 'submit', '.#comment form', (e) ->
+#    $.post('padding_url', $(this).serialize())
+#    .done( -> alert '發訊完成' )
+#    .fail( -> alert '發訊失敗' )

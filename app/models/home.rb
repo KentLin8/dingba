@@ -702,29 +702,31 @@ class Home
         return {:error => true, :message => '訂位時間必須大於現在時間喔!'}
       end
 
-      if time_zone.sequence == 0
-        if (day_booking.zone1 + booking_people) > time_zone.total_allow
-          return {:error => true, :message => '你的訂位人數已經超過該餐廳此時段還可提供訂位的人數，請電話詢問餐廳是否還有位子，以確保權益!'}
-        end
-      elsif time_zone.sequence == 1
-        if (day_booking.zone2 + booking_people) > time_zone.total_allow
-          return {:error => true, :message => '你的訂位人數已經超過該餐廳此時段還可提供訂位的人數，請電話詢問餐廳是否還有位子，以確保權益!'}
-        end
-      elsif time_zone.sequence == 2
-        if (day_booking.zone3 + booking_people) > time_zone.total_allow
-          return {:error => true, :message => '你的訂位人數已經超過該餐廳此時段還可提供訂位的人數，請電話詢問餐廳是否還有位子，以確保權益!'}
-        end
-      elsif time_zone.sequence == 3
-        if (day_booking.zone4 + booking_people) > time_zone.total_allow
-          return {:error => true, :message => '你的訂位人數已經超過該餐廳此時段還可提供訂位的人數，請電話詢問餐廳是否還有位子，以確保權益!'}
-        end
-      elsif time_zone.sequence == 4
-        if (day_booking.zone5 + booking_people) > time_zone.total_allow
-          return {:error => true, :message => '你的訂位人數已經超過該餐廳此時段還可提供訂位的人數，請電話詢問餐廳是否還有位子，以確保權益!'}
-        end
-      elsif time_zone.sequence == 5
-        if (day_booking.zone6 + booking_people) > time_zone.total_allow
-          return {:error => true, :message => '你的訂位人數已經超過該餐廳此時段還可提供訂位的人數，請電話詢問餐廳是否還有位子，以確保權益!'}
+      if !day_booking.blank?
+        if time_zone.sequence == 0
+          if (day_booking.zone1 + booking_people) > time_zone.total_allow
+            return {:error => true, :message => '你的訂位人數已經超過該餐廳此時段還可提供訂位的人數，請電話詢問餐廳是否還有位子，以確保權益!'}
+          end
+        elsif time_zone.sequence == 1
+          if (day_booking.zone2 + booking_people) > time_zone.total_allow
+            return {:error => true, :message => '你的訂位人數已經超過該餐廳此時段還可提供訂位的人數，請電話詢問餐廳是否還有位子，以確保權益!'}
+          end
+        elsif time_zone.sequence == 2
+          if (day_booking.zone3 + booking_people) > time_zone.total_allow
+            return {:error => true, :message => '你的訂位人數已經超過該餐廳此時段還可提供訂位的人數，請電話詢問餐廳是否還有位子，以確保權益!'}
+          end
+        elsif time_zone.sequence == 3
+          if (day_booking.zone4 + booking_people) > time_zone.total_allow
+            return {:error => true, :message => '你的訂位人數已經超過該餐廳此時段還可提供訂位的人數，請電話詢問餐廳是否還有位子，以確保權益!'}
+          end
+        elsif time_zone.sequence == 4
+          if (day_booking.zone5 + booking_people) > time_zone.total_allow
+            return {:error => true, :message => '你的訂位人數已經超過該餐廳此時段還可提供訂位的人數，請電話詢問餐廳是否還有位子，以確保權益!'}
+          end
+        elsif time_zone.sequence == 5
+          if (day_booking.zone6 + booking_people) > time_zone.total_allow
+            return {:error => true, :message => '你的訂位人數已經超過該餐廳此時段還可提供訂位的人數，請電話詢問餐廳是否還有位子，以確保權益!'}
+          end
         end
       end
 
@@ -785,11 +787,19 @@ class Home
 
         if !booking.email.blank? && !(booking.email =~ /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/).blank?
           send_mail_result = MyMailer.booking_success(booking.email, booking).deliver   # Send mail fail may be the email problem, check time out
-        else
-          email_not_allow =  'true'
         end
 
-        return {:success => true, :data => '訂位成功!', :booking_id => booking.id }
+        has_mail = false
+        if !send_mail_result.blank?
+          has_mail = true
+        end
+
+        if booking.num_of_people > 1
+          booking_notice_type = 'multi'
+        elsif booking.num_of_people == 1
+          booking_notice_type = 'one'
+        end
+        return {:success => true, :data => '訂位成功!', :booking_id => booking.id, :booking_notice_type => booking_notice_type, :has_mail => has_mail}
       end
     rescue => e
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/Models/home.rb  ,Method:save_booking(user_id, booking)"
