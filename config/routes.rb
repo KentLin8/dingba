@@ -57,7 +57,8 @@ DingBa::Application.routes.draw do
 
   get  'restaurant_manage/modify_booking'
   post 'restaurant_manage/modify_booking_save'
-  post 'restaurant_manage/cancel_booking'
+  get  'restaurant_manage/cancel_booking'
+  post 'restaurant_manage/cancel_booking_save'
 
   get  'restaurant_manage/day_booking'
   get  'restaurant_manage/query_books_by_date'

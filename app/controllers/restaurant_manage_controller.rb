@@ -230,10 +230,20 @@ class RestaurantManageController < ApplicationController
     render json: result
   end
 
+  def cancel_booking
+    begin
+      @booking = Booking.find(params[:booking_id].to_i)
+    rescue => e
+      Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/controllers/restaurant_manage_controller.rb  ,Action:cancel_booking"
+    end
+
+    render 'restaurant_manage/_cancel_booking', :layout => false
+  end
+
   # ====== Code Check: 2013/12/08 ====== [ panda: TODO: wait Front-end engineering ]
   # POST === Function: cancel booking
   # =========================================================================
-  def cancel_booking
+  def cancel_booking_save
     result = RestaurantManage.cancel_booking(params[:booking_id], params[:status], params[:cancel_note])
     render json: result
   end

@@ -370,7 +370,7 @@ $ ->
 
   show_delete_form = (tr) ->
     id = tr.data('id')
-    $.get('test/delete_form', {id: id}, 'html')
+    $.get('/restaurant_manage/cancel_booking', {booking_id: id}, 'html')
       .done( (response) ->
         new_tr = $($.parseHTML(response, document, true))
         tr.after(new_tr)
