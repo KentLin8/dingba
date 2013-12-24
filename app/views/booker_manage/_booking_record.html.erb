@@ -3,10 +3,9 @@
 
   <div style="width:100%; border: 1px solid rgb(207,207,207);margin-bottom: 2px">
   </div>
-
   <div style="float:left; width: 40%; height: 50%;text-align: center">
     <h4><%= booking.booking_time.strftime("%Y-%m-%d %H:%M")%></h4>
-    <img width="300" height="225" src="/res/<%= booking.restaurant_id %>/images/<%= booking.restaurant_pic %>" alt="RES_PIC">
+    <img width="300" height="225" src="/res/<%= booking.restaurant_id %>/images/<%= booking.restaurant_pic %>" alt="">
   </div>
   <div style="float: right; width: 60%; height: 50%">
     <div style="width: 15%; font-size: 16px; text-align: right;float: left; margin-top: 10px; margin-bottom: 5px">
@@ -17,9 +16,11 @@
       電話：</br>
       人數：</br>
       出席者：</br>
-      備註：
+      備註：</br>
+      狀態：
     </div>
     <div style="width: 85%; font-size: 16px; text-align: left;float: right; margin-top: 10px; margin-bottom: 5px">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true" name="cancel_booking_btn" data-value="<%= booking.id %>" style="font-size: 26px">×</button>
       <%= booking.restaurant_name %></br>
       <%= booking.restaurant_address %></br>
       <%= booking.name %></br>
@@ -28,6 +29,26 @@
       <%= booking.num_of_people %></br>
       <%= booking.participants %></br>
       <%= booking.remark %></br>
+
+      <label id="<%= booking.id %>" style="font-size: 16px">
+      <% if booking.status == '0' %>
+          已訂位(未用餐)
+      <% elsif booking.status == '1' %>
+          已訂位(用完餐)
+      <% elsif booking.status == '2' %>
+          取消訂位(同伴無法配合)
+      <% elsif booking.status == '3' %>
+          取消訂位(餐廳當天座位不夠)
+      <% elsif booking.status == '4' %>
+          取消訂位(選擇了其他餐廳)
+      <% elsif booking.status == '5' %>
+          取消訂位(餐廳臨時公休)
+      <% elsif booking.status == '6' %>
+          取消訂位(聚餐延期)
+      <% elsif booking.status == '7' %>
+          取消訂位(原因:<%= booking.cancel_note%>)
+      <% end %>
+      </label>
     </div>
 
     <hr color="#D6D6D6" size="5" width="100%">

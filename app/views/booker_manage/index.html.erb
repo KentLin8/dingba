@@ -14,26 +14,30 @@
   </div>
 </div>
 
-<div id="myModal" class="modal hide fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div id="cancelBookingModal" class="modal hide fade in" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true" name="close_modal">×</button>
-    <h4 id="myModalLabel">輸入消費感想</h4>
+    <h4 id="myModalLabel">取消訂位</h4>
   </div>
   <div class="modal-body">
-    <textarea id="feedback"></textarea>
+    <input id="booking_id_hidden_cancel" type="hidden" value="">
+    <label><input type="radio" name="cancel_radio" value="2">同伴無法配合</label>
+    <label><input type="radio" name="cancel_radio" value="3">餐廳當天座位不夠</label>
+    <label><input type="radio" name="cancel_radio" value="4">選擇了其他餐廳</label>
+    <label><input type="radio" name="cancel_radio" value="5">餐廳臨時公休</label>
+    <label><input type="radio" name="cancel_radio" value="6">聚餐延期</label>
+    <label><input type="radio" name="cancel_radio" value="7">其他，因為：</label>
+    <textarea id="cancel_note"></textarea>
   </div>
   <div class="modal-footer">
-    <button class="btn btn-primary" name="save_feedback">儲存</button>
-    <button class="btn" data-dismiss="modal" aria-hidden="true" name='close_modal'>關閉</button>
+    <button class="btn btn-primary" name="cancel_booking_btn_modal">取消訂位</button>
+    <button type="button" class="btn" data-dismiss="modal" aria-hidden="true" name='close_modal'>關閉</button>
   </div>
 </div>
 
 <script>
 
     $('[name=showEdit]').click(function(){
-
-        //$('#feedback').text($('#feedback_hidden').val())
-
         $('[name=btn_div]').hide();
         $('[name=feedback_area]').hide();
         $('[name=feedback_label]').show();
@@ -65,17 +69,6 @@
         $('[name=showEdit]').show();
     });
 
-
-    $('[name=showModal]').click(function(){
-        //$('body').css({'overflow':'hidden'});
-        $('#feedback').text($('#feedback_hidden').val())
-        $('#myModal').show().offset($(this).offset());
-    });
-
-    $('[name=close_modal]').click(function(){
-        $('#myModal').hide();
-    });
-
     $('[name=save_feedback]').click(function(){
         var booking_id = ''
         var feedback = ''
@@ -96,9 +89,6 @@
             feedback = $(this).val();
         });
 
-        //var feedback = $('#feedback').val()
-        //var booking_id = $('#feedback_btn').data('value')
-
         $.ajax({
             url: "/booker_manage/feedback",
             type: 'POST',
@@ -106,8 +96,6 @@
             cache: false,
             async: false,
             success: function(response){
-                //$('#myModal').hide();
-
                 if (response.success){
                     obj_area.text(feedback);
                     obj_label.text(feedback);
@@ -129,12 +117,57 @@
                 $('[name=showEdit]').show();
             },
             error: function(){
-                //$('#myModal').hide();
                 obj_area.val(obj_label.text())
                 $('[name=btn_div]').hide();
                 $('[name=feedback_area]').hide();
                 $('[name=feedback_label]').show();
                 $('[name=showEdit]').show();
+                alert('oops! 出現錯誤了!');
+            }
+        });
+    });
+
+    $('[name=cancel_booking_btn]').click(function(){
+        $('#booking_id_hidden_cancel').val($(this).data('value'))
+        $('#cancelBookingModal').show()
+    });
+
+    $('[name=close_modal]').click(function(){
+        $('#cancelBookingModal').hide();
+    });
+
+    $('[name=cancel_booking_btn_modal]').click(function(){
+
+        var booking_id = $('#booking_id_hidden_cancel').val();
+        var status = $('input[name="cancel_radio"]:checked').val();
+        var cancel_note = $('#cancel_note').val();
+        var status_label = '#' + booking_id;
+        var obj_label = $(status_label);
+
+        $.ajax({
+            url: '/home/save_cancel_booking',
+            type: 'POST',
+            data:  {booking_id: booking_id, status: status, cancel_note:cancel_note},
+            cache: false,
+            async: false,
+            success: function(response){
+                $('input[name="cancel_radio"]:checked').prop('checked', false);
+                $('#cancel_note').val('');
+                $('#cancelBookingModal').hide();
+
+                if (response.success){
+                    obj_label.text(response.status_string)
+                    alert(response.data)
+                }
+                else if (response.error){
+                    alert(response.message)
+                }
+                else {
+                    alert('發生未預期的回應，請告知CoDream小組處理!')
+                }
+            },
+            error: function(){
+                $('#cancelBookingModal').hide();
                 alert('oops! 出現錯誤了!');
             }
         });

@@ -234,7 +234,7 @@ class RestaurantManageController < ApplicationController
   # POST === Function: cancel booking
   # =========================================================================
   def cancel_booking
-    result = RestaurantManage.cancel_booking(params[:booking])
+    result = RestaurantManage.cancel_booking(params[:booking_id], params[:status], params[:cancel_note])
     render json: result
   end
 

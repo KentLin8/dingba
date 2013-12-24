@@ -737,6 +737,18 @@ class Home
       end
       # ========================= end of validation
 
+      if restaurant.front_cover == '1'
+        restaurant_pic = restaurant.pic_name1
+      elsif restaurant.front_cover == '2'
+        restaurant_pic = restaurant.pic_name2
+      elsif restaurant.front_cover == '3'
+        restaurant_pic = restaurant.pic_name3
+      elsif restaurant.front_cover == '4'
+        restaurant_pic = restaurant.pic_name4
+      elsif restaurant.front_cover == '5'
+        restaurant_pic = restaurant.pic_name5
+      end
+
       Booking.transaction do
         booking = Booking.new
         booking.user_id = booker_id
@@ -751,6 +763,7 @@ class Home
         booking.email = origin_booking[:booker_email]
         booking.remark = origin_booking[:remark]
         booking.status = '0'
+        booking.restaurant_pic = restaurant_pic
         booking.save
 
         time_zone = TimeZone.find( origin_booking[:time_zone_id].to_i)

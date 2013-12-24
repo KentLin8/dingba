@@ -96,7 +96,7 @@ class HomeController < ApplicationController
   end
 
   def save_cancel_booking
-    result = RestaurantManage.cancel_booking(params[:booking])
+    result = RestaurantManage.cancel_booking(params[:booking_id], params[:status], params[:cancel_note])
     render json: result
   end
 

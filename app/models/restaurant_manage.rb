@@ -584,26 +584,39 @@ class RestaurantManage
     end
   end
 
-  def self.cancel_booking(origin_booking)
+  def self.cancel_booking(booking_id, status, cancel_note)
     begin
         Booking.transaction do
-        booking = Booking.find(origin_booking[:id].to_i)
-        booking.status = origin_booking[:status]
-        booking.cancel_note = origin_booking[:cancel_note] if booking.status == '6'
-        booking.save
+        booking = Booking.find(booking_id.to_i)
 
-        daybooking = DayBooking.where(:restaurant_id => booking.restaurant_id, :day => Date.parse(booking.booking_time.to_s))
-        if daybooking.blank?
-          Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/models/restaurant_manage.rb  ,Method:cancel_booking(origin_booking)"
+        if booking.status.blank?
           return {:error => true, :message => '阿! 發生錯誤了! 取消訂位失敗!'}
         end
 
+        if booking.status == '1'
+          return {:error => true, :message => '已經到店用餐，無法取消訂位!'}
+        elsif booking.status != '0'
+          return {:error => true, :message => '該訂位已經取消，無法再取消訂位，目前不開放，變更取消原因!'}
+        end
+
+        booking.status = status
+        if booking.status == '7'
+          booking.cancel_note = cancel_note
+        end
+        booking.save
+
+        day_booking = DayBooking.where(:restaurant_id => booking.restaurant_id, :day => Date.parse(booking.booking_time.to_s))
+        if day_booking.blank?
+          Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/models/restaurant_manage.rb  ,Method:cancel_booking(origin_booking)"
+          return {:error => true, :message => '阿! 發生錯誤了! 取消訂位失敗!'}
+        end
+        day_booking = day_booking.first
         day_begin = Time.parse(booking.booking_time.strftime("%Y-%m-%d") + " 00:00")
         conditions = SupplyCondition.where(:restaurant_id => booking.restaurant_id, :status => 't').where('range_begin <= ?', day_begin).where('range_end >= ?',day_begin).order('sequence ASC')
 
         if conditions.blank?
-          daybooking.other = daybooking.zone1 + daybooking.zone2 + daybooking.zone3 + daybooking.zone4 + daybooking.zone5 + daybooking.zone6
-          daybooking.save
+          day_booking.other = day_booking.zone1 + day_booking.zone2 + day_booking.zone3 + day_booking.zone4 + day_booking.zone5 + day_booking.zone6
+          day_booking.save
           return {:success => true, :data => '已取消訂位!'}
         end
 
@@ -612,27 +625,41 @@ class RestaurantManage
         zones.each do |z|
           if z.range_begin <= booking.booking_time && z.range_end > booking.booking_time
             if z.sequence == 0
-              daybooking.zone1 = daybooking.zone1 - booking.num_of_people
+              day_booking.zone1 = day_booking.zone1 - booking.num_of_people
             elsif z.sequence == 1
-              daybooking.zone2 = daybooking.zone2 - booking.num_of_people
+              day_booking.zone2 = day_booking.zone2 - booking.num_of_people
             elsif z.sequence == 2
-              daybooking.zone3 = daybooking.zone3 - booking.num_of_people
+              day_booking.zone3 = day_booking.zone3 - booking.num_of_people
             elsif z.sequence == 3
-              daybooking.zone4 = daybooking.zone4 - booking.num_of_people
+              day_booking.zone4 = day_booking.zone4 - booking.num_of_people
             elsif z.sequence == 4
-              daybooking.zone5 = daybooking.zone5 - booking.num_of_people
+              day_booking.zone5 = day_booking.zone5 - booking.num_of_people
             elsif z.sequence == 5
-              daybooking.zone6 = daybooking.zone6 - booking.num_of_people
+              day_booking.zone6 = day_booking.zone6 - booking.num_of_people
             end
             break;
           end
         end
 
-        daybooking.save
+        day_booking.save
 
         MyMailer.cancel_booking(booking.email ,booking).deliver
 
-        return {:success => true, :data => '已取消訂位!'}
+        if booking.status == '2'
+          status_string = '取消訂位(同伴無法配合)'
+        elsif booking.status == '3'
+          status_string = '取消訂位(餐廳當天座位不夠)'
+        elsif booking.status == '4'
+          status_string = '取消訂位(選擇了其他餐廳)'
+        elsif booking.status == '5'
+          status_string = '取消訂位(餐廳臨時公休)'
+        elsif booking.status == '6'
+          status_string = '取消訂位(聚餐延期)'
+        elsif booking.status == '7'
+          status_string = '取消訂位(原因:' + cancel_note  + ')'
+        end
+
+        return {:success => true, :data => '已取消訂位!', :status_string => status_string}
       end
     rescue => e
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/models/restaurant_manage.rb  ,Method:cancel_booking(origin_booking)"
