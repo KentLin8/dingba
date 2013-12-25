@@ -104,12 +104,12 @@ class HomeController < ApplicationController
     begin
       @booker = User.new
       if !current_user.blank?
-        if current_user.role == '0'   # restaurant
+        #if current_user.role == '0'   # restaurant
           #signed_out = (Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name))
           #redirect_to confirmation_getting_started_path
-        elsif current_user.role == '1'  # booker
+        #elsif current_user.role == '1'  # booker
           @booker = User.find(current_user.id)
-        end
+        #end
       end
     rescue => e
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/controllers/home_controller.rb  ,Filter:get_user"
