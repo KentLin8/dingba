@@ -1,7 +1,6 @@
 class HomeController < ApplicationController
   layout 'home'
-  before_action :get_user, :only => [:index, :booking_restaurant, :get_condition, :save_booking, :notice_friend, :cancel_booking, :save_cancel_booking]
-  #before_action :get_restaurant, :only => [:booking_restaurant]
+  before_action :get_user, :only => [:wait_confirm_email, :index, :booking_restaurant, :get_condition, :save_booking, :notice_friend, :cancel_booking, :save_cancel_booking]
 
   # =========================================================================
   # panda: 我比較偏向不使用path,因為命名這件事讓trace code變得麻煩一點(must see routes),雖然path可以讓rename 好管理,但基本上!! rename畢竟是很少發生的情況
@@ -19,6 +18,16 @@ class HomeController < ApplicationController
 
   def index
     #主要首頁,p1 不開放
+  end
+
+  def wait_confirm_email
+    if !@booker.id.blank?
+      if @booker.role == '0'
+        redirect_to confirmation_getting_started_path
+      elsif @booker.role == '1'
+        redirect_to booker_manage_index_path
+      end
+    end
   end
 
   # GET the booking url ,when restaurant 2000 ,build home page, and move booking page to this place

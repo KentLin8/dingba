@@ -33,6 +33,8 @@ DingBa::Application.routes.draw do
   post 'home/notice_friend'
   post 'home/save_cancel_booking'
 
+  get  'home/wait_confirm_email'
+
   #==========================================================================
   # restaurant_manage controller
   #==========================================================================
@@ -42,8 +44,8 @@ DingBa::Application.routes.draw do
   get  'restaurant_manage/restaurant_image',     :as => 'res_manage_img'
   post 'restaurant_manage/upload_img',           :as => 'res_upload_img'
 
-  get  'restaurant_manage/image_cover_save'      # TODO wait Front-end engineering
-  get  'restaurant_manage/image_destroy'         # TODO wait Front-end engineering
+  get  'restaurant_manage/image_cover_save'
+  get  'restaurant_manage/image_destroy'
 
   get  'restaurant_manage/supply_condition',     :as => 'res_manage_supply_condition'
   post 'restaurant_manage/condition_state_save'
