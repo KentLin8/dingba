@@ -8,7 +8,7 @@
     <table class="table">
       <tr>
         <td>您的姓名</td>
-        <td><%= text_field_tag :tag_name, params[:tag_name],:class => 'input-block-level' %></td>
+        <td><%= text_field_tag :tag_name, params[:tag_name], :required => true,:class => 'input-block-level' %></td>
       </tr>
       <tr>
         <td>您的E-Mail</td>
@@ -31,12 +31,12 @@
         <td colspan="2"><%= submit_tag "註冊帳號" , { :class => 'btn btn-large btn-block' } %></td>
       </tr>
     </table>
-點擊「註冊帳號」的同時，表示您同意接受我們的個人資料提供同意書以及使用條款<br>
-，也詳讀和完全了解我們的資料使用政策，包括Cookie的使用，<br>
-詳細資訊及內容請參考<a href="" target="_blank" class="base_brown">訂吧 條款</a>
 
+    點擊「註冊帳號」的同時，表示您同意接受我們的個人資料提供同意書以及使用條款，也詳讀和完全了解我們的資料使用政策，包括Cookie的使用，詳細資訊及內容請參考
+    <a href="" target="_blank" class="base_brown">訂吧 條款</a>
   <% end %>
 </div>
+
 <script>
   $('form').submit(function(){
     return validate(this);
