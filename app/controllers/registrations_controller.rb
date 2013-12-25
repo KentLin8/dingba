@@ -5,29 +5,51 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def restaurant_create
+    begin
+      name = params[:tag_name].strip
+      email = params[:tag_email].strip
+      phone = params[:tag_phone].strip
+      password = params[:tag_password].strip
+      i_agree = params[:tag_i_agree].strip    # nil mean not agree clause
 
-    name = params[:tag_name]
-    email = params[:tag_email]
-    phone = params[:tag_phone]
-    password = params[:tag_password]
-    i_agree = params[:tag_i_agree]    # nil mean not agree clause
+      if (name.blank? || email.blank? || phone.blank? || password.blank? || i_agree.blank?)
+        flash.now[:alert] = '有欄位未填喔!'
+        render 'devise/registrations/restaurant_new'
+        return
+      end
 
-    if (name.blank? || email.blank? || phone.blank? || password.blank? || i_agree.blank?)
-      flash.now[:alert] = '有欄位未填喔!'
-      render 'devise/registrations/restaurant_new'
-    else
+      if (email =~ /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/).blank?
+        flash.now[:alert] = 'E-mail 格式錯誤!'
+        render 'devise/registrations/restaurant_new'
+        return
+      end
 
-      person =  { 'name' => name, 'email' => email, 'phone' => phone, 'role' => 0,  # 0 = restaurant
-                  'password' => password, 'password_confirmation' => password }
+      if i_agree != '1'
+        flash.now[:alert] = '資料異常! 註冊失敗!'
+        render 'devise/registrations/restaurant_new'
+        return
+      end
+
+      person =  { 'name' => name,
+                  'email' => email,
+                  'phone' => phone,
+                  'role' => 0,             # 0 = restaurant
+                  'password' => password,
+                  'password_confirmation' => password }
 
       user_id = devise_save(person)
 
       if user_id.blank?
-        flash.now[:alert] = '發生錯誤!'
+        flash.now[:alert] = '發生錯誤! 註冊失敗!'
+        render 'devise/registrations/restaurant_new'
       else
         restaurant_init(phone, user_id)
         #render json: {:success => true, :data => 'Please comfirm email!'}
       end
+    rescue => e
+      Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/controllers/registrations_controller.rb ,Action:restaurant_create"
+      flash.now[:alert] = '發生錯誤! 註冊失敗!'
+      render 'devise/registrations/restaurant_new'
     end
 
   end

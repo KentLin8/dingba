@@ -8,15 +8,15 @@
     <table class="table">
       <tr>
         <td>您的姓名</td>
-        <td><%= text_field_tag :tag_name, nil, :required => true, :class => 'input-block-level' %></td>
+        <td><%= text_field_tag :tag_name, params[:tag_name],:class => 'input-block-level' %></td>
       </tr>
       <tr>
         <td>您的E-Mail</td>
-        <td><%= email_field_tag :tag_email, nil, :required => true, :class => 'input-block-level' %></td>
+        <td><%= email_field_tag :tag_email, params[:tag_email], :required => true, :class => 'input-block-level' %></td>
       </tr>
       <tr>
         <td>餐廳電話</td>
-        <td><%= phone_field_tag :tag_phone, nil, :required => true, :class => 'input-block-level' %></td>
+        <td><%= phone_field_tag :tag_phone, params[:tag_phone], :required => true, :class => 'input-block-level' %></td>
       </tr>
       <tr>
         <td>設定密碼</td>
