@@ -1,7 +1,7 @@
 <tr class="form">
   <td colspan="8">
     <div id="wrapper">
-      <%= form_for :booking ,:url => "restaurant_manage/cancel_booking", :html => {:id => 'cancel_booking'} do |f| %>
+      <%= form_for :booking ,:url => "/restaurant_manage/cancel_booking_save", :html => {:id => 'cancel_booking'} do |f| %>
         <%= f.hidden_field :id %>
         <div class="info">訂位取消</div>
         <table class="table">

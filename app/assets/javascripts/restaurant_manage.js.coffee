@@ -374,7 +374,7 @@ $ ->
       .done( (response) ->
         new_tr = $($.parseHTML(response, document, true))
         tr.after(new_tr)
-        new_tr.find('#wrapper').animate(height: 160)
+        new_tr.find('#wrapper').animate(height: 210)
       )
       .fail( -> alert '讀取失敗' )
 
@@ -408,7 +408,7 @@ $ ->
     next = tr.next()
     if next.hasClass('form')
       next.find('#wrapper').animate(height: 0, -> next.remove())
-      unless next.hasClass('delete')
+      if next.hasClass('delete')
         show_delete_form(tr)
     else
       show_delete_form(tr)
