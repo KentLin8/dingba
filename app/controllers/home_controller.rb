@@ -26,6 +26,10 @@ class HomeController < ApplicationController
     restaurant_url = params[:id]
     booking_day = params[:booking_day]
 
+    #@booking_day = (Date.parse(Time.now.to_s) + 1.days).to_s
+    #if !booking_day.blank?
+    #  @booking_day = booking_day
+    #end
     @restaurant = Restaurant.new
     @restaurant = Home.get_restaurant(restaurant_url)
     @booking_condition = BookingCondition.new

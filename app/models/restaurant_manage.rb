@@ -68,14 +68,19 @@ class RestaurantManage
 
       if restaurant.pic_name1.blank?
         restaurant.pic_name1 = filename
+        restaurant.front_cover = '1' if restaurant.front_cover.blank?
       elsif restaurant.pic_name2.blank?
         restaurant.pic_name2 = filename
+        restaurant.front_cover = '2' if restaurant.front_cover.blank?
       elsif restaurant.pic_name3.blank?
         restaurant.pic_name3 = filename
+        restaurant.front_cover = '3' if restaurant.front_cover.blank?
       elsif restaurant.pic_name4.blank?
         restaurant.pic_name4 = filename
+        restaurant.front_cover = '4' if restaurant.front_cover.blank?
       elsif restaurant.pic_name5.blank?
         restaurant.pic_name5 = filename
+        restaurant.front_cover = '5' if restaurant.front_cover.blank?
       else
         return {:error => true, :message => '只能上傳五張圖片!'}
       end
@@ -180,7 +185,7 @@ class RestaurantManage
         target_condition = SupplyCondition.new
 
         max_sequence = SupplyCondition.maximum(:sequence)
-        max_sequence.blank? ? max_sequence = 0 : max_sequence = max_sequence + 1
+        max_sequence.blank? ? max_sequence = 1 : max_sequence = max_sequence + 1
 
         # why set sequence in this area => because the supply_condition_save method have multi usage, and they don't set sequence
         target_condition.sequence = max_sequence
@@ -623,7 +628,7 @@ class RestaurantManage
         condition = conditions.first
         zones = TimeZone.where(:supply_condition_id => condition.id, :status => 't')
         zones.each do |z|
-          if z.range_begin <= booking.booking_time && z.range_end > booking.booking_time
+          if z.range_begin <= booking.booking_time.strftime("%H:%M") && z.range_end > booking.booking_time.strftime("%H:%M")
             if z.sequence == 0
               day_booking.zone1 = day_booking.zone1 - booking.num_of_people
             elsif z.sequence == 1
