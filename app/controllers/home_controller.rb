@@ -33,8 +33,10 @@ class HomeController < ApplicationController
     @restaurant = Restaurant.new
     @restaurant = Home.get_restaurant(restaurant_url)
     @booking_condition = BookingCondition.new
+    @booking_condition.option_of_time = []
     if !@restaurant.blank?
       @booking_condition = BookingCondition.new
+      @booking_condition.option_of_time = []
       @booking_condition = Home.get_condition(@restaurant, booking_day)
     else
       redirect_to home_path

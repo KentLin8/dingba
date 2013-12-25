@@ -14,6 +14,7 @@ class Home
       #restaurant = Restaurant.where(:res_url => restaurant_url).first
       restaurant = restaurant
       booking_condition = BookingCondition.new
+      booking_condition.option_of_time = []
 
       if booking_day.blank?
         booking_day = Date.parse(Time.now.to_s)
@@ -36,6 +37,7 @@ class Home
 
       if conditions.blank?
         booking_condition = BookingCondition.new
+        booking_condition.option_of_time = []
         booking_condition.error = true
         booking_condition.message = '目前這個時段，餐廳沒有開放的訂位，請選擇較後面的日期查看喲!'
         return booking_condition
@@ -57,6 +59,7 @@ class Home
 
       if effect_condition.blank?
         booking_condition = BookingCondition.new
+        booking_condition.option_of_time = []
         booking_condition.error = true
         booking_condition.message = '目前這個時段，餐廳沒有開放的訂位，請選擇較後面的日期查看喲!'
         return booking_condition
@@ -68,6 +71,7 @@ class Home
 
       if zones.blank?
         booking_condition = BookingCondition.new
+        booking_condition.option_of_time = []
         booking_condition.error = true
         booking_condition.message = '目前這個時段，餐廳沒有開放的訂位，請選擇較後面的日期查看喲!'
         return booking_condition
@@ -87,6 +91,7 @@ class Home
 
       if is_today && !limit_day_time.blank?
         booking_condition = BookingCondition.new
+        booking_condition.option_of_time = []
         booking_condition.error = true
         booking_condition.message = '目前這個時段，餐廳沒有開放的訂位，請選擇較後面的日期查看喲!'
         return booking_condition
@@ -668,6 +673,7 @@ class Home
     rescue => e
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/Models/home.rb  ,Method:get_condition(restaurant_url, booking_day)"
       booking_condition = BookingCondition.new
+      booking_condition.option_of_time = []
       booking_condition.error = true
       booking_condition.message = '目前這個時段，餐廳沒有開放的訂位，請選擇較後面的日期查看喲!'
       return booking_condition
