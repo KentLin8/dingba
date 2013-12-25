@@ -4,7 +4,8 @@
  *
  */
 body
-  font-family: "微軟正黑體"
+  font-family: "微軟正黑體", "Microsoft Jhenghei"
+  font-weight: 400
 
 div
   position: relative
@@ -15,6 +16,12 @@ a:hover
   color: #000000
 a:focus
   color: #000000
+
+table
+  table-layout: fixed
+  td
+    text-overflow: ellipsis
+    word-wrap: break-word
 
 .table
   border-bottom: 3px solid #FFFFFF
@@ -51,6 +58,12 @@ input.invalid, tr.invalid
 .base_gray
   background-color: rgb(240,240,240)
 
+.base_blue
+  color: #1893db
+
+.tooltip
+  font-size: 14px
+
 .line
   border-top: 1px dotted #cccccc
   margin: 15px 0
@@ -66,3 +79,10 @@ input.invalid, tr.invalid
 
 .required, .required:hover, .required:focus
   color: #FF0000
+
+.ui-widget
+  font-size: 1em !important
+
+#datepicker, .datepicker
+  width: 75px
+  text-align: center

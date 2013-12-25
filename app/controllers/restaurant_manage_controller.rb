@@ -74,6 +74,8 @@ class RestaurantManageController < ApplicationController
     if @conditions.blank?
       redirect_to res_manage_supply_time_path
     else
+      @special_conditions = @conditions.select { |x| x.is_special == 't' }
+      @normal_conditions = @conditions.select { |x| x.is_special != 't' }
       render 'restaurant_manage/supply_condition', :layout => false
     end
   end
@@ -122,7 +124,9 @@ class RestaurantManageController < ApplicationController
     end
 
     @conditions = SupplyCondition.where(:restaurant_id => @restaurant.id).order('sequence ASC')
-    result[:attachmentPartial] = render_to_string('restaurant_manage/supply_condition', :layout => false, :locals => { :conditions => @conditions })
+    @special_conditions = @conditions.select { |x| x.is_special == 't' }
+    @normal_conditions = @conditions.select { |x| x.is_special != 't' }
+    result[:attachmentPartial] = render_to_string('restaurant_manage/supply_condition', :layout => false, :locals => { :normal_conditions => @normal_conditions, :special_conditions => @special_conditions })
     render json: result
   end
 
@@ -144,9 +148,11 @@ class RestaurantManageController < ApplicationController
   # GET ==== Function: destroy condition
   # =========================================================================
   def destroy_condition
-    result = RestaurantManage.destroy_condition(params[:condition_id])
+    result = RestaurantManage.destroy_condition(params[:condition_id], @restaurant.id)
     @conditions = SupplyCondition.where(:restaurant_id => @restaurant.id).order('sequence ASC')
-    result[:attachmentPartial] = render_to_string('restaurant_manage/supply_condition', :layout => false, :locals => { :conditions => @conditions })
+    @special_conditions = @conditions.select { |x| x.is_special == 't' }
+    @normal_conditions = @conditions.select { |x| x.is_special != 't' }
+    result[:attachmentPartial] = render_to_string('restaurant_manage/supply_condition', :layout => false, :locals => { :normal_conditions => @normal_conditions, :special_conditions => @special_conditions })
     render json: result
   end
 
@@ -154,7 +160,7 @@ class RestaurantManageController < ApplicationController
   # GET ==== Function: show special time view
   # =========================================================================
   def special_time
-    @special_day = params[:special_day]
+    @select_date = params[:special_day]
     @time_zones = RestaurantManage.get_time_zones(params[:condition_id])
     render 'restaurant_manage/_time_zones', :layout => false
   end
@@ -173,7 +179,9 @@ class RestaurantManageController < ApplicationController
 
     result =  RestaurantManage.special_create(zones, params[:special_day], @restaurant.id)
     @conditions = SupplyCondition.where(:restaurant_id => @restaurant.id).order('sequence ASC')
-    result[:attachmentPartial] = render_to_string('restaurant_manage/supply_condition', :layout => false, :locals => { :conditions => @conditions })
+    @special_conditions = @conditions.select { |x| x.is_special == 't' }
+    @normal_conditions = @conditions.select { |x| x.is_special != 't' }
+    result[:attachmentPartial] = render_to_string('restaurant_manage/supply_condition', :layout => false, :locals => { :normal_conditions => @normal_conditions, :special_conditions => @special_conditions })
     render json: result
   end
 
@@ -182,6 +190,7 @@ class RestaurantManageController < ApplicationController
   # =========================================================================
   def day_booking
     @zones_books = RestaurantManage.get_day_books(@restaurant.id, params[:special_day])
+    @select_date = params[:special_day]
     render 'restaurant_manage/_day_booking', :layout => false
   end
 
@@ -210,7 +219,7 @@ class RestaurantManageController < ApplicationController
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/controllers/restaurant_manage_controller.rb  ,Action:modify_booking"
     end
 
-    render 'restaurant_manage/_modify_booking'#, :layout => false
+    render 'restaurant_manage/_modify_booking', :layout => false
   end
 
   # ====== Code Check: 2013/12/08 ====== [ panda: TODO: wait Front-end engineering ]
@@ -221,11 +230,22 @@ class RestaurantManageController < ApplicationController
     render json: result
   end
 
+  def cancel_booking
+    begin
+      @booking = Booking.find(params[:booking_id].to_i)
+    rescue => e
+      Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/controllers/restaurant_manage_controller.rb  ,Action:cancel_booking"
+    end
+
+    render 'restaurant_manage/_cancel_booking', :layout => false
+  end
+
   # ====== Code Check: 2013/12/08 ====== [ panda: TODO: wait Front-end engineering ]
   # POST === Function: cancel booking
   # =========================================================================
-  def cancel_booking
-    result = RestaurantManage.cancel_booking(params[:booking])
+  def cancel_booking_save
+    booking = params[:booking]
+    result = RestaurantManage.cancel_booking(booking[:id], booking[:status], booking[:cancel_note])
     render json: result
   end
 
@@ -236,7 +256,7 @@ class RestaurantManageController < ApplicationController
     begin
       if current_user.blank?
         flash.now[:alert] = '您還沒登入喔!~~ '
-        redirect_to home_path
+        redirect_to res_session_new_path
       else
         if current_user.role == '0'
           manage_restaurants = RestaurantUser.where(:user_id => current_user.id)
@@ -258,7 +278,7 @@ class RestaurantManageController < ApplicationController
     rescue => e
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/controllers/restaurant_manage_controller.rb  ,Filter:get_restaurant"
       flash.now[:alert] = 'oops! 出現錯誤了!'
-      redirect_to home_path
+      redirect_to res_session_new_path
     end
   end
 

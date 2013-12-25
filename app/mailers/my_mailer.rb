@@ -23,15 +23,22 @@ class MyMailer < ActionMailer::Base
       #email = 'a17877yun@gmail.com,u9523039@yuntech.edu.tw'
       email = email.split(',')
 
-      mail(to: email,
+      effect_email = []
+      email.each do |e|
+        if !e.blank? && !(e =~ /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/).blank?
+          effect_email.push(e)
+        end
+      end
+
+      mail(to: effect_email,
            subject: '訂吧通知：您的朋友邀請您一起用餐！') do |format|
         format.html { render 'my_mailer/booking_friend' }
       end
 
-      return {:success => true, :data => '通知成功!' }
+      return true
     rescue => e
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/Mailers/my_mailer.rb ,Method:notify_friend(email, booking_id)"
-      return {:error => true, :message => '阿! 發生錯誤了! 通知失敗!'}
+      return false
     end
   end
 

@@ -28,6 +28,9 @@ DingBa::Application.routes.draw do
   get  'home/get_condition'
   get  'home/notice_friend'
   get  'home/cancel_booking'
+
+  post 'home/save_booking'
+  post 'home/notice_friend'
   post 'home/save_cancel_booking'
 
   #==========================================================================
@@ -54,7 +57,8 @@ DingBa::Application.routes.draw do
 
   get  'restaurant_manage/modify_booking'
   post 'restaurant_manage/modify_booking_save'
-  post 'restaurant_manage/cancel_booking'
+  get  'restaurant_manage/cancel_booking'
+  post 'restaurant_manage/cancel_booking_save'
 
   get  'restaurant_manage/day_booking'
   get  'restaurant_manage/query_books_by_date'
@@ -71,9 +75,9 @@ DingBa::Application.routes.draw do
   #==========================================================================
   # booker_manage controller
   #==========================================================================
-  get 'booker_manage/index', :as => 'booker_manage_index'
-  get 'booker_manage/booking_record'
-
+  get  'booker_manage/index', :as => 'booker_manage_index'
+  get  'booker_manage/booking_record'
+  post 'booker_manage/feedback'
 
 
   # 暫時用來展示畫面的routes
@@ -93,6 +97,8 @@ DingBa::Application.routes.draw do
   get 'test/front/mail1', :to => 'front#mail1'
   get 'test/front/mail2', :to => 'front#mail2'
   get 'test/front/mail3', :to => 'front#mail3'
+
+  get 'test/delete_form', :to => 'viewtest#delete_form'
 
 
 

@@ -68,14 +68,19 @@ class RestaurantManage
 
       if restaurant.pic_name1.blank?
         restaurant.pic_name1 = filename
+        restaurant.front_cover = '1' if restaurant.front_cover.blank?
       elsif restaurant.pic_name2.blank?
         restaurant.pic_name2 = filename
+        restaurant.front_cover = '2' if restaurant.front_cover.blank?
       elsif restaurant.pic_name3.blank?
         restaurant.pic_name3 = filename
+        restaurant.front_cover = '3' if restaurant.front_cover.blank?
       elsif restaurant.pic_name4.blank?
         restaurant.pic_name4 = filename
+        restaurant.front_cover = '4' if restaurant.front_cover.blank?
       elsif restaurant.pic_name5.blank?
         restaurant.pic_name5 = filename
+        restaurant.front_cover = '5' if restaurant.front_cover.blank?
       else
         return {:error => true, :message => '只能上傳五張圖片!'}
       end
@@ -180,7 +185,7 @@ class RestaurantManage
         target_condition = SupplyCondition.new
 
         max_sequence = SupplyCondition.maximum(:sequence)
-        max_sequence.blank? ? max_sequence = 0 : max_sequence = max_sequence + 1
+        max_sequence.blank? ? max_sequence = 1 : max_sequence = max_sequence + 1
 
         # why set sequence in this area => because the supply_condition_save method have multi usage, and they don't set sequence
         target_condition.sequence = max_sequence
@@ -197,6 +202,8 @@ class RestaurantManage
           target_zones.push(TimeZone.new)
         end
         time_zone_save(origin_zones, condition_id, target_zones)
+        #calculate_day_booking(restaurant_id, origin_condition)
+        calculate_day_booking_part(restaurant_id, condition_id)
 
         return {:success => true, :data => '新增供位條件成功!'}
       end
@@ -217,6 +224,8 @@ class RestaurantManage
 
         zones = TimeZone.where(:supply_condition_id => origin_condition[:id].to_i).order('sequence ASC')
         time_zone_save(origin_zones, condition_id, zones)
+        calculate_day_booking_part(restaurant_id, condition_id)
+
         return {:success => true, :data => '修改成功!'}
       end
     rescue => e
@@ -226,74 +235,67 @@ class RestaurantManage
   end
 
   def self.supply_condition_save(origin_condition, restaurant_id, target_condition)
-    #begin
-      target_condition.restaurant_id = restaurant_id
-      target_condition.name = origin_condition[:name]
-      target_condition.range_begin = origin_condition[:range_begin]
-      target_condition.range_end = origin_condition[:range_end]
-      target_condition.available_week = "#{origin_condition[:week1]},#{origin_condition[:week2]},#{origin_condition[:week3]},#{origin_condition[:week4]},#{origin_condition[:week5]},#{origin_condition[:week6]},#{origin_condition[:week7]}"
-      target_condition.status = 't'   # t = enable ,f = disable
-      target_condition.save
-      return target_condition.id
-    #rescue => e
-    #  Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/models/restaurant_manage.rb  ,Method:supply_condition_save(origin_condition, restaurant_id, target_condition)"
-    #  return nil
-    #end
+    # don't catch this method error , transaction issue
+    target_condition.restaurant_id = restaurant_id
+    target_condition.name = origin_condition[:name]
+    target_condition.range_begin = origin_condition[:range_begin]
+    target_condition.range_end = origin_condition[:range_end]
+    target_condition.available_week = "#{origin_condition[:week1]},#{origin_condition[:week2]},#{origin_condition[:week3]},#{origin_condition[:week4]},#{origin_condition[:week5]},#{origin_condition[:week6]},#{origin_condition[:week7]}"
+    target_condition.status = 't'   # t = enable ,f = disable
+    target_condition.save
+    return target_condition.id
   end
 
   def self.time_zone_save(origin_zones, condition_id, target_zones)
     #TODO: batch save
-    #begin
-      zones = []
-      origin_zones.each_with_index do |origin_zone, index|
-        zone = target_zones[index]
-        zone.supply_condition_id = condition_id
-        zone.sequence = index
-        origin_zone[:enable].blank? ? zone.status = 'f' : zone.status = 't'
-        zone.name = origin_zone[:name]
-        zone.range_begin = origin_zone[:time_begin]
-        zone.range_end = origin_zone[:time_end]
-        zone.total_allow = origin_zone[:total_allow]
-        zone.each_allow = origin_zone[:each_allow]
-        zone.fifteen_allow = origin_zone[:fifteen_allow]
-        zones.push(zone)
-      end
+    # don't catch this method error , transaction issue
+    zones = []
+    origin_zones.each_with_index do |origin_zone, index|
+      zone = target_zones[index]
+      zone.supply_condition_id = condition_id
+      zone.sequence = index
+      origin_zone[:enable].blank? ? zone.status = 'f' : zone.status = 't'
+      zone.name = origin_zone[:name]
+      zone.range_begin = origin_zone[:time_begin]
+      zone.range_end = origin_zone[:time_end]
+      zone.total_allow = origin_zone[:total_allow]
+      zone.each_allow = origin_zone[:each_allow]
+      zone.fifteen_allow = origin_zone[:fifteen_allow]
+      zones.push(zone)
+    end
 
-      zones.length.times do |i|
-        zones.length.times do |j|
-          temp_max_zone = zones[j]
-          if !zones[j + 1].blank?
-            temp_begin = zones[j + 1].range_begin.split(':')
-            if zones[j + 1].range_begin < zones[j].range_begin
-              if temp_begin[0] != '00'
-                temp_max_zone = zones[j]
-                zones[j]= zones[j + 1]
-                zones[j + 1] = temp_max_zone
-              end
+    zones.length.times do |i|
+      zones.length.times do |j|
+        temp_max_zone = zones[j]
+        if !zones[j + 1].blank?
+          temp_begin = zones[j + 1].range_begin.split(':')
+          if zones[j + 1].range_begin < zones[j].range_begin
+            if temp_begin[0] != '00'
+              temp_max_zone = zones[j]
+              zones[j]= zones[j + 1]
+              zones[j + 1] = temp_max_zone
             end
           end
         end
       end
+    end
 
-      zones.each_with_index do |zone, index|
-        zone.sequence = index
-        zone.save
-      end
+    zones.each_with_index do |zone, index|
+      zone.sequence = index
+      zone.save
+    end
 
-      return true
-    #rescue => e
-    #  Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/models/restaurant_manage.rb  ,Method:time_zone_save(origin_zones, condition_id, target_zones)"
-    #  return false
-    #end
+    return true
   end
 
-  def self.destroy_condition(condition_id)
+  def self.destroy_condition(condition_id, restaurant_id)
     if !condition_id.blank?
       begin
         condition_id = condition_id.to_i
         SupplyCondition.transaction do
           SupplyCondition.find(condition_id).destroy
           TimeZone.where(:supply_condition_id => condition_id).destroy_all
+          calculate_day_booking_all(restaurant_id)
           return {:success => true, :data => '刪除成功!' }
         end
       rescue => e
@@ -409,6 +411,8 @@ class RestaurantManage
         restaurant.available_type = data_parsed['reserve_type']
         restaurant.save
 
+        calculate_day_booking_all(restaurant.id.to_i)
+
         return conditions
       end
     rescue => e
@@ -456,7 +460,7 @@ class RestaurantManage
       zone6.range_end = '24:00'
       time_zones.push(zone6)
     else
-      zones = TimeZone.where(:supply_condition_id => condition_id)  # if add .to_i must add begin recure
+      zones = TimeZone.where(:supply_condition_id => condition_id).order('sequence')  # if add .to_i must add begin recure
       zones.each do |z|
         time_zones.push(z)
       end
@@ -473,12 +477,17 @@ class RestaurantManage
       # FIX  where below
       day_books = Booking.where(:restaurant_id => restaurant_id).where('booking_time >= ?', special_day_begin).where('booking_time <= ?', special_day_end).order('booking_time ASC')
 
-      # why use this solution => because use day to know the condition is too slow , so i use books to get the condition id ,if no book, just show no one booking
       if !day_books.blank?
-        #temp_zone = TimeZone.find(day_books.first.time_zone_id)
-        #zones = TimeZone.where(:supply_condition_id => temp_zone.supply_condition_id)
-
         conditions = SupplyCondition.where(:restaurant_id => restaurant_id).where(:status => 't').where('range_begin <= ?', special_day_begin).where('range_end >= ?',special_day_begin).order('sequence ASC')
+
+        if conditions.blank?
+          zones_books = []
+          zone_booking = ZoneBooking.new
+          zone_booking.name = '今日訂位資訊'
+          zone_booking.books = day_books
+          zones_books.push(zone_booking)
+          return zones_books
+        end
 
         effect_conditions = nil
         conditions.each do |c|
@@ -568,8 +577,8 @@ class RestaurantManage
       booking.name = origin_booking[:name]
       booking.phone = origin_booking[:phone]
       booking.email = origin_booking[:email]
-      booking.booking_time = origin_booking[:booking_time]
-      booking.num_of_people = origin_booking[:num_of_people]
+      booking.booking_time = Time.parse(origin_booking[:booking_time].to_s)
+      booking.num_of_people = origin_booking[:num_of_people].to_i
       booking.remark = origin_booking[:remark]
       booking.save
 
@@ -580,20 +589,186 @@ class RestaurantManage
     end
   end
 
-  def self.cancel_booking(origin_booking)
+  def self.cancel_booking(booking_id, status, cancel_note)
     begin
-      booking = Booking.find(origin_booking[:id].to_i)
-      booking.status = origin_booking[:status]
-      booking.cancel_note = origin_booking[:cancel_note] if booking.status == '6'
-      booking.save
+        Booking.transaction do
+        booking = Booking.find(booking_id.to_i)
 
-      MyMailer.cancel_booking(booking.email ,booking).deliver
+        if booking.status.blank?
+          return {:error => true, :message => '阿! 發生錯誤了! 取消訂位失敗!'}
+        end
 
-      return {:success => true, :data => '已取消訂位!'}
+        if booking.status == '1'
+          return {:error => true, :message => '已經到店用餐，無法取消訂位!'}
+        elsif booking.status != '0'
+          return {:error => true, :message => '該訂位已經取消，無法再取消訂位，目前不開放，變更取消原因!'}
+        end
+
+        booking.status = status
+        if booking.status == '7'
+          booking.cancel_note = cancel_note
+        end
+        booking.save
+
+        day_booking = DayBooking.where(:restaurant_id => booking.restaurant_id, :day => Date.parse(booking.booking_time.to_s))
+        if day_booking.blank?
+          Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/models/restaurant_manage.rb  ,Method:cancel_booking(origin_booking)"
+          return {:error => true, :message => '阿! 發生錯誤了! 取消訂位失敗!'}
+        end
+        day_booking = day_booking.first
+        day_begin = Time.parse(booking.booking_time.strftime("%Y-%m-%d") + " 00:00")
+        conditions = SupplyCondition.where(:restaurant_id => booking.restaurant_id, :status => 't').where('range_begin <= ?', day_begin).where('range_end >= ?',day_begin).order('sequence ASC')
+
+        if conditions.blank?
+          day_booking.other = day_booking.zone1 + day_booking.zone2 + day_booking.zone3 + day_booking.zone4 + day_booking.zone5 + day_booking.zone6
+          day_booking.save
+          return {:success => true, :data => '已取消訂位!'}
+        end
+
+        condition = conditions.first
+        zones = TimeZone.where(:supply_condition_id => condition.id, :status => 't')
+        zones.each do |z|
+          if z.range_begin <= booking.booking_time.strftime("%H:%M") && z.range_end > booking.booking_time.strftime("%H:%M")
+            if z.sequence == 0
+              day_booking.zone1 = day_booking.zone1 - booking.num_of_people
+            elsif z.sequence == 1
+              day_booking.zone2 = day_booking.zone2 - booking.num_of_people
+            elsif z.sequence == 2
+              day_booking.zone3 = day_booking.zone3 - booking.num_of_people
+            elsif z.sequence == 3
+              day_booking.zone4 = day_booking.zone4 - booking.num_of_people
+            elsif z.sequence == 4
+              day_booking.zone5 = day_booking.zone5 - booking.num_of_people
+            elsif z.sequence == 5
+              day_booking.zone6 = day_booking.zone6 - booking.num_of_people
+            end
+            break;
+          end
+        end
+
+        day_booking.save
+
+        MyMailer.cancel_booking(booking.email ,booking).deliver
+
+        if booking.status == '2'
+          status_string = '取消訂位(同伴無法配合)'
+        elsif booking.status == '3'
+          status_string = '取消訂位(餐廳當天座位不夠)'
+        elsif booking.status == '4'
+          status_string = '取消訂位(選擇了其他餐廳)'
+        elsif booking.status == '5'
+          status_string = '取消訂位(餐廳臨時公休)'
+        elsif booking.status == '6'
+          status_string = '取消訂位(聚餐延期)'
+        elsif booking.status == '7'
+          status_string = '取消訂位(原因:' + cancel_note  + ')'
+        end
+
+        return {:success => true, :data => '已取消訂位!', :status_string => status_string}
+      end
     rescue => e
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/models/restaurant_manage.rb  ,Method:cancel_booking(origin_booking)"
       return {:error => true, :message => '阿! 發生錯誤了! 取消訂位失敗!'}
     end
+  end
+
+  def self.calculate_day_booking_all(restaurant_id)
+    # don't catch this method error , transaction issue
+    day_bookings = DayBooking.where(:restaurant_id => restaurant_id).order('day ASC')
+    if day_bookings.blank?
+      return
+    end
+    conditions = SupplyCondition.where(:restaurant_id => restaurant_id, :status => 't').order('sequence ASC')
+    bookings = Booking.where(:restaurant_id => restaurant_id).group('booking_time').sum(:num_of_people)
+
+    calculate_day_booking(day_bookings, conditions, bookings)
+  end
+
+  def self.calculate_day_booking_part(restaurant_id, condition_id)
+    # don't catch this method error , transaction issue
+    origin_condition = SupplyCondition.find(condition_id)
+    day_bookings = DayBooking.where(:restaurant_id => restaurant_id).where('day >= ?', origin_condition.range_begin).where('day <= ?', origin_condition.range_end).order('day ASC')
+    if day_bookings.blank?
+      return
+    end
+    conditions = SupplyCondition.where(:restaurant_id => restaurant_id, :status => 't').where('range_begin <= ?', origin_condition.range_begin).where('range_end >= ?', origin_condition.range_end).order('sequence ASC')
+    bookings = Booking.where(:restaurant_id => restaurant_id).where('booking_time >= ?', origin_condition.range_begin).where('booking_time <= ?', origin_condition.range_end).group('booking_time').sum(:num_of_people)#.order('booking_time ASC')
+
+    calculate_day_booking(day_bookings, conditions, bookings)
+  end
+
+  def self.calculate_day_booking(day_bookings, conditions, bookings)
+    # don't catch this method error , transaction issue
+
+    day_booking_mix = []
+    day_bookings.each do |db|
+      day_booking_group = []
+      db.zone1 = 0
+      db.zone2 = 0
+      db.zone3 = 0
+      db.zone4 = 0
+      db.zone5 = 0
+      db.zone6 = 0
+      day_booking_group.push(db)
+      db_begin = Time.parse(db.day.strftime("%Y-%m-%d") + " 00:00")
+      db_end = Time.parse(db.day.strftime("%Y-%m-%d") + " 23:59")
+
+      bookings_of_group = []
+      bookings.each do |b|
+        if db_begin <= b[0] && db_end >= b[0]
+          b.push(b[0].strftime("%H:%M"))                # [time,sum(num_of_people),'11:00']
+          bookings_of_group.push(b)
+        else
+          break;
+        end
+      end
+
+      day_booking_group.push(bookings_of_group)           # [day_booking, bookings_of_group]
+      day_booking_mix.push(day_booking_group)
+    end
+
+    if conditions.blank?
+      #把所有bookings 直接以other 丟到day_booking
+      day_booking_mix.each do |mix|
+        mix[1].each do |books|
+          mix[0].other = mix[0].other + books
+        end
+      end
+    end
+
+    conditions.each do |c|
+      zones = TimeZone.where(:supply_condition_id => c.id, :status => 't').order('sequence ASC')
+
+      day_booking_mix.each do |mix|
+        if c.range_begin <= mix[0].day && c.range_end >= mix[0].day
+          zones.each do |z|
+            mix[1].each do |books|
+              if z.range_begin <= books[2] && z.range_end > books[2]
+                if z.sequence == 0
+                  mix[0].zone1 = mix[0].zone1 + books[1]
+                elsif z.sequence == 1
+                  mix[0].zone2 = mix[0].zone2 + books[1]
+
+                elsif z.sequence == 2
+                  mix[0].zone3 = mix[0].zone3 + books[1]
+                elsif z.sequence == 3
+                  mix[0].zone4 = mix[0].zone4 + books[1]
+                  mix[1].delete(books)
+                elsif z.sequence == 4
+                  mix[0].zone5 = mix[0].zone5 + books[1]
+                  mix[1].delete(books)
+                elsif z.sequence == 5
+                else
+                  mix[0].other = mix[0].other + books[1]
+                end
+              end
+            end
+          end
+        end
+        mix[0].save
+      end
+    end
+
   end
 
 

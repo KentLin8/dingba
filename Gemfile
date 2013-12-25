@@ -4,16 +4,10 @@ source 'https://rubygems.org'
 #  gem 'pg'
 #end
 
-group :assets do
-  gem 'coffee-rails', '~> 4.0.0'
-  #gem 'compass', '~> 0.12.alpha.0'
-  #gem 'html5-boilerplate'
-  gem 'uglifier', '>= 1.3.0'
-end
+# for solve send email is slow problem, sending asynchronous
+gem 'delayed_job'
 
-
-
-#jquery-ui-rails
+# jquery-ui-rails
 gem 'jquery-ui-rails'
 
 # omniauth
@@ -29,8 +23,8 @@ gem 'omniauth-google-oauth2'
 #gem 'omniauth-yahoo'
 #gem 'omniauth-openid'
 
-#Twitter Bootstrap
-gem 'bootstrap-sass', '2.3.2.2'
+# bootstrap
+gem 'bootstrap-sass', '2.3.2.2'     # change version by thunder
 
 # for member system
 gem 'devise'
@@ -61,6 +55,14 @@ group :doc do
   gem 'sdoc', require: false
 end
 
+#===================================== add by thunder
+group :assets do
+  gem 'coffee-rails', '~> 4.0.0'
+  #gem 'compass', '~> 0.12.alpha.0'
+  #gem 'html5-boilerplate'
+  gem 'uglifier', '>= 1.3.0'
+end
+
 group :test, :development do
   gem "rspec"
   gem "rspec-rails"
@@ -73,9 +75,10 @@ end
 # gem 'unicorn'
 
 # Use Capistrano for deployment
- gem 'capistrano', group: :development
+gem 'capistrano', group: :development
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
- gem 'i18n'
+gem 'i18n'
+#===================================== end by thunder

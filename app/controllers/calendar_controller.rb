@@ -58,8 +58,11 @@ class CalendarController < ApplicationController
       end
       #==================================
 
+      @id_with_name = {}
       # set condition to calendar
       conditions.each do |con|
+        @id_with_name[con.id]= con.name
+
         week = con.available_week.split(',')
         week = week.collect{|e| e.to_i}
 
@@ -146,10 +149,10 @@ class CalendarController < ApplicationController
   # GET ==== Function: show day booking
   # =========================================================================
   def restaurant_day
-    select_date = params[:select_date]
-    select_date = Time.now.to_s if select_date.blank?
-    @zones_books = RestaurantManage.get_day_books(@restaurant.id, select_date)
-    @show_select_date = select_date.to_date.to_s
+    @select_date = params[:select_date]
+    @select_date = Time.now.to_s if @select_date.blank?
+    @zones_books = RestaurantManage.get_day_books(@restaurant.id, @select_date)
+    @select_date = @select_date.to_date
     render 'restaurant_manage/_day_booking', :layout => false
   end
 
@@ -160,7 +163,7 @@ class CalendarController < ApplicationController
     begin
       if current_user.blank?
         flash.now[:alert] = '您還沒登入喔!~~ '
-        redirect_to home_path
+        redirect_to res_session_new_path
       else
         if current_user.role == '0'
           manage_restaurants = RestaurantUser.where(:user_id => current_user.id)
@@ -177,7 +180,7 @@ class CalendarController < ApplicationController
     rescue => e
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/controllers/calendar_controller.rb  ,Filter:get_restaurant"
       flash.now[:alert] = 'oops! 出現錯誤了!'
-      redirect_to home_path
+      redirect_to res_session_new_path
     end
   end
 

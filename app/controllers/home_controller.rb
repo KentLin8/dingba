@@ -1,6 +1,6 @@
 class HomeController < ApplicationController
   layout 'home'
-  before_action :get_user, :only => [:booking_restaurant, :get_condition, :save_booking]
+  before_action :get_user, :only => [:index, :booking_restaurant, :get_condition, :save_booking, :notice_friend, :cancel_booking, :save_cancel_booking]
   #before_action :get_restaurant, :only => [:booking_restaurant]
 
   # =========================================================================
@@ -26,53 +26,66 @@ class HomeController < ApplicationController
     restaurant_url = params[:id]
     booking_day = params[:booking_day]
 
+    #@booking_day = (Date.parse(Time.now.to_s) + 1.days).to_s
+    #if !booking_day.blank?
+    #  @booking_day = booking_day
+    #end
     @restaurant = Restaurant.new
     @restaurant = Home.get_restaurant(restaurant_url)
     @booking_condition = BookingCondition.new
     if !@restaurant.blank?
       @booking_condition = BookingCondition.new
       @booking_condition = Home.get_condition(@restaurant, booking_day)
+    else
+      redirect_to home_path
     end
   end
 
   def get_condition
     restaurant_url = params[:id]
-    booking_day = params[:booking_day]
+    @booking_day = params[:booking_day]
 
     @restaurant = Restaurant.new
     @restaurant = Home.get_restaurant(restaurant_url)
     @booking_condition = BookingCondition.new
     if !@restaurant.blank?
       @booking_condition = BookingCondition.new
-      @booking_condition = Home.get_condition(@restaurant, booking_day)
+      @booking_condition = Home.get_condition(@restaurant, @booking_day)
 
-      result = {:success => true, :attachmentPartial => render_to_string('home/_booking_zone', :layout => false, :locals => { :booking_condition => @booking_condition })}
+      result = {:success => true, :attachmentPartial => render_to_string('home/_booking_zone', :layout => false, :locals => { :booking_condition => @booking_condition, :booking_day => @booking_day, :restaurant => @restaurant, :booker => @booker })}
       render json: result
+    else
+      render json: {:error => true, :message => '沒有此家餐廳!'}
     end
   end
 
   def save_booking
-    #restaurant_id =  params[:restaurant_id]
-    #booking_time = params[:booking_time]
-    #num_of_people = params[:num_of_people]
-    #booker_name = params[:booker_name]
-    #booker_phone = params[:booker_phone]
-    #booker_email = params[:booker_email]
-    #booker_remark = params[:booker_remark]
-
     result = Home.save_booking(@booker, params[:booking])
+
+    #result = {:success => true, :attachmentPartial => render_to_string('home/_booking_zone', :layout => false, :locals => { :booking_condition => @booking_condition, :booking_day => @booking_day, :restaurant => @restaurant, :booker => @booker })}
     render json: result
   end
 
   def notice_friend
-    params[:booking_id]
-    params[:email]
+    begin
+      booking_id = params[:booking_id].to_i
+      notice_emails = params[:notice_emails].strip
 
-    if params[:booking_id].blank? || params[:email].blank?
-      return {:error => true, :message => '阿! 發生錯誤了! 通知失敗!'}
+      if booking_id.blank? || notice_emails.blank?
+        render json: {:error => true, :message => '阿! 發生錯誤了! 通知失敗!'}
+      end
+
+      result = MyMailer.notify_friend(notice_emails, booking_id).deliver
+
+      if result.perform_deliveries
+        render json: {:success => true, :data => '通知成功!' }
+      else
+        render json: {:error => true, :message => '阿! 發生錯誤了! 通知失敗!'}
+      end
+
+    rescue => e
+      render json: {:error => true, :message => '阿! 發生錯誤了! 通知失敗!'}
     end
-
-    MyMailer.notify_friend(params[:email], params[:booking_id]).deliver
   end
 
   def cancel_booking
@@ -82,12 +95,12 @@ class HomeController < ApplicationController
       @restaurant = Restaurant.find(@booking.restaurant_id)
     rescue => e
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/controllers/home_controller.rb ,Action:cancel_booking"
-      return {:error => true, :message => '阿! 發生錯誤了! 資料異常!'}
+      render json: {:error => true, :message => '阿! 發生錯誤了! 資料異常!'}
     end
   end
 
   def save_cancel_booking
-    result = RestaurantManage.cancel_booking(params[:booking])
+    result = RestaurantManage.cancel_booking(params[:booking_id], params[:status], params[:cancel_note])
     render json: result
   end
 
@@ -95,11 +108,12 @@ class HomeController < ApplicationController
     begin
       @booker = User.new
       if !current_user.blank?
-        if current_user.role == '0'   # restaurant
-          redirect_to confirmation_getting_started_path
-        elsif current_user.role == '1'  # booker
+        #if current_user.role == '0'   # restaurant
+          #signed_out = (Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name))
+          #redirect_to confirmation_getting_started_path
+        #elsif current_user.role == '1'  # booker
           @booker = User.find(current_user.id)
-        end
+        #end
       end
     rescue => e
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/controllers/home_controller.rb  ,Filter:get_user"

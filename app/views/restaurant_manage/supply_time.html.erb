@@ -4,8 +4,12 @@
     <input name="condition[id]" type="hidden" value="<%= @supply_time.id %>">
   <% end %>
   <table class="table">
+    <colgroup>
+      <col style="width: 140px">
+      <col>
+    </colgroup>
     <tr>
-      <td>設立名稱<i class="required">*</i></td>
+      <td class="title"><i class="required">*</i>設立名稱</td>
       <% if @supply_time.id != '' %>
           <td><input type="text" name="condition[name]" value="<%= @supply_time.name %>" required="required"></td>
       <% else %>
@@ -13,17 +17,17 @@
       <% end %>
     </tr>
     <tr>
-      <td>設立訂位有效期間<i class="required">*</i></td>
+      <td class="title"><i class="required">*</i>設立訂位有效期間</td>
       <td>
-        <label for="from">From</label>
-        <input type="text" data-type="date" name="condition[range_begin]" class="datepicker from" required="required">
-        <label for="to">to</label>
-        <input type="text" data-type="date" name="condition[range_end]" class="datepicker to" required="required">
+        From&nbsp;
+        <input type="text" data-type="date" name="condition[range_begin]" class="datepicker from input-small" required="required">&nbsp;
+        to&nbsp;
+        <input type="text" data-type="date" name="condition[range_end]" class="datepicker to input-small" required="required">
       </td>
     </tr>
 
     <tr>
-      <td>每周可提供訂位日</td>
+      <td class="title"><i class="required">*</i>每周可提供訂位日</td>
       <td>
         <% week = @supply_time.available_week.split(',') %>
         <label class="checkbox inline"><input type="checkbox" name="condition[week1]" value="1" <%= week.include?('1') ? 'checked="checked"' : '' %>>星期一</label>
@@ -57,7 +61,8 @@
             dateFormat: 'yy-mm-dd',
             //defaultDate: "+1w",
             changeMonth: true,
-            numberOfMonths: 3,
+            showOn: 'both',
+            buttonText: '<i class="icon-calendar"></i>',
             onClose: function( selectedDate ) {
                 $("#to").datepicker( "option", "minDate", selectedDate );
             }
@@ -67,7 +72,8 @@
             dateFormat: 'yy-mm-dd',
             //defaultDate: "+1w",
             changeMonth: true,
-            numberOfMonths: 3,
+            showOn: 'both',
+            buttonText: '<i class="icon-calendar"></i>',
             onClose: function( selectedDate ) {
                 $("#from").datepicker( "option", "maxDate", selectedDate );
             }

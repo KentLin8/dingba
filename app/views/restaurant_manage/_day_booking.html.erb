@@ -1,31 +1,52 @@
-<input type="text" name="" id="show_day" class="datepicker" value="<%= @show_select_date %>">
-<table class="table" id="daily_info">
-  <% @zones_books.each do |z| %>
-      <tr>
-        <th class="mark mark1"></th>
-        <th colspan="6"><%= z.name%></th>
-      </tr>
-      <tr>
-        <td>時間</td>
-        <td>人數</td>
-        <td>訂位人大名</td>
-        <td>訂位人電話</td>
-        <td>訂位人EMail</td>
-        <td>備註</td>
-        <td></td>
-      </tr>
+<input type="text" name="" id="show_day" class="datepicker input-small" value="<%= @select_date %>"><br>
+<span style="color: rgb(127,23,0)"><%= @select_date %></span> 的訂位資料為：
+<br>
+<% if @zones_books.length == 0 %>
+  目前無人訂位
+<% end %>
+<% @zones_books.each do |z| %>
+  <table class="table table-bordered daily_info">
+    <colgroup>
+      <col style="width: 10%">
+      <col style="width: 6%">
+      <col style="width: 11%">
+      <col style="width: 11%">
+      <col style="width: 26%">
+      <col style="width: 26%">
+      <col style="width: 5%">
+      <col style="width: 5%">
+    </colgroup>
+    <tr>
+      <th colspan="8"><div class="mark1"></div>&nbsp;<%= z.name %></th>
+    </tr>
+    <tr>
+      <td>時間</td>
+      <td>人數</td>
+      <td>訂位人大名</td>
+      <td>訂位人電話</td>
+      <td>訂位人EMail</td>
+      <td>備註</td>
+      <td></td>
+      <td></td>
+    </tr>
 
-      <% z.books.each do |b| %>
-      <tr>
-        <td><%= b.booking_time %></td>
-        <td><%= b.num_of_people %></td>
-        <td><%= b.name %></td>
-        <td><%= b.phone %></td>
-        <td><%= b.email %></td>
-        <td><%= b.remark %></td>
-        <td><a href="" class="btn">修改</a></td>
-      </tr>
-      <% end %>
-      <tr><td colspan="7"></td></tr>
-  <% end %>
- </table>
+    <% z.books.each do |b| %>
+    <tr data-id="<%= b.id %>">
+      <td><%= b.booking_time.strftime('%H:%M') %></td>
+      <td><%= b.num_of_people %></td>
+      <td><%= b.name %></td>
+      <td><%= b.phone %></td>
+      <td><a href="mailto:<%= b.email %>"><%= b.email %></a></td>
+      <td><%= b.remark %></td>
+      <td>
+        <i class="icon-pencil modify" title="修改"></i>
+        <!-- <a href="" class="btn">修改</a> -->
+      </td>
+      <td>
+        <i class="icon-remove-circle delete" title="刪除"></i>
+        <!-- <a href="" class="btn">刪除</a> -->
+      </td>
+    </tr>
+    <% end %>
+  </table>
+<% end %>

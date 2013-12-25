@@ -14,36 +14,38 @@
 $ ->
   not_finish = ($('#booking_form').length > 0)
 
-  $("#datepicker").datepicker(
-    dateFormat: "yy-mm-dd"
-  ).change ->
-    $.getJSON('/home/get_condition', {booking_day: this.value, id: location.href.split('/').pop()})
-    .done( (response) ->
-        $('#get_info').html response
-      )
-    .fail( -> alert 'gg' )
+#  do bind = ->
+#    $("#datepicker").datepicker(
+#      dateFormat: "yy-mm-dd"
+#    ).change ->
+#      $.getJSON('/home/get_condition', {booking_day: this.value, id: location.href.split('/').pop()})
+#      .done( (response) ->
+#          $('#get_info').html $.parseHTML response.attachmentPartial
+#          num_of_people = '1'
+#          $('#select_people').val(num_of_people)
+#          show_zone(num_of_people)
+#        )
+#      .fail( -> alert 'gg' )
 
-
-
-  $(document).on 'click', '#time_select .btn:not(.btn-inverse)', ->
+  $(document).on 'click', '.t_select .btn:not(.btn-inverse)', ->
     $('#time').val(this.value)
-    $('#time_select .btn').removeClass('checked')
+    $('.t_select .btn').removeClass('checked')
     $(this).addClass('checked')
 
-  $('#booking_form').submit (e) ->
-    e.preventDefault()
-    $.post(this.action, $(this).serialize(), 'json')
-    .done( (response) ->
-        if response.success
-          not_finish = false
-          $('#scroll').animate(left: -940)
-        else if response.error
-          alert "訂位失敗，原因：#{response.message}"
-        else
-          alert '原因不明的失敗'
-      )
-    .fail( -> alert '資料傳遞失敗' )
-    false
+#  $('#booking_form').submit (e) ->
+#    e.preventDefault()
+#    $.post("/home/save_booking", $(this).serialize(), 'json')
+#    .done( (response) ->
+#        if response.success
+#          not_finish = false
+#          $('#scroll').animate(left: -940)
+#        else if response.error
+#          alert "訂位失敗，原因：#{response.message}"
+#        else
+#          alert '原因不明的失敗'
+#      )
+#    .fail( -> alert '資料傳遞失敗' )
+#    false
 
   $('#to_friend_form').submit (e) ->
     e.preventDefault()
@@ -80,19 +82,21 @@ $ ->
     e.preventDefault()
     if not_finish
       return unless confirm('你的訂位尚未完成，請問要離開這個頁面嗎？')
-    $.get('/my_dingba', {}, 'html')
-    .done( (response) ->
-        $('#main').html response
-      )
-    .fail( -> alert '載入失敗')
+    window.location.href = '/booker_manage/index';
+    return
+#    $.get('/booker_manage/my_dingba', {}, 'html')
+#    .done( (response) ->
+#        $('#main').html response
+#      )
+#    .fail( -> alert '載入失敗')
 
   $('#tabs').tabs()
 
-  $(document).on 'click', '.add_comment', (e) ->
-    e.preventDefault()
-    $('#comment').show().offset($(this).offset()).find(':hidden').val($(this).data('id'))
-
-  $(document).on 'submit', '.#comment form', (e) ->
-    $.post('padding_url', $(this).serialize())
-    .done( -> alert '發訊完成' )
-    .fail( -> alert '發訊失敗' )
+#  $(document).on 'click', '.add_comment', (e) ->
+#    e.preventDefault()
+#    $('#comment').show().offset($(this).offset()).find(':hidden').val($(this).data('id'))
+#
+#  $(document).on 'submit', '.#comment form', (e) ->
+#    $.post('padding_url', $(this).serialize())
+#    .done( -> alert '發訊完成' )
+#    .fail( -> alert '發訊失敗' )

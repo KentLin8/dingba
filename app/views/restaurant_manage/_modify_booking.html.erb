@@ -1,100 +1,103 @@
-
-<%= form_for :booking ,:url => "modify_booking_save" do |f| %>
-    <%= f.hidden_field :id %>
-    <table class="table">
-      <tr>
-        <td>用餐日期</td>
-        <td><%= f.text_field :booking_time, :class => "booking_date datepicker" %></td>
-        <td></td>
-      </tr>
-       <tr>
-         <td>用餐時間</td>
-         <td>
-           <select name="" id=""></select>
-         </td>
-         <td></td>
-       </tr>
-      <tr>
-        <td>用餐人數</td>
-        <td><%= f.text_field :num_of_people %></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>訂位者大名</td>
-        <td><%= f.text_field :name %></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>訂位者電話</td>
-        <td><%= f.phone_field :phone %></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>訂位E-mail</td>
-        <td><%= f.email_field :email %></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>備註</td>
-        <td><%= f.text_area :remark %></td>
-        <td><input type="submit" value="確認修改" class="btn btn-primary"></td>
-      </tr>
-    </table>
-<% end %>
-
-    <div style="border-top: 1px dotted #DDDDDD; margin: 10px 0"></div>
-
-<%= form_for :booking ,:url => "cancel_booking" do |f| %>
-    <%= f.hidden_field :id %>
-    <div class="info">訂位取消</div>
-    <table class="table">
-      <tr>
-        <td><%= f.radio_button :status, "2", checked: @booking.status == '2' %> 同伴無法配合</td>
-        <td><%= f.radio_button :status, "3", checked: @booking.status == '3' %> 餐廳當天座位不夠</td>
-      </tr>
-      <tr>
-        <td><%= f.radio_button :status, "4", checked: @booking.status == '4' %> 選擇了其他餐廳</td>
-        <td><%= f.radio_button :status, "5", checked: @booking.status == '5' %> 餐廳臨時公休</td>
-      </tr>
-      <tr>
-        <td><%= f.radio_button :status, "6", checked: @booking.status == '6' %> 聚餐延期</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td colspan="2">
-          <%= f.radio_button :status, "7", checked: @booking.status == '7' %> 其他
-          <%= f.text_field :cancel_note, :placeholder => '請輸入' %>
-        </td>
-      </tr>
-      <tr>
-        <td></td>
-        <td><input type="submit" value="訂位取消" class="btn btn-primary"></td>
-      </tr>
-    </table>
-<% end %>
-
+<tr class="form">
+  <td colspan="8">
+    <div id="wrapper">
+      <div class="base_blue" style="font-size: 16px; margin: 6px 0">修改訂位資料</div>
+      <%= form_for :booking ,:url => "restaurant_manage/modify_booking_save", :html => {:id => 'modify_booking'} do |f| %>
+        <%= f.hidden_field :id %>
+        <table class="table">
+          <colgroup>
+            <col style="width: 12%;">
+            <col style="width: 20%;">
+            <col style="width: 12%;">
+            <col style="width: 42%;">
+            <col style="width: 14%;">
+          </colgroup>
+          <tr>
+            <td style="text-align: right">用餐日期</td>
+            <td><%= f.text_field :booking_time, :class => "booking_date datepicker", :required => true, :style => 'width: 77px' %></td>
+            <td style="text-align: right">訂位者電話</td>
+            <td><%= f.phone_field :phone, :required => true, :style => 'width: 270px' %></td>
+            <td></td>
+          </tr>
+           <tr>
+             <td style="text-align: right">用餐時間</td>
+             <td>
+              <select name="" id="" required="required" style="width: 77px">
+                <option value="00:30">00:30</option>
+                <option value="01:00">01:00</option>
+                <option value="01:30">01:30</option>
+                <option value="02:00">02:00</option>
+                <option value="02:30">02:30</option>
+                <option value="03:00">03:00</option>
+                <option value="03:30">03:30</option>
+                <option value="04:00">04:00</option>
+                <option value="04:30">04:30</option>
+                <option value="05:00">05:00</option>
+                <option value="05:30">05:30</option>
+                <option value="06:00">06:00</option>
+                <option value="06:30">06:30</option>
+                <option value="07:00">07:00</option>
+                <option value="07:30">07:30</option>
+                <option value="08:00">08:00</option>
+                <option value="08:30">08:30</option>
+                <option value="09:00">09:00</option>
+                <option value="09:30">09:30</option>
+                <option value="10:00">10:00</option>
+                <option value="10:30">10:30</option>
+                <option value="11:00">11:00</option>
+                <option value="11:30">11:30</option>
+                <option value="12:00">12:00</option>
+                <option value="12:30">12:30</option>
+                <option value="13:00">13:00</option>
+                <option value="13:30">13:30</option>
+                <option value="14:00">14:00</option>
+                <option value="14:30">14:30</option>
+                <option value="15:00">15:00</option>
+                <option value="15:30">15:30</option>
+                <option value="16:00">16:00</option>
+                <option value="16:30">16:30</option>
+                <option value="17:00">17:00</option>
+                <option value="17:30">17:30</option>
+                <option value="18:00">18:00</option>
+                <option value="18:30">18:30</option>
+                <option value="19:00">19:00</option>
+                <option value="19:30">19:30</option>
+                <option value="20:00">20:00</option>
+                <option value="20:30">20:30</option>
+                <option value="21:00">21:00</option>
+                <option value="21:30">21:30</option>
+                <option value="22:00">22:00</option>
+                <option value="22:30">22:30</option>
+                <option value="23:00">23:00</option>
+                <option value="23:30">23:30</option>
+                <option value="24:00">24:00</option>
+              </select>
+             </td>
+            <td style="text-align: right">訂位E-mail</td>
+            <td><%= f.email_field :email, :required => true, :style => 'width: 270px' %></td>
+            <td></td>
+           </tr>
+          <tr>
+            <td style="text-align: right">訂位者大名</td>
+            <td><%= f.text_field :name, :required => true, :style => 'width: 64px' %></td>
+            <td rowspan="2" style="text-align: right">備註</td>
+            <td rowspan="2"><%= f.text_area :remark, :style => 'width: 270px' %></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td style="text-align: right">用餐人數</td>
+            <td><%= f.text_field :num_of_people, :required => true, :style => 'width: 30px; text-align: center' %></td>
+            <td colspan="2"><input type="submit" value="確認修改" class="btn btn-primary"></td>
+          </tr>
+        </table>
+      <% end %>
+    </div>
+  </td>
+</tr>
 <script>
-    $(function() {
-
-        $(".booking_date").datepicker({
-            dateFormat: 'yy-mm-dd'
-        }).val(getTodaysDate());
-
-    });
-
-    function getTodaysDate () {
-        var t = new Date;
-        var year = t.getFullYear();
-
-        var day = t.getDate()
-        if (day < 10) {
-            day = '0' + day;
-        }
-
-        var month = t.getMonth() + 1;
-        if ( month < 10){
-            month = '0' + month;
-        }
-        return (year + '-' + month + '-' + day);
-    }
+$(".booking_date").datepicker({
+  dateFormat: 'yy-mm-dd',
+  showOn: 'both',
+  buttonText: '<i class="icon-calendar"></i>'
+});
 </script>

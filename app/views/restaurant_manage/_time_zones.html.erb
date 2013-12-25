@@ -1,14 +1,14 @@
-
+修改 <span style="color: rgb(127,23,0)"><%= @select_date %></span> 的供位設定爲<br>
 <table class="period table table-bordered">
   <tr>
-    <td style="width:5%">啟用</td>
-    <td style="width:15%">時段名稱</td>
-    <td style="width:40%">時段區間</td>
-    <td style="width:15%">總供位</td>
-    <td style="width:10%">單次</br>供位 <a class="ans" title="該時段餐廳能提供給單批客人桌椅的最大數量限制。">?</a></td>
-    <td style="width:15%">15分鐘</br>總供位 <a class="ans" title="為避免餐廳無法在短時間接待太大量的客人，因此設定每15分鐘內的總訂位客人不超過一定的數量，以保持良好的服務品質。">?</a></td>
+    <td style="width: 6%;">啟用</td>
+    <td style="width: 27%;">時段名稱</td>
+    <td style="width: 27%;">時段區間</td>
+    <td style="width: 11%;">總供位</td>
+    <td style="width: 12%;">單次供位 <a title="" class="ans" data-original-title="該時段餐廳能提供給單批客人桌椅的最大數量限制。">?</a></td>
+    <td style="width: 17%;">15分鐘總供位 <a title="" class="ans" data-original-title="為避免餐廳無法在短時間接待太大量的客人，因此設定每15分鐘內的總訂位客人不超過一定的數量，以保持良好的服務品質。">?</a></td>
   </tr>
-  <input name="special_day" type="hidden" value="<%= @special_day %>">
+  <input name="special_day" type="hidden" value="<%= @select_date %>">
 
     <% @time_zones.each_with_index do |t, index|%>
         <tr>
@@ -19,10 +19,10 @@
                 <input type="checkbox" name="zone<%= index %>[enable]">
             <% end %>
           </td>
-          <td><input class="input-small" type="text" name="zone<%= index %>[name]" value="<%= t.name %>">
+          <td><input style="width: 160px" type="text" name="zone<%= index %>[name]" value="<%= t.name %>">
 
           <td>
-            <select class="input-small" name="zone<%= index %>[time_begin]" data-value="<%= t.range_begin %>">
+            <select style="width: 77px" name="zone<%= index %>[time_begin]" data-value="<%= t.range_begin %>">
               <option value="00:30">00:30</option>
               <option value="01:00">01:00</option>
               <option value="01:30">01:30</option>
@@ -73,7 +73,7 @@
               <option value="24:00">24:00</option>
             </select>
             ~
-            <select class="input-small" name="zone<%= index %>[time_end]" data-value="<%= t.range_end %>">
+            <select style="width: 77px" name="zone<%= index %>[time_end]" data-value="<%= t.range_end %>">
               <option value="00:30">00:30</option>
               <option value="01:00">01:00</option>
               <option value="01:30">01:30</option>
@@ -124,9 +124,9 @@
               <option value="24:00">24:00</option>
             </select>
           </td>
-          <td><input class="input-mini" type="text" name="zone<%= index %>[total_allow]" value="<%= t.total_allow %>"></td>
-          <td><input class="input-mini" type="text" name="zone<%= index %>[each_allow]" value="<%= t.each_allow %>"></td>
-          <td><input class="input-mini" type="text" name="zone<%= index %>[fifteen_allow]" value="<%= t.fifteen_allow %>"></td>
+          <td><input style="text-align: right; width: 30px" type="text" name="zone<%= index %>[total_allow]" value="<%= t.total_allow %>"></td>
+          <td><input style="text-align: right; width: 30px" type="text" name="zone<%= index %>[each_allow]" value="<%= t.each_allow %>"></td>
+          <td><input style="text-align: right; width: 30px" type="text" name="zone<%= index %>[fifteen_allow]" value="<%= t.fifteen_allow %>"></td>
         </tr>
     <% end %>
 </table>
