@@ -553,12 +553,15 @@ class RestaurantManage
         now_year = Time.now.year
         daysOfMon = Time.days_in_month(now_month, now_year)
         date_start = "#{now_year}-#{now_month}-1"
-        date_end = "#{now_year}-#{now_month}-#{daysOfMon}"
+        date_end = "#{now_year}-#{now_month}-#{daysOfMon} 23:59"
       end
 
       date_start = Time.parse(date_start)
       date_end = Time.parse(date_end)
-      bookings =  Booking.where(:restaurant_id => restaurant_id).where('booking_time >= ?', date_start).where('booking_time <= ?', date_end).order('booking_time ASC')
+
+      date_start = Time.parse(date_start.strftime("%Y-%m-%d") + " 00:00")
+      date_end = Time.parse(date_end.strftime("%Y-%m-%d") + " 23:59")
+      bookings = Booking.where(:restaurant_id => restaurant_id).where('booking_time >= ?', date_start).where('booking_time <= ?', date_end).order('booking_time ASC')
 
       #bookings.each do |b|
       #  b.booking_time = b.booking_time.strftime("%Y-%m-%d %H:%M")

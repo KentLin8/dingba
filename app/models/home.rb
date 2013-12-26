@@ -914,7 +914,7 @@ class Home
         booking.restaurant_id = restaurant.id
         booking.res_url = restaurant.res_url
         booking.restaurant_name = restaurant.name
-        booking.restaurant_address = restaurant.city + restaurant.area + restaurant.address
+        booking.restaurant_address = "#{restaurant.city} #{restaurant.area} #{restaurant.address}"
         booking.booking_time = booking_time
         booking.num_of_people = booking_people
         booking.name = origin_booking[:booker_name]

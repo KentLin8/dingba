@@ -5,7 +5,7 @@
   </div>
   <div style="float:left; width: 40%; height: 50%;text-align: center">
     <h4><%= booking.booking_time.strftime("%Y-%m-%d %H:%M")%></h4>
-    <img width="300" height="225" src="/res/<%= booking.restaurant_id %>/images/<%= booking.restaurant_pic %>" alt="">
+    <a href="/r/<%= booking.res_url %>"><img width="300" height="225" src="/res/<%= booking.restaurant_id %>/images/<%= booking.restaurant_pic %>" alt=""></a>
   </div>
   <div style="float: right; width: 60%; height: 50%">
     <div style="width: 15%; font-size: 16px; text-align: right;float: left; margin-top: 10px; margin-bottom: 5px">

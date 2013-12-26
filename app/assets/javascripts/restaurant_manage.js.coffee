@@ -231,18 +231,21 @@ $ ->
   $('#lightbox_wrap').click (e) -> $(this).hide() if e.target is this
 
   $(document).on 'click', '#calendar .cell', ->
-    $.get('restaurant_manage/special_time', {condition_id: $(this).data('id'), special_day: $('#year').val() + '/' + $(this).find('.date').html()})
-    .done( (response) ->
-        if typeof response is 'string'
-          $('#tabs').tabs(active: 0)
-          $('#tab_time').html($.parseHTML(response, document, true))
-          $('.ans').tooltip()
-          $('select').each ->
-            $(this).val $(this).data('value')
-      )
-    .fail( -> alert '資料傳遞失敗' )
-    false
-    $('#lightbox_wrap').show()
+    da = $(this).find('.date').html()
+    if da is undefined
+    else
+      $.get('restaurant_manage/special_time', {condition_id: $(this).data('id'), special_day: $('#year').val() + '/' + da})
+      .done( (response) ->
+          if typeof response is 'string'
+            $('#tabs').tabs(active: 0)
+            $('#tab_time').html($.parseHTML(response, document, true))
+            $('.ans').tooltip()
+            $('select').each ->
+              $(this).val $(this).data('value')
+        )
+      .fail( -> alert '資料傳遞失敗' )
+      false
+      $('#lightbox_wrap').show()
 
   if document.getElementById 'res_header'
     $(document).on 'submit', 'form', (e) ->
