@@ -24,7 +24,7 @@
             </tr>
             <tr>
               <td style="font-size: 16px">餐廳地址：</td>
-              <td><%= @restaurant.city + @restaurant.area + @restaurant.address %></td>
+              <td><%= @address %></td>
             </tr>
             <tr>
               <td style="font-size: 16px">餐廳電話：</td>
@@ -41,15 +41,15 @@
             <tr>
               <td style="font-size: 16px">付款方式：</td>
               <td>
-                <% if @restaurant.pay_type.include?('1') %>
+                <% if @pay_type.include?('1') %>
                     現金
                 <% end %>
 
-                <% if @restaurant.pay_type.include?('2') %>
+                <% if @pay_type.include?('2') %>
                     信用卡
                 <% end %>
 
-                <% if @restaurant.pay_type.include?('3') %>
+                <% if @pay_type.include?('3') %>
                     悠遊卡
                 <% end %>
               </td>
@@ -158,8 +158,6 @@
   </div>
 </div>
 
-
-
 <script>
     $('[name=bookingModal]').click(function(){
         $('#bookingModal').show();
@@ -206,9 +204,9 @@
     $("#booking_date").datepicker({
         dateFormat: 'yy-mm-dd',
         changeMonth: true
-    }).val(getTodaysDate()); // For current date;
+    }) //.val(getTodaysDate(1)); // For current date;
 
-    function getTodaysDate () {
+    function getTodaysDate (add_day) {
         var t = new Date;
         var year = t.getFullYear();
         var day = t.getDate()

@@ -35,18 +35,22 @@ class HomeController < ApplicationController
     restaurant_url = params[:id]
     booking_day = params[:booking_day]
 
-    #@booking_day = (Date.parse(Time.now.to_s) + 1.days).to_s
-    #if !booking_day.blank?
-    #  @booking_day = booking_day
-    #end
-    @restaurant = Restaurant.new
-    @restaurant = Home.get_restaurant(restaurant_url)
+    @booking_day = (Date.parse(Time.now.to_s) + 1.days).to_s
+    if !booking_day.blank?
+      @booking_day = booking_day
+    end
+    restaurant = Restaurant.new
+    restaurant = Home.get_restaurant(restaurant_url)
+    @pay_type = "#{restaurant.pay_type}"
+    @address = "#{restaurant.city} #{restaurant.area} #{restaurant.address}"
+    @restaurant = restaurant
+
     @booking_condition = BookingCondition.new
     @booking_condition.option_of_time = []
     if !@restaurant.blank?
       @booking_condition = BookingCondition.new
       @booking_condition.option_of_time = []
-      @booking_condition = Home.get_condition(@restaurant, booking_day)
+      @booking_condition = Home.get_condition(@restaurant, @booking_day)
     else
       redirect_to home_path
     end
