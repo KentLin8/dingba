@@ -8,8 +8,8 @@
   </tr>
   <% end %>
   <tr>
-    <td style="width: 22%; padding-left: 13px; font-size: 16px">用餐日期：</td>
-    <td style="width: 78%;">
+    <td style="width: 25%; padding-left: 13px; font-size: 16px">用餐日期：</td>
+    <td style="width: 75%;">
       <input name="restaurant_id" type="hidden" value="<%= @restaurant.id %>">
       <input name="booker_id" type="hidden" value="<%= @booker.id %>">
       <input type="text" id="booking_date" style="width:110px; text-align: left; font-size: 16px; padding-left: 5px" value="<%= @booking_day %>">
@@ -19,7 +19,7 @@
     <td style="padding-left: 13px;font-size: 16px">用餐人數：</td>
     <td>
       <% if @booking_condition.error != true %>
-          <%= select_tag(:booking_people, options_for_select(@booking_condition.option_max_people) , id:'select_people', style: 'width:110px') %>
+          <%= select_tag(:booking_people, options_for_select(@booking_condition.option_max_people) , id:'select_people', style: 'width:117px') %>
       <% end %>
     </td>
   </tr>
@@ -27,16 +27,16 @@
     <td style="padding-left: 13px;font-size: 16px">用餐時段：</td>
     <td>
       <% if @booking_condition.error != true %>
-          <%= select_tag(:booking_zone, options_for_select(@booking_condition.option_of_zone) , id:'select_zone', style: 'width:110px') %>
+          <%= select_tag(:booking_zone, options_for_select(@booking_condition.option_of_zone) , id:'select_zone', style: 'width:117px') %>
       <% end %>
     </td>
   </tr>
-  <tr>
-    <td style="padding-left: 13px;font-size: 16px">
-      用餐時間：
-      <input type="hidden" name="time" id="time"></td>
-    <td></td>
-  </tr>
+  <!--<tr>-->
+    <!--<td style="padding-left: 13px;font-size: 16px">-->
+      <!--用餐時間：-->
+      <!--<input type="hidden" name="time" id="time"></td>-->
+    <!--<td></td>-->
+  <!--</tr>-->
   <tr>
 
     <td id="time_select1" class="t_select" colspan="2" style="display:none">

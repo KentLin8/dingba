@@ -2,10 +2,16 @@ class Home
 
   def self.get_restaurant(restaurant_url)
     begin
-      return Restaurant.where(:res_url => restaurant_url).first
+      restaurant = Restaurant.new
+      #restaurant.pay_type = '1'
+      restaurant = Restaurant.where(:res_url => restaurant_url).first
+      #restaurant.pay_type = '1'
+      return restaurant
     rescue => e
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/Models/home.rb  ,Method:get_restaurant(restaurant_url)"
-      return Restaurant.new
+      restaurant = Restaurant.new
+      #restaurant.pay_type = '1'
+      return restaurant
     end
   end
 
@@ -953,6 +959,7 @@ class Home
 
         if !booking.email.blank? && !(booking.email =~ /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/).blank?
           send_mail_result = MyMailer.booking_success(booking.email, booking).deliver   # Send mail fail may be the email problem, check time out
+          #send_mail_result = MyMailer.delay(run_at: 1.minutes.from_now).booking_success(booking.email, booking)
         end
 
         has_mail = false

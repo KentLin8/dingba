@@ -39,8 +39,15 @@ class HomeController < ApplicationController
     if !booking_day.blank?
       @booking_day = booking_day
     end
+
     restaurant = Restaurant.new
     restaurant = Home.get_restaurant(restaurant_url)
+
+    if restaurant.blank?
+      redirect_to home_path
+      return
+    end
+
     @pay_type = "#{restaurant.pay_type}"
     @address = "#{restaurant.city} #{restaurant.area} #{restaurant.address}"
     @restaurant = restaurant

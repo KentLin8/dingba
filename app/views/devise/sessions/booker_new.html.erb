@@ -12,7 +12,10 @@
 
       <tr>
         <td>信箱</td>
-        <td><%= f.email_field :email, :required => true, :class => 'input-block-level' %></td>
+        <td>
+          <%= f.hidden_field :role, :value => '1' %>
+          <%= f.email_field :email, :required => true, :class => 'input-block-level' %>
+        </td>
       </tr>
 
       <tr>

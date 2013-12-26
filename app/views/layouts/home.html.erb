@@ -35,8 +35,8 @@
                 <%= link_to "登入", "/sessions/booker_new", :class => 'navbar-link' %> |
                 <%= link_to "註冊", "/registrations/booker_new", :class => 'navbar-link' %>
             <% elsif !@booker.id.blank? %>
-                Hi <%= @booker.name %> 你好 </br>
                 <a href="/booker_manage/index" id="my_dingba" class="navbar-link">我的訂吧</a>
+                <%= link_to "登出", destroy_user_session_path, method: :delete, :class => 'navbar-link'  %>
             <% end %>
           </div>
         </div>
