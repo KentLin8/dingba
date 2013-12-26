@@ -16,7 +16,6 @@ class RestaurantManageController < ApplicationController
   end
 
   # ====== Code Check: 2013/12/07 ====== [ panda ok ]
-  # ====== Code Check: 2013/12/09 ====== [ kent: TODO: to fix something ]
   # GET ==== Function: show restaurant information view
   # =========================================================================
   def restaurant_info
@@ -226,7 +225,7 @@ class RestaurantManageController < ApplicationController
   # POST === Function: save modify booking
   # =========================================================================
   def modify_booking_save
-    result = RestaurantManage.modify_booking_save(params[:booking])
+    result = RestaurantManage.modify_booking_save(params[:booking], params[:ti])
     render json: result
   end
 

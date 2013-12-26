@@ -574,18 +574,62 @@ class RestaurantManage
     end
   end
 
-  def self.modify_booking_save(origin_booking)
+  def self.modify_booking_save(origin_booking, ti)
     begin
+      Booking.transaction do
       booking = Booking.find(origin_booking[:id].to_i)
+      db_num_of_people = booking.num_of_people
       booking.name = origin_booking[:name]
       booking.phone = origin_booking[:phone]
       booking.email = origin_booking[:email]
-      booking.booking_time = Time.parse(origin_booking[:booking_time].to_s)
+
+      da = Time.parse(origin_booking[:booking_time].to_s).strftime("%Y-%m-%d")
+      da = "#{da} #{ti}"
+      booking.booking_time = Time.parse(da)
       booking.num_of_people = origin_booking[:num_of_people].to_i
       booking.remark = origin_booking[:remark]
       booking.save
 
+      day_booking = DayBooking.where(:restaurant_id => booking.restaurant_id, :day => Date.parse(booking.booking_time.to_s))
+      if day_booking.blank?
+        Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/models/restaurant_manage.rb  ,Method:modify_booking_save(origin_booking)"
+        return {:error => true, :message => '阿! 發生錯誤了! 修改訂位失敗!'}
+      end
+      day_booking = day_booking.first
+      day_begin = Time.parse(booking.booking_time.strftime("%Y-%m-%d") + " 00:00")
+      conditions = SupplyCondition.where(:restaurant_id => booking.restaurant_id, :status => 't').where('range_begin <= ?', day_begin).where('range_end >= ?',day_begin).order('sequence ASC')
+
+      if conditions.blank?
+        day_booking.other = day_booking.zone1 + day_booking.zone2 + day_booking.zone3 + day_booking.zone4 + day_booking.zone5 + day_booking.zone6
+        day_booking.save
+        return {:success => true, :data => '已修改訂位!'}
+      end
+
+      condition = conditions.first
+      zones = TimeZone.where(:supply_condition_id => condition.id, :status => 't')
+      zones.each do |z|
+        if z.range_begin <= booking.booking_time.strftime("%H:%M") && z.range_end > booking.booking_time.strftime("%H:%M")
+          if z.sequence == 0
+            day_booking.zone1 = day_booking.zone1 - db_num_of_people + booking.num_of_people
+          elsif z.sequence == 1
+            day_booking.zone2 = day_booking.zone2 - db_num_of_people + booking.num_of_people
+          elsif z.sequence == 2
+            day_booking.zone3 = day_booking.zone3 - db_num_of_people + booking.num_of_people
+          elsif z.sequence == 3
+            day_booking.zone4 = day_booking.zone4 - db_num_of_people + booking.num_of_people
+          elsif z.sequence == 4
+            day_booking.zone5 = day_booking.zone5 - db_num_of_people + booking.num_of_people
+          elsif z.sequence == 5
+            day_booking.zone6 = day_booking.zone6 - db_num_of_people + booking.num_of_people
+          end
+          break;
+        end
+      end
+
+      day_booking.save
+      MyMailer.modify_booking(booking.email ,booking).deliver
       return {:success => true, :data => '修改成功!'}
+      end
     rescue => e
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/models/restaurant_manage.rb  ,Method:modify_booking_save(origin_booking)"
       return {:error => true, :message => '阿! 發生錯誤了! 修改失敗!'}

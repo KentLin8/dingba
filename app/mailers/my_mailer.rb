@@ -52,4 +52,12 @@ class MyMailer < ActionMailer::Base
     end
   end
 
+  def modify_booking(email, booking)
+    @booking = booking
+    mail(to: email,
+         subject: '訂吧通知：您的訂位已由餐廳方修改，請再次確認！') do |format|
+      format.html { render 'my_mailer/modify_booking' }
+    end
+  end
+
 end
