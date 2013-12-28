@@ -98,6 +98,12 @@ $ ->
           $('#upload span').html('選擇檔案上傳')
           if response.success
             show_cover response.image_path
+            $('.cover').removeClass('cover')
+            $('#pics .float').each () ->
+              if parseInt($(this).data('id')) == parseInt(response.cover_id)
+                $(this).find('.placeholder').addClass('cover')
+                $(this).find(".radio input[type='radio']").prop('checked', true)
+                return
           else if response.error
             alert "上傳失敗，原因：#{response.message}"
           else
@@ -316,7 +322,7 @@ $ ->
           $('.cover').removeClass('cover')
           p.find('.placeholder').addClass('cover')
         else if response.error
-          alert "封面設定失敗，原因：#{response.message}"
+          alert "#{response.message}"
         else
           alert '封面設定失敗'
       )
@@ -329,10 +335,19 @@ $ ->
       .done( (response) ->
         if response.success
           show_cover response.image_path
+          $('.cover').removeClass('cover')
+          $('#pics .float').each () ->
+            if response.cover_id == null
+              $(".radio input[type='radio']").prop('checked', false)
+              return
+            else if parseInt($(this).data('id')) == parseInt(response.cover_id)
+              $(this).find('.placeholder').addClass('cover')
+              $(this).find(".radio input[type='radio']").prop('checked', true)
+              return
         else if response.error
-          alert "封面設定失敗，原因：#{response.message}"
+          alert "#{response.message}"
         else
-          alert '封面設定失敗'
+          alert '刪除圖片失敗'
       )
       .fail( -> alert '圖片刪除失敗' )
 

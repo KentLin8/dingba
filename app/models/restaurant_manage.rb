@@ -1,8 +1,12 @@
 class RestaurantManage
 
   def self.check_restaurant_info(restaurant)
-    if restaurant.name.blank? || restaurant.address.blank? || restaurant.phone.blank? ||
-        restaurant.business_hours.blank? || restaurant.supply_person.blank?
+    if restaurant.name.blank? ||
+        restaurant.address.blank? ||
+        #restaurant.phone.blank? ||
+        restaurant.business_hours.blank? ||
+        restaurant.supply_person.blank? ||
+        restaurant.supply_email.blank?
       return false
     else
       return true
@@ -29,17 +33,8 @@ class RestaurantManage
       restaurant.address = origin_restaurant[:address]
       restaurant.res_type = origin_restaurant[:res_type]
       restaurant.feature = origin_restaurant[:feature]
-
-      pay_type_cash = origin_restaurant[:pay_type_cash]
-      pay_type_CreditCard = origin_restaurant[:pay_type_CreditCard]
-      pay_type_EasyCard = origin_restaurant[:pay_type_EasyCard]
-
       pay_type = [origin_restaurant[:pay_type_cash], origin_restaurant[:pay_type_CreditCard], origin_restaurant[:pay_type_EasyCard]].join(',')
-      # pay_type = pay_type_cash if !pay_type_cash.blank?
-      # pay_type = pay_type + ',' + pay_type_CreditCard if !pay_type_CreditCard.blank?
-      # pay_type = pay_type + ',' + pay_type_EasyCard if !pay_type_EasyCard.blank?
       restaurant.pay_type = pay_type
-
       restaurant.business_hours = origin_restaurant[:business_hours]
       restaurant.supply_person = origin_restaurant[:supply_person]
       restaurant.supply_email = origin_restaurant[:supply_email]
@@ -49,9 +44,13 @@ class RestaurantManage
       restaurant.info_url1 = origin_restaurant[:info_url1]
       restaurant.info_url2 = origin_restaurant[:info_url2]
       restaurant.info_url3 = origin_restaurant[:info_url3]
-      restaurant.save
 
-      return {:success => true, :data => '儲存成功!'}
+      if restaurant.save
+        return {:success => true, :data => '儲存成功!'}
+      else
+        error_message = restaurant.errors.first[1]
+        return {:error => true, :message => error_message}
+      end
     rescue => e
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/models/restaurant_manage.rb  ,Method:res_info_save(restaurant_info)"
       return {:error => true, :message => '阿! 發生錯誤了! 儲存失敗!'}
@@ -87,7 +86,11 @@ class RestaurantManage
 
       fullpath = File.expand_path(filename, path)
       File.open(fullpath, 'wb'){ |file| file.write(data) }
-      restaurant.save
+
+      if !restaurant.save
+        error_message = restaurant.errors.first[1]
+        return {:error => true, :message => error_message}
+      end
 
       image_path = {}
       image_path[1] = "res/#{restaurant.id}/images/" + restaurant.pic_name1 if !restaurant.pic_name1.blank?
@@ -96,7 +99,7 @@ class RestaurantManage
       image_path[4] = "res/#{restaurant.id}/images/" + restaurant.pic_name4 if !restaurant.pic_name4.blank?
       image_path[5] = "res/#{restaurant.id}/images/" + restaurant.pic_name5 if !restaurant.pic_name5.blank?
 
-      return {:success => true, :image_path => image_path }
+      return {:success => true, :image_path => image_path, :cover_id => restaurant.front_cover }
     rescue Exception => e
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/models/restaurant_manage.rb  ,Method:upload_img(restaurant, qqfile, data)"
       return {:error => true, :message => '阿! 發生錯誤了! 上傳失敗!'}
@@ -105,15 +108,22 @@ class RestaurantManage
 
   def self.image_cover_save(restaurant, cover_id)
     begin
-      if (cover_id == '1' && restaurant.pic_name1.blank?) || (cover_id == '2' && restaurant.pic_name2.blank?) || (cover_id == '3' && restaurant.pic_name3.blank?) ||
-          (cover_id == '4' && restaurant.pic_name4.blank?) || (cover_id == '5' && restaurant.pic_name5.blank?)
+      if (cover_id == '1' && restaurant.pic_name1.blank?) ||
+          (cover_id == '2' && restaurant.pic_name2.blank?) ||
+          (cover_id == '3' && restaurant.pic_name3.blank?) ||
+          (cover_id == '4' && restaurant.pic_name4.blank?) ||
+          (cover_id == '5' && restaurant.pic_name5.blank?)
 
         return {:error => true, :message => '有圖片才能設為封面喔!'}
       else
         restaurant.front_cover = cover_id
-        restaurant.save
 
-        return {:success => true, :data => '封面設定完畢!'}
+        if restaurant.save
+          return {:success => true, :data => '封面設定完畢!'}
+        else
+          error_message = restaurant.errors.first[1]
+          return {:error => true, :message => error_message}
+        end
       end
     rescue => e
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/models/restaurant_manage.rb  ,Method:img_cover_save(restaurant, cover_id)"
@@ -169,7 +179,7 @@ class RestaurantManage
         image_path[4] = "res/#{restaurant.id}/images/" + restaurant.pic_name4 if !restaurant.pic_name4.blank?
         image_path[5] = "res/#{restaurant.id}/images/" + restaurant.pic_name5 if !restaurant.pic_name5.blank?
 
-        return {:success => true, :data => '刪除成功!', :image_path => image_path }
+        return {:success => true, :data => '刪除成功!', :image_path => image_path, :cover_id => restaurant.front_cover }
       else
         return {:error => true, :message => '沒有圖片~ 無法刪除!'}
       end
