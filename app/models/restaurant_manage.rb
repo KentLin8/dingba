@@ -277,9 +277,14 @@ class RestaurantManage
     # don't catch this method error , transaction issue
     target_condition.restaurant_id = restaurant_id
     target_condition.name = origin_condition[:name]
-    target_condition.range_begin = origin_condition[:range_begin]
-    target_condition.range_end = origin_condition[:range_end]
-    target_condition.available_week = "#{origin_condition[:week1]},#{origin_condition[:week2]},#{origin_condition[:week3]},#{origin_condition[:week4]},#{origin_condition[:week5]},#{origin_condition[:week6]},#{origin_condition[:week7]}"
+    if target_condition.is_special == 't'
+      target_condition.range_begin = origin_condition[:range_begin]
+      target_condition.range_end = origin_condition[:range_begin]
+    else
+      target_condition.range_begin = origin_condition[:range_begin]
+      target_condition.range_end = origin_condition[:range_end]
+      target_condition.available_week = "#{origin_condition[:week1]},#{origin_condition[:week2]},#{origin_condition[:week3]},#{origin_condition[:week4]},#{origin_condition[:week5]},#{origin_condition[:week6]},#{origin_condition[:week7]}"
+    end
     target_condition.status = 't'   # t = enable ,f = disable
     target_condition.save
     return target_condition.id

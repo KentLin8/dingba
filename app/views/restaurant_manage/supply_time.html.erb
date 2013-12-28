@@ -1,5 +1,5 @@
 
-<form action="restaurant_manage/supply_condition_save" id="new_supply" method="post">
+<form action="restaurant_manage/supply_condition_save" id="new_supply" method="post" data-value="<%= @supply_time.is_special %>">
   <% if @supply_time.id != '' %>
     <input name="condition[id]" type="hidden" value="<%= @supply_time.id %>">
   <% end %>
@@ -16,6 +16,16 @@
           <td><input type="text" name="condition[name]" value="" required="required"></td>
       <% end %>
     </tr>
+
+    <% if @supply_time.is_special == 't' %>
+    <tr>
+      <td class="title"><i class="required">*</i>特定日</td>
+      <td>
+        <input type="text" data-type="date" name="condition[range_begin]" class="datepicker from input-small" required="required">&nbsp;
+      </td>
+    </tr>
+
+    <% elsif @supply_time.is_special != 't' %>
     <tr>
       <td class="title"><i class="required">*</i>設立訂位有效期間</td>
       <td>
@@ -39,6 +49,7 @@
         <label class="checkbox inline"><input type="checkbox" name="condition[week7]" value="0" <%= week.include?('0') ? 'checked="checked"' : '' %>>星期日</label>
       </td>
     </tr>
+    <% end %>
   </table>
 
   <%= render :partial => 'time_zones' %>

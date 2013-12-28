@@ -229,12 +229,13 @@ $ ->
     check = true
     periods = []
     # 檢查日期前後順序
-    if $('input[data-type=date]').length > 0
-      [from, to] = $('input[data-type=date]').get()
-      if from.value > to.value
-        check = false
-        $([from, to]).addClass('invalid')
-        alert '日期要從小到大'
+    if $('#new_supply').data('value') == null
+      if $('input[data-type=date]').length > 0
+        [from, to] = $('input[data-type=date]').get()
+        if from.value > to.value
+          check = false
+          $([from, to]).addClass('invalid')
+          alert '日期要從小到大'
     $('.period').find('tr').removeClass('invalid').each ->
       _this = $(this)
       ban = true
