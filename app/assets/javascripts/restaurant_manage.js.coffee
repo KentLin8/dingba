@@ -65,7 +65,7 @@ $ ->
     ).change( ->
       if this.id is 'show_day'
         $.get('/calendar/restaurant_day', {select_date: this.value}, 'html')
-          .done( (response) -> refresh response )
+          .done( (response) -> refresh response.attachmentPartial )
           .fail( -> alert 'fail' )
       else
         from = $('#from').val()
@@ -75,7 +75,7 @@ $ ->
             alert '前需比後小'
             return
           $.get('restaurant_manage/query_books_by_date', {from: from, to: to}, 'html')
-            .done( (response) -> refresh response )
+            .done( (response) -> refresh response.attachmentPartial )
             .fail( -> alert 'fail' )
     )
     # 填入select
@@ -167,18 +167,61 @@ $ ->
     hook_event()
 
   load_page = (url, set_href = false) ->
-    $.get(url, {}, 'html')
-      .done( (html) ->
-        refresh html
-        if set_href
-          if location.href.match '#'
-            tmp = location.href.split '#'
-            tmp[1] = url
-            location.href = tmp.join '#'
-          else
-            location.href += '#' + url
+    $.getJSON(url, {})
+      .done( (response) ->
+        if response.error
+          if response.step == '1'
+            $('.now').removeClass('now')
+            $('#sub_choice').animate(height: 44, 'border-width': 1, 'margin-bottom': 10) #TODO 66 -> 44 mark 賬戶密碼
+            $('#sub_choice2').animate(height: 0, 'border-width': 0, 'margin-bottom': 0)
+            $('#step1_mark').addClass('now')
+            $('#step1').addClass('now')
+            $('#sub_res_info').addClass('now')
+          else if response.step == '2'
+            $('.now').removeClass('now')
+            $('#sub_choice').animate(height: 44, 'border-width': 1, 'margin-bottom': 10) #TODO 66 -> 44 mark 賬戶密碼
+            $('#sub_choice2').animate(height: 0, 'border-width': 0, 'margin-bottom': 0)
+            $('#step1_mark').addClass('now')
+            $('#step1').addClass('now')
+            $('#sub_res_img').addClass('now')
+
+          refresh (response.attachmentPartial)
+          if set_href
+            if location.href.match '#'
+              tmp = location.href.split '#'
+              tmp[1] = response.url
+              location.href = tmp.join '#'
+            else
+              location.href += '#' + response.url
+          alert(response.message)
+        else
+          refresh (response.attachmentPartial)
+          if set_href
+            if location.href.match '#'
+              tmp = location.href.split '#'
+              tmp[1] = url
+              location.href = tmp.join '#'
+            else
+              location.href += '#' + url
       )
       .fail( -> alert '連線失敗，請稍後再試' )
+
+
+  #  load_page = (url, set_href = false) ->
+#    $.get(url, {}, 'html')
+#      .done( (data) ->
+#        alert(data.message)
+#        refresh html
+#        if set_href
+#          alert(html)
+#          if location.href.match '#'
+#            tmp = location.href.split '#'
+#            tmp[1] = url
+#            location.href = tmp.join '#'
+#          else
+#            location.href += '#' + url
+#      )
+#      .fail( -> alert '連線失敗，請稍後再試' )
 
   form_place = $('#form_place')
 
@@ -295,7 +338,7 @@ $ ->
   $('#step1').click ->
     $('#step1_mark').addClass('now')
     $('#sub_choice').children().eq(0).addClass('now')
-    $('#sub_choice').animate(height: 66, 'border-width': 1, 'margin-bottom': 10)
+    $('#sub_choice').animate(height: 44, 'border-width': 1, 'margin-bottom': 10) #TODO 66 -> 44 mark 賬戶密碼
     $('#sub_choice2').animate(height: 0, 'border-width': 0, 'margin-bottom': 0)
   $('#step2').click ->
     $('#step2_mark').addClass('now')
@@ -360,17 +403,17 @@ $ ->
     m = $('#month').val()
     if y? and m?
       $.get('/calendar/restaurant_month', {year: y, month: m}, 'html')
-        .done( (response) -> refresh(response) )
+        .done( (response) -> refresh(response.attachmentPartial) )
         .fail( -> alert 'fail' )
 
   $(document).on 'click', '#new_condition', ->
     $.get('/restaurant_manage/supply_time', {}, 'html')
-      .done( (response) -> refresh response )
+      .done( (response) -> refresh response.attachmentPartial )
       .fail( -> alert('oops! 出現錯誤了!') )
 
   $(document).on 'click', '.edit_condition', ->
     $.get('/restaurant_manage/supply_time', {condition_id: $(this).data('id')}, 'html')
-      .done( (response) -> refresh response )
+      .done( (response) -> refresh response.attachmentPartial )
       .fail( -> alert('oops! 出現錯誤了!') )
 
   $(document).on 'click', '.destroy_condition', ->

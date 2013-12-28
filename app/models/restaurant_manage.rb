@@ -1,12 +1,31 @@
 class RestaurantManage
 
   def self.check_restaurant_info(restaurant)
+    if restaurant.blank?
+      return false
+    end
+
     if restaurant.name.blank? ||
         restaurant.address.blank? ||
-        #restaurant.phone.blank? ||
         restaurant.business_hours.blank? ||
         restaurant.supply_person.blank? ||
         restaurant.supply_email.blank?
+      return false
+    else
+      return true
+    end
+  end
+
+  def self.check_restaurant_image(restaurant)
+    if restaurant.blank?
+      return false
+    end
+
+    if restaurant.pic_name1.blank? &&
+        restaurant.pic_name2.blank? &&
+        restaurant.pic_name3.blank? &&
+        restaurant.pic_name4.blank? &&
+        restaurant.pic_name5.blank?
       return false
     else
       return true
@@ -38,9 +57,10 @@ class RestaurantManage
       restaurant.business_hours = origin_restaurant[:business_hours]
       restaurant.supply_person = origin_restaurant[:supply_person]
       restaurant.supply_email = origin_restaurant[:supply_email]
-      restaurant.url1 = origin_restaurant[:url1]
-      restaurant.url2 = origin_restaurant[:url2]
-      restaurant.url3 = origin_restaurant[:url3]
+
+      restaurant.url1 = get_http_string(origin_restaurant[:url1])
+      restaurant.url2 = get_http_string(origin_restaurant[:url2])
+      restaurant.url3 = get_http_string(origin_restaurant[:url3])
       restaurant.info_url1 = origin_restaurant[:info_url1]
       restaurant.info_url2 = origin_restaurant[:info_url2]
       restaurant.info_url3 = origin_restaurant[:info_url3]
@@ -55,6 +75,15 @@ class RestaurantManage
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/models/restaurant_manage.rb  ,Method:res_info_save(restaurant_info)"
       return {:error => true, :message => '阿! 發生錯誤了! 儲存失敗!'}
     end
+  end
+
+  def self.get_http_string(url)
+    taget_url = url
+    if taget_url.length > 1 && taget_url[0..6] != 'http://'
+      taget_url = "http://#{taget_url}"
+    end
+
+    return taget_url
   end
 
   def self.upload_img(restaurant, qqfile, data)
@@ -470,7 +499,7 @@ class RestaurantManage
       zone6.range_end = '24:00'
       time_zones.push(zone6)
     else
-      zones = TimeZone.where(:supply_condition_id => condition_id).order('sequence')  # if add .to_i must add begin recure
+      zones = TimeZone.where(:supply_condition_id => condition_id.to_i).order('sequence')  # if add .to_i must add begin recure
       zones.each do |z|
         time_zones.push(z)
       end
@@ -766,6 +795,7 @@ class RestaurantManage
       db.zone4 = 0
       db.zone5 = 0
       db.zone6 = 0
+      db.other = 0
       day_booking_group.push(db)
       db_begin = Time.parse(db.day.strftime("%Y-%m-%d") + " 00:00")
       db_end = Time.parse(db.day.strftime("%Y-%m-%d") + " 23:59")
@@ -788,8 +818,10 @@ class RestaurantManage
       #把所有bookings 直接以other 丟到day_booking
       day_booking_mix.each do |mix|
         mix[1].each do |books|
-          mix[0].other = mix[0].other + books
+          mix[0].other = mix[0].other + books[1]
         end
+
+        mix[0].save
       end
     end
 
@@ -805,7 +837,6 @@ class RestaurantManage
                   mix[0].zone1 = mix[0].zone1 + books[1]
                 elsif z.sequence == 1
                   mix[0].zone2 = mix[0].zone2 + books[1]
-
                 elsif z.sequence == 2
                   mix[0].zone3 = mix[0].zone3 + books[1]
                 elsif z.sequence == 3
