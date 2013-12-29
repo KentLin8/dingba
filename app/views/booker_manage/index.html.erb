@@ -7,10 +7,15 @@
     <%= render :partial => 'booking_record' %>
   </div>
   <div id="tabs-2">
+
     <%= render :template => 'devise/registrations/edit',
                :locals => {
                        :resource => @booker,
                        :resource_name => 'user' } %>
+
+    <% if alert %>
+        <script type="text/javascript">alert("<%= alert %>");</script>
+    <% end %>
   </div>
 </div>
 
@@ -36,6 +41,12 @@
 </div>
 
 <script>
+
+    $('#tabs').tabs({
+        beforeActivate: function (event, ui) {
+            window.location.hash = ui.newPanel.selector;
+        }
+    });
 
     $('[name=showEdit]').click(function(){
         $('[name=btn_div]').hide();
