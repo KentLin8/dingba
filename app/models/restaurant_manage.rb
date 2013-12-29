@@ -94,41 +94,68 @@ class RestaurantManage
       ex_name = qqfile.split('.').pop
       filename = "#{now}.#{ex_name}"
 
+      change_booking_pic_name = false
       if restaurant.pic_name1.blank?
         restaurant.pic_name1 = filename
-        restaurant.front_cover = '1' if restaurant.front_cover.blank?
+        if restaurant.front_cover.blank?
+          restaurant.front_cover = '1'
+          change_booking_pic_name = true
+        end
       elsif restaurant.pic_name2.blank?
         restaurant.pic_name2 = filename
-        restaurant.front_cover = '2' if restaurant.front_cover.blank?
+        if restaurant.front_cover.blank?
+          restaurant.front_cover = '2'
+          change_booking_pic_name = true
+        end
       elsif restaurant.pic_name3.blank?
         restaurant.pic_name3 = filename
-        restaurant.front_cover = '3' if restaurant.front_cover.blank?
+        if restaurant.front_cover.blank?
+          restaurant.front_cover = '3'
+          change_booking_pic_name = true
+        end
       elsif restaurant.pic_name4.blank?
         restaurant.pic_name4 = filename
-        restaurant.front_cover = '4' if restaurant.front_cover.blank?
+        if restaurant.front_cover.blank?
+          restaurant.front_cover = '4'
+          change_booking_pic_name = true
+        end
       elsif restaurant.pic_name5.blank?
         restaurant.pic_name5 = filename
-        restaurant.front_cover = '5' if restaurant.front_cover.blank?
+        if restaurant.front_cover.blank?
+          restaurant.front_cover = '5'
+          change_booking_pic_name = true
+        end
       else
         return {:error => true, :message => '只能上傳五張圖片!'}
       end
 
-      fullpath = File.expand_path(filename, path)
-      File.open(fullpath, 'wb'){ |file| file.write(data) }
+      Restaurant.transaction do
+        if !restaurant.save
+          error_message = restaurant.errors.first[1]
+          return {:error => true, :message => error_message}
+        end
 
-      if !restaurant.save
-        error_message = restaurant.errors.first[1]
-        return {:error => true, :message => error_message}
+        if change_booking_pic_name
+          effect_booking = Booking.where(:restaurant_id => restaurant.id)
+
+          effect_booking.each do |eb|
+            eb.restaurant_pic = filename
+            eb.save
+          end
+        end
+
+        fullpath = File.expand_path(filename, path)
+        File.open(fullpath, 'wb'){ |file| file.write(data) }
+
+        image_path = {}
+        image_path[1] = "res/#{restaurant.id}/images/" + restaurant.pic_name1 if !restaurant.pic_name1.blank?
+        image_path[2] = "res/#{restaurant.id}/images/" + restaurant.pic_name2 if !restaurant.pic_name2.blank?
+        image_path[3] = "res/#{restaurant.id}/images/" + restaurant.pic_name3 if !restaurant.pic_name3.blank?
+        image_path[4] = "res/#{restaurant.id}/images/" + restaurant.pic_name4 if !restaurant.pic_name4.blank?
+        image_path[5] = "res/#{restaurant.id}/images/" + restaurant.pic_name5 if !restaurant.pic_name5.blank?
+
+        return {:success => true, :image_path => image_path, :cover_id => restaurant.front_cover }
       end
-
-      image_path = {}
-      image_path[1] = "res/#{restaurant.id}/images/" + restaurant.pic_name1 if !restaurant.pic_name1.blank?
-      image_path[2] = "res/#{restaurant.id}/images/" + restaurant.pic_name2 if !restaurant.pic_name2.blank?
-      image_path[3] = "res/#{restaurant.id}/images/" + restaurant.pic_name3 if !restaurant.pic_name3.blank?
-      image_path[4] = "res/#{restaurant.id}/images/" + restaurant.pic_name4 if !restaurant.pic_name4.blank?
-      image_path[5] = "res/#{restaurant.id}/images/" + restaurant.pic_name5 if !restaurant.pic_name5.blank?
-
-      return {:success => true, :image_path => image_path, :cover_id => restaurant.front_cover }
     rescue Exception => e
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/models/restaurant_manage.rb  ,Method:upload_img(restaurant, qqfile, data)"
       return {:error => true, :message => '阿! 發生錯誤了! 上傳失敗!'}
@@ -180,35 +207,51 @@ class RestaurantManage
         restaurant.pic_name5 = nil
       end
 
+      change_pic_name = nil
       if !pic_name.blank?
         if restaurant.front_cover == pic_id
           if !restaurant.pic_name1.blank?
+            change_pic_name = restaurant.pic_name1
             restaurant.front_cover = '1'
           elsif !restaurant.pic_name2.blank?
+            change_pic_name = restaurant.pic_name2
             restaurant.front_cover = '2'
           elsif !restaurant.pic_name3.blank?
+            change_pic_name = restaurant.pic_name3
             restaurant.front_cover = '3'
           elsif !restaurant.pic_name4.blank?
+            change_pic_name = restaurant.pic_name4
             restaurant.front_cover = '4'
           elsif !restaurant.pic_name5.blank?
+            change_pic_name = restaurant.pic_name5
             restaurant.front_cover = '5'
           else
             restaurant.front_cover = nil
           end
         end
 
-        path = File.expand_path("./public/res/#{restaurant.id}/images/", Rails.root)
-        File.delete(path + '/' + pic_name)
-        restaurant.save
+        Restaurant.transaction do
+          restaurant.save
+          effect_booking = Booking.where(:restaurant_id => restaurant.id, :restaurant_pic => pic_name)
 
-        image_path = {}
-        image_path[1] = "res/#{restaurant.id}/images/" + restaurant.pic_name1 if !restaurant.pic_name1.blank?
-        image_path[2] = "res/#{restaurant.id}/images/" + restaurant.pic_name2 if !restaurant.pic_name2.blank?
-        image_path[3] = "res/#{restaurant.id}/images/" + restaurant.pic_name3 if !restaurant.pic_name3.blank?
-        image_path[4] = "res/#{restaurant.id}/images/" + restaurant.pic_name4 if !restaurant.pic_name4.blank?
-        image_path[5] = "res/#{restaurant.id}/images/" + restaurant.pic_name5 if !restaurant.pic_name5.blank?
+          effect_booking.each do |eb|
+            eb.restaurant_pic = change_pic_name
+            eb.save
+          end
 
-        return {:success => true, :data => '刪除成功!', :image_path => image_path, :cover_id => restaurant.front_cover }
+          path = File.expand_path("./public/res/#{restaurant.id}/images/", Rails.root)
+          File.delete(path + '/' + pic_name)
+
+
+          image_path = {}
+          image_path[1] = "res/#{restaurant.id}/images/" + restaurant.pic_name1 if !restaurant.pic_name1.blank?
+          image_path[2] = "res/#{restaurant.id}/images/" + restaurant.pic_name2 if !restaurant.pic_name2.blank?
+          image_path[3] = "res/#{restaurant.id}/images/" + restaurant.pic_name3 if !restaurant.pic_name3.blank?
+          image_path[4] = "res/#{restaurant.id}/images/" + restaurant.pic_name4 if !restaurant.pic_name4.blank?
+          image_path[5] = "res/#{restaurant.id}/images/" + restaurant.pic_name5 if !restaurant.pic_name5.blank?
+
+          return {:success => true, :data => '刪除成功!', :image_path => image_path, :cover_id => restaurant.front_cover }
+        end
       else
         return {:error => true, :message => '沒有圖片~ 無法刪除!'}
       end
