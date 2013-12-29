@@ -146,18 +146,40 @@ class RegistrationsController < Devise::RegistrationsController
     self.resource = resource_class.to_adapter.get!(send(:"current_#{resource_name}").to_key)
     prev_unconfirmed_email = resource.unconfirmed_email if resource.respond_to?(:unconfirmed_email)
 
-    if update_resource(resource, registration_params)
-      if is_navigational_format?
-        flash_key = update_needs_confirmation?(resource, prev_unconfirmed_email) ?
-            :update_needs_confirmation : :updated
-        set_flash_message :notice, flash_key
-      end
-      sign_in resource_name, resource, :bypass => true
-      respond_with resource, :location => after_update_path_for(resource)
+    taget_user = registration_params
+    taget_user[:password] = taget_user[:password].strip
+    taget_user[:password_confirmation] = taget_user[:password_confirmation].strip
+    taget_user[:name] = taget_user[:name].strip
+    taget_user[:phone] = taget_user[:phone].strip
+    taget_user[:current_password] = taget_user[:current_password].strip
+
+    if taget_user[:password] != taget_user[:password_confirmation]
+      result = '新密碼與確認新密碼不符'
+    elsif !taget_user[:password].blank? && !taget_user[:password_confirmation].blank? && taget_user[:password].length < 6
+      result = '密碼長度必須大於6個字元, 前後不能空白'
+    elsif taget_user[:name].blank?
+      result = '姓名為必填欄位喔!'
+    elsif taget_user[:phone].blank?
+      result = '電話為必填欄位喔!'
+    elsif taget_user[:current_password].blank?
+      result = '驗證碼為必填欄位喔!'
     else
-      clean_up_passwords resource
-      respond_with resource
+      if update_resource(resource, taget_user)
+        if is_navigational_format?
+          flash_key = update_needs_confirmation?(resource, prev_unconfirmed_email) ?
+              :update_needs_confirmation : :updated
+          #set_flash_message :notice, flash_key
+        end
+        sign_in resource_name, resource, :bypass => true
+        #respond_with resource, :location => '/booker_manage/index' #after_update_path_for(resource)
+        result = '修改成功!'
+      else
+        clean_up_passwords resource
+        result = '修改失敗! 請確認輸入資料是否正確!,或資料長度超過限制'
+      end
     end
+
+    redirect_to '/booker_manage/index#tabs-2', :alert => result
   end
 
   def registration_params
