@@ -168,7 +168,7 @@
   <img class="content" src="/assets/booker/blog.jpg" alt="">
 </div>
 
-<div id="bookingModal" class="modal hide fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div id="bookingModal" class="modal hide fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="height:auto">
   <input id="booking_id_hidden" type="hidden" value="">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true" name="close_bookingModal">×</button>
@@ -176,6 +176,11 @@
   </div>
   <div class="modal-body" style="font-size: 16px">
     我們已經收到你的訂位，<div id="has_mail_div" style="font-size: 16px">並且已經發送E-Mail 提醒您。</div>謝謝你使用DingBa提供的訂位服務。
+    <hr id="step_2_hr" color="#D6D6D6" size="3" width="100%">
+    <div id="step_2" class="base_orange">
+      <span style="font-size: 24px">步驟 2</span>
+      <span style="line-height: 24px; vertical-align: bottom;">通知好友訂位資訊</span>
+    </div>
     <textarea id="notice_emails" placeholder="直接輸入E-mail, 並以”,”區分不同收件者"></textarea>
   </div>
   <div class="modal-footer">
@@ -368,6 +373,8 @@
                     if (response.booking_notice_type == 'one'){
                         $('#noticeFriend').hide();
                         $('#notice_emails').hide();
+                        $('#step_2_hr').hide();
+                        $('#step_2').hide();
                     }
 
                     if (response.has_mail == false){
