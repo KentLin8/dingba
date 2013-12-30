@@ -18,8 +18,7 @@ class Booking < ActiveRecord::Base
                    :length => { :maximum => 20, :message => "訂位者姓名，" + OUT_OF_LENGTH }
   validates :phone, :presence => { :message => "訂位者電話，" + NOT_EMPTY } ,
                     :length => { :maximum => 30, :message => "訂位者電話，" + OUT_OF_LENGTH }
-  validates :email, :format => { with: /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/, :message => "E-mail 格式錯誤喔!" },
-                    :length => { :maximum => 60, :message => "E-mail，" + OUT_OF_LENGTH }
+  validates :email, :length => { :maximum => 60, :message => "E-mail，" + OUT_OF_LENGTH }
   validates :remark, :length => { :maximum => 200, :message => "備註，" + OUT_OF_LENGTH }
   validates :num_of_people, :presence => { :message => "訂位人數，" + NOT_EMPTY } ,
                             :length => { :maximum => 11, :message => "訂位人數，" + OUT_OF_LENGTH } ,

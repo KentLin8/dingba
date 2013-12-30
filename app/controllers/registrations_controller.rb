@@ -85,7 +85,13 @@ class RegistrationsController < Devise::RegistrationsController
       build_resource(person)
       if resource.save
         if person['role'] == '0'
-          restaurant_init(person['phone'], resource.id)
+          result = restaurant_init(person['phone'], resource)
+          if result[0] == false
+            flash.now[:alert] = result[1]
+            render 'devise/registrations/restaurant_new'
+            raise ActiveRecord::Rollback
+            #make_error =  1/0  # template solve the hack attack or man make error situation
+          end
         end
 
         if resource.active_for_authentication?
@@ -108,7 +114,7 @@ class RegistrationsController < Devise::RegistrationsController
   # ====== Code Check: 2013/12/25 ====== [ panda: ok ]
   # Method === Function: init restaurant data
   # =========================================================================
-  def restaurant_init(phone, user_id)
+  def restaurant_init(phone, user)
     # max_seq = Restaurant.maximum(:res_url)
     res_url_tag = get_res_url_tag
     res = Restaurant.new
@@ -116,13 +122,26 @@ class RegistrationsController < Devise::RegistrationsController
     res.res_url = res_url_tag         # APP_CONFIG['domain']
     res.available_type = '1'
     res.available_date = '22:00'
-    res.save
+    res.available_hour = 1
+    res.supply_person = user.name
+    res.supply_email = user.email
 
-    res_user = RestaurantUser.new
-    res_user.restaurant_id = res.id
-    res_user.permission = 0           # 0 mean all manager
-    res_user.user_id = user_id
-    res_user.save
+    if res.save
+      res_user = RestaurantUser.new
+      res_user.restaurant_id = res.id
+      res_user.permission = '0'           # 0 mean all manager
+      res_user.user_id = user.id
+
+      if res_user.save
+        return [true, 'success']
+      else
+        error_message = res_user.errors.first[1]
+        return [false, error_message]
+      end
+    else
+      error_message = res.errors.first[1]
+      return [false, error_message]
+    end
   end
 
   # ====== Code Check: 2013/12/25 ====== [ panda: ok ]

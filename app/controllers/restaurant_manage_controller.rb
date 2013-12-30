@@ -231,6 +231,7 @@ class RestaurantManageController < ApplicationController
   # func ==== Function: auth user and get restaurant
   def get_restaurant
     begin
+      @pay_type = []
       if current_user.blank?
         flash.now[:alert] = '您還沒登入喔!~~ '
         redirect_to res_session_new_path
@@ -243,7 +244,6 @@ class RestaurantManageController < ApplicationController
             @restaurant = Restaurant.find(target.restaurant_id)
             @res_url = APP_CONFIG['domain'] + @restaurant.res_url.to_s
 
-            @pay_type = []
             if !@restaurant.pay_type.blank?
               @pay_type = @restaurant.pay_type.split(',')
             end
@@ -263,6 +263,7 @@ class RestaurantManageController < ApplicationController
     if !RestaurantManage.check_restaurant_info(restaurant)
       render json: {:error => true, :message => '餐廳資料,必填欄位完善才能進行下一步喔!', :step => '1', :url => '/restaurant_manage/restaurant_info', :attachmentPartial => render_to_string('restaurant_manage/restaurant_info', :layout => false ) }
       return false
+
     end
 
     return true

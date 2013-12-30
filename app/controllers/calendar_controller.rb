@@ -171,6 +171,7 @@ class CalendarController < ApplicationController
   # =========================================================================
   def get_restaurant
     begin
+      @pay_type = []
       if current_user.blank?
         flash.now[:alert] = '您還沒登入喔!~~ '
         redirect_to res_session_new_path
@@ -182,6 +183,10 @@ class CalendarController < ApplicationController
 
             @restaurant = Restaurant.find(target.restaurant_id)
             @res_url = APP_CONFIG['domain'] + @restaurant.res_url.to_s
+
+            if !@restaurant.pay_type.blank?
+              @pay_type = @restaurant.pay_type.split(',')
+            end
           end
         elsif current_user.role == '1'
           redirect_to booker_manage_index_path

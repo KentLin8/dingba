@@ -15,7 +15,7 @@ class Restaurant < ActiveRecord::Base
   validates :business_hours, :length => { :maximum => 255, :message => "營業時間，" + OUT_OF_LENGTH }
   validates :pay_type, :length => { :maximum => 10, :message => "付款方式，" + OUT_OF_LENGTH }
   validates :supply_person, :length => { :maximum => 20, :message => "供位聯絡人，" + OUT_OF_LENGTH }
-  validates :supply_email, :format => { with: /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/, :message => "E-mail 格式錯誤喔!" },
+  validates :supply_email, :format => { with: /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/, :message => "供位聯絡人 E-mail 格式錯誤喔!" },
                            :length => { :maximum => 60, :message => "E-mail，" + OUT_OF_LENGTH }
   validates :url1, :length => { :maximum => 60, :message => "餐廳網址1，" + OUT_OF_LENGTH }
   validates :url2, :length => { :maximum => 60, :message => "餐廳網址2，" + OUT_OF_LENGTH }

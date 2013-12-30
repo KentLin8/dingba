@@ -177,6 +177,7 @@ $ ->
             $('#step1_mark').addClass('now')
             $('#step1').addClass('now')
             $('#sub_res_info').addClass('now')
+            alert(response.message)
           else if response.step == '2'
             $('.now').removeClass('now')
             $('#sub_choice').animate(height: 44, 'border-width': 1, 'margin-bottom': 10) #TODO 66 -> 44 mark 賬戶密碼
@@ -184,25 +185,16 @@ $ ->
             $('#step1_mark').addClass('now')
             $('#step1').addClass('now')
             $('#sub_res_img').addClass('now')
+            alert(response.message)
 
-          refresh (response.attachmentPartial)
-          if set_href
-            if location.href.match '#'
-              tmp = location.href.split '#'
-              tmp[1] = response.url
-              location.href = tmp.join '#'
-            else
-              location.href += '#' + response.url
-          alert(response.message)
-        else
-          refresh (response.attachmentPartial)
-          if set_href
-            if location.href.match '#'
-              tmp = location.href.split '#'
-              tmp[1] = url
-              location.href = tmp.join '#'
-            else
-              location.href += '#' + url
+        refresh (response.attachmentPartial)
+        if set_href
+          if location.href.match '#'
+            tmp = location.href.split '#'
+            tmp[1] = url
+            location.href = tmp.join '#'
+          else
+            location.href += '#' + url
       )
       .fail( -> alert '連線失敗，請稍後再試' )
 
