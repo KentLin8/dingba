@@ -187,14 +187,24 @@ $ ->
             $('#sub_res_img').addClass('now')
             alert(response.message)
 
-        refresh (response.attachmentPartial)
-        if set_href
-          if location.href.match '#'
-            tmp = location.href.split '#'
-            tmp[1] = url
-            location.href = tmp.join '#'
+          refresh (response.attachmentPartial)
+          if set_href
+            if location.href.match '#'
+              tmp = location.href.split '#'
+              tmp[1] = response.url
+              location.href = tmp.join '#'
+            else
+              location.href += '#' + response.url
           else
-            location.href += '#' + url
+        else
+          refresh (response.attachmentPartial)
+          if set_href
+            if location.href.match '#'
+              tmp = location.href.split '#'
+              tmp[1] = url
+              location.href = tmp.join '#'
+            else
+              location.href += '#' + url
       )
       .fail( -> alert '連線失敗，請稍後再試' )
 
