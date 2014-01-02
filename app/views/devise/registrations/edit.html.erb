@@ -1,7 +1,9 @@
 
-<%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put }) do |f| %>
+<div style="width: 500px">
+<%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => {:id => 'devise_edit', :method => :put }) do |f| %>
 
     <div style="float: left;width: 200px;font-size: 16px; line-height:40px;text-align: right;padding-right: 5px">
+      <input type="hidden" name="from" value="<%= @from %>" />
       帳號 ( E-Mail )：</br>
       姓名：</br>
       手機：</br>
@@ -23,6 +25,7 @@
 
     <table style="width: 100%"></table>
 <% end %>
+</div>
 
 <script>
   $('form').submit(function(){

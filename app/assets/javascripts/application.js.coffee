@@ -7,6 +7,9 @@ $.fn.live = (event, callback) -> $(document).on event, this.selector, callback
 
 window.validate = (form) ->
   check  = true
+  if $(form).attr('id') == 'devise_edit'
+    return check
+
   $(form).find('.invalid').removeClass('invalid')
 
   $(form).find('input').each ->

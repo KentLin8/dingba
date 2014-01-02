@@ -1,10 +1,12 @@
 class RegistrationsController < Devise::RegistrationsController
-  layout 'restaurant_manage'
+  #layout 'restaurant_manage'
+  layout 'registration'
 
   # ====== Code Check: 2013/12/25 ====== [ panda: ok ]
   # GET ==== Function: show registration restaurant view
   # =========================================================================
   def restaurant_new
+    @restaurant = Restaurant.new
   end
 
   # ====== Code Check: 2013/12/25 ====== [ panda: TODO: phase 2]
@@ -160,6 +162,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   def account_edit
     @booker = current_user
+    @from = 'res'
     render 'devise/registrations/edit', :layout => false, :locals => { :resource => @booker, :resource_name => 'user'}
   end
 
@@ -203,7 +206,12 @@ class RegistrationsController < Devise::RegistrationsController
       end
     end
 
-    redirect_to '/booker_manage/index#tabs-2', :alert => result
+    from = params[:from]
+    if from.blank?
+      redirect_to '/booker_manage/index#tabs-2', :alert => result
+    else
+      return json
+    end
   end
 
   def registration_params

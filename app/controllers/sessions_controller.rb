@@ -1,12 +1,13 @@
 class SessionsController < Devise::SessionsController
-  layout 'restaurant_manage'
+  #layout 'restaurant_manage'
+  layout 'registration'
 
   def restaurant_new
     new(sign_in_params, '0')
   end
 
   def booker_new
-    @res_url = params[:format]
+    #@res_url = params[:format]
     #@res_url = @res_url[0..5]
 
     new(sign_in_params, '1')
@@ -38,11 +39,11 @@ class SessionsController < Devise::SessionsController
       end
     rescue => e
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/controllers/sessions_controller.rb  ,Method:new(sign_in_params)"
-      if role == '0'
-        redirect_to res_session_new_path
-      else
-        redirect_to booker_session_new_path
-      end
+      #if role == '0'
+      #  redirect_to res_session_new_path
+      #else
+      #  redirect_to booker_session_new_path
+      #end
     end
   end
 

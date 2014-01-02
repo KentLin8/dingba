@@ -38,7 +38,7 @@
                 <span style="color: #000000">你好 </span>
                 <!--<a href="/booker_manage/index" id="my_dingba" style="color: rgb(233,147,88)">| 我的帳戶 |</a>-->
                 <!--<button type="button" class="fancybox">Click Me!</button>-->
-                <a href="registrations/account_edit" class="fancybox" title="Sample title">| 我的帳戶 |</a>
+                <a id="my_account" href="#" class="fancybox" title="Sample title">| 我的帳戶 |</a>
                 <%= link_to "登出", destroy_user_session_path, method: :delete  %>
             <% end %>
           </span>
@@ -88,8 +88,6 @@
   </div>
 </div>
 
-
-
 </body>
 </html>
 
@@ -99,9 +97,35 @@
 //        $('.fancybox').fancybox('<div><h1>Lorem Lipsum</h1><p>Lorem lipsum</p></div>', {
 //            title : 'Custom Title'
 //        });
+        //$('#account_fancybox').attr('href', window.location.hash.substring(1)).fancybox();
 
-        $('.fancybox').fancybox({ content: '<div>my custom html</div>' }, {
-            title : 'Custom Title'
-        });
+//        $('.fancybox').fancybox({ content: '<div>my custom html</div>' }, {
+//            title : 'Custom Title'
+//        });
+
+//        var nzData = 'registrations/account_edit';
+//
+//        $('#account_fancybox').load(nzData, function(){
+//            var foo = $('#account_fancybox').html();
+//            $.fancybox(foo);
+//        });
     });
+
+    $('#my_account').click(function(){
+        var nzData = '/registrations/account_edit';
+
+        $.get(nzData, function(html) {
+            $.fancybox({
+                "content":html,
+                "width":400
+            });
+        });
+
+//        $.fancybox({
+//            //'autoScale' : true
+//            'width': 500
+//        });
+
+    });
+
 </script>
