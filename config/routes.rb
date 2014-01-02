@@ -7,6 +7,7 @@ DingBa::Application.routes.draw do
     match 'registrations/restaurant_create' => 'registrations#restaurant_create',:via => 'post', :as => 'res_create'
     match 'registrations/booker_new' => 'registrations#booker_new',              :via => 'get',  :as => 'booker_new'
     match 'registrations/booker_create' => 'registrations#booker_create',        :via => 'post', :as => 'booker_create'
+    match 'registrations/account_edit' => 'registrations#account_edit',          :via => 'get',  :as => 'account_edit'
 
     match 'sessions/restaurant_new' => 'sessions#restaurant_new',                :via => 'get',  :as => 'res_session_new'
     match 'sessions/booker_new' => 'sessions#booker_new',                        :via => 'get',  :as => 'booker_session_new'

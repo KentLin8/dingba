@@ -37,14 +37,14 @@
                 <span style="color: #000000">Hi,</span> <%= @restaurant.name %>
                 <span style="color: #000000">你好 </span>
                 <!--<a href="/booker_manage/index" id="my_dingba" style="color: rgb(233,147,88)">| 我的帳戶 |</a>-->
-                <button type="button" class="fancybox">Click Me!</button>
+                <!--<button type="button" class="fancybox">Click Me!</button>-->
                 <a href="registrations/account_edit" class="fancybox" title="Sample title">| 我的帳戶 |</a>
                 <%= link_to "登出", destroy_user_session_path, method: :delete  %>
             <% end %>
           </span>
             </div>
             <% if !@restaurant.id.blank? %>
-                <a href="/restaurant#/calendar/restaurant_month"><img src="/assets/res/go_restaurant.png" alt="訂吧" style="margin-left: 600px"></a>
+                <a href="/r/<%= @restaurant.res_url %>"><img src="/assets/res/go_restaurant.png" alt="訂吧" style="margin-left: 600px"></a>
             <% end %>
           </div>
         </div>
