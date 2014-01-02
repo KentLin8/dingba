@@ -6,49 +6,102 @@
   <%= stylesheet_link_tag    'restaurant_manage', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'restaurant_manage', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css" media="screen" />
+  <script type="text/javascript" src="/fancybox/jquery.fancybox.pack.js"></script>
 </head>
 <body>
 
+<div id="res_header">
   <div class="container">
-    <div class="row" style="margin: 35px 0">
+    <div class="row-fluid" style="">
+      <div class="span2">
+        <img src="/assets/booker/logo.png" alt="訂吧" id="logo">
+      </div>
+      <div class="span9">
+        <div class="row-fluid">
+          <div class="span6">
+            <div style="font-size: 50px;top: 57px;width: 300px;font-style:italic;">
+              24
+              <span style="font-size: 20px;margin-left: -10px;font-style:italic;">hr</span>
+              <span style="font-size: 20px;font-style:normal;letter-spacing: 1px;">餐廳網路訂位平台</span>
+            </div>
+
+            <div id="logo_word">
+              訂位不打烊，你我都是VIP
+
+          <span style="margin-left: 100px;font-size: 15px">
+            <% if @restaurant.id.blank? %>
+                <%= link_to "登入", booker_session_new_path %> |
+                <%= link_to "註冊", "/registrations/booker_new" %>
+            <% elsif !@restaurant.id.blank? %>
+                <span style="color: #000000">Hi,</span> <%= @restaurant.name %>
+                <span style="color: #000000">你好 </span>
+                <!--<a href="/booker_manage/index" id="my_dingba" style="color: rgb(233,147,88)">| 我的帳戶 |</a>-->
+                <button type="button" class="fancybox">Click Me!</button>
+                <a href="registrations/account_edit" class="fancybox" title="Sample title">| 我的帳戶 |</a>
+                <%= link_to "登出", destroy_user_session_path, method: :delete  %>
+            <% end %>
+          </span>
+            </div>
+            <% if !@restaurant.id.blank? %>
+                <a href="/restaurant#/calendar/restaurant_month"><img src="/assets/res/go_restaurant.png" alt="訂吧" style="margin-left: 600px"></a>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      <img src="/assets/booker/line.png" id="line">
+    </div>
+    <div class="row" style="margin: 0px 0">
       <%= yield %>
     </div>
+  </div>
 
-    <div class="row">
-      <div id="about" class="span6">
-        <a href="">關於我們</a>
-        <a href="">會員條款</a>
-        <a href="">常見問與答</a>
+  <div id="about">
+    <div class="row-fluid">
+      <div class="span3"></div>
+      <div class="span6">
+        <a href="" target="_blank">關於我們</a>
+        <a href="" target="_blank">會員條款</a>
+        <a href="" target="_blank">常見問與答</a>
       </div>
-      <div id="copyright" class="span6">
-        © 2013 Codream. All Rights Reserved.
-      </div>
+      <div class="span3"></div>
     </div>
-
-    <div class="row">
-      <div id="statement" class="span12">
-        此訂位平台為免費資源，不收取任何費用，由 Codream 團隊提供。
+    <div class="row-fluid">
+      <div class="span12">
+        此定位平台為免費資源，不收取任何費用，由Codream團隊提供。
       </div>
     </div>
   </div>
-<div style="margin: 0px auto;width: 1024px">
-    <% if alert %>
-      <script type="text/javascript">alert("<%= alert %>");</script>
-    <% end %>
 
-    <div style="margin-left: 10%;margin-right: 10%; text-align: right">
-      <% if user_signed_in? %>
-
-          <%-# link_to "帳戶管理" , booker_manage_index_path , :class => 'navbar-link' %>
-          <%= link_to "登出", destroy_user_session_path, method: :delete, :class => 'navbar-link'  %>
-      <% else %>
-          <%= link_to "註冊", new_user_registration_path, :class => 'navbar-link'  %> |
-          <%= link_to "登入", new_user_session_path, :class => 'navbar-link'  %>
-      <% end %>
+  <div id="copyright">
+    <div class="row-fluid">
+      <div class="span3"></div>
+      <div class="span6">
+        <div>2013 CoDream. All Rights Reserved.</div>
+        <a href="" id="fb" target="_blank"></a>
+        <a href="" id="blog" target="_blank"></a>
+        <a href="" id="gp" target="_blank"></a>
+        <a href="" id='yt' target="_blank"></a>
+      </div>
+      <div class="span3"></div>
     </div>
-
-
+  </div>
 </div>
+
+
 
 </body>
 </html>
+
+<script>
+
+    $(document).ready(function() {
+//        $('.fancybox').fancybox('<div><h1>Lorem Lipsum</h1><p>Lorem lipsum</p></div>', {
+//            title : 'Custom Title'
+//        });
+
+        $('.fancybox').fancybox({ content: '<div>my custom html</div>' }, {
+            title : 'Custom Title'
+        });
+    });
+</script>

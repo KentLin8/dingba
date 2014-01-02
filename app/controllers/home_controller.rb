@@ -35,6 +35,7 @@ class HomeController < ApplicationController
     restaurant_url = params[:id]
     booking_day = params[:booking_day]
 
+
     @booking_day = (Date.parse(Time.now.to_s) + 1.days).to_s
     if !booking_day.blank?
       @booking_day = booking_day
@@ -43,6 +44,7 @@ class HomeController < ApplicationController
     restaurant_url = restaurant_url[0..5]
     restaurant = Restaurant.new
     restaurant = Home.get_restaurant(restaurant_url)
+    @res_url = restaurant_url
 
     if restaurant.blank?
       redirect_to home_path
@@ -96,6 +98,7 @@ class HomeController < ApplicationController
 
       if booking_id.blank? || notice_emails.blank?
         render json: {:error => true, :message => '阿! 發生錯誤了! 通知失敗!'}
+        return
       end
 
       result = MyMailer.notify_friend(notice_emails, booking_id).deliver

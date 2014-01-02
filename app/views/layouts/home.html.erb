@@ -5,38 +5,46 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <%= stylesheet_link_tag    'home', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'home', 'data-turbolinks-track' => true %>
-  <%-# yield :javascript_includes %>
   <%= csrf_meta_tags %>
 </head>
 <body>
-
 <div id="front_header">
   <div class="container">
-    <div class="row-fluid">
-
-      <div class="span3">
+    <div class="row-fluid" style="">
+      <div class = "span2">
         <img src="/assets/booker/logo.png" alt="訂吧" id="logo">
       </div>
-
       <div class="span9">
         <div class="row-fluid">
           <div class="span6">
-            <div id="subtitle">
-              只要輸入用餐日期、<br>
-              時間、人數、手機號碼，<br>
-              就可輕鬆擁有專屬你的座位。
+            <!--<div id="subtitle">-->
+              <!--只要輸入用餐日期、<br>-->
+              <!--時間、人數、手機號碼，<br>-->
+              <!--就可輕鬆擁有專屬你的座位。-->
+            <!--</div>-->
+            <div style="font-size: 50px;top: 57px;width: 300px;font-style:italic;">
+              24
+              <span style="font-size: 20px;margin-left: -10px;font-style:italic;">hr</span>
+              <span style="font-size: 20px;font-style:normal;letter-spacing: 1px;">餐廳網路訂位平台</span>
             </div>
+
             <div id="logo_word">
               訂位不打烊，你我都是VIP
+
+              <span style="margin-left: 100px;font-size: 15px">
+                <% if @booker.id.blank? %>
+                    <%= link_to "登入", booker_session_new_path(@res_url) %> |
+                    <%= link_to "註冊", "/registrations/booker_new" %>
+                <% elsif !@booker.id.blank? %>
+                    <span style="color: #000000">Hi,</span> <%= @booker.name %>
+                    <span style="color: #000000">你好 </span>
+                    <a href="/booker_manage/index" id="my_dingba" style="color: rgb(233,147,88)">| 我的訂吧 |</a>
+                    <%= link_to "登出", destroy_user_session_path, method: :delete  %>
+                <% end %>
+              </span>
             </div>
-          </div>
-          <div class="span6" id="log_info">
-            <% if @booker.id.blank? %>
-                <%= link_to "登入", "/sessions/booker_new", :class => 'navbar-link' %> |
-                <%= link_to "註冊", "/registrations/booker_new", :class => 'navbar-link' %>
-            <% elsif !@booker.id.blank? %>
-                <a href="/booker_manage/index" id="my_dingba" class="navbar-link">我的訂吧</a>
-                <%= link_to "登出", destroy_user_session_path, method: :delete, :class => 'navbar-link'  %>
+            <% if !@booker.id.blank? %>
+                <a href="/restaurant#/calendar/restaurant_month"><img src="/assets/res/go_restaurant.png" alt="訂吧" style="margin-left: 600px"></a>
             <% end %>
           </div>
         </div>

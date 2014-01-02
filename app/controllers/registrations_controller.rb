@@ -158,6 +158,11 @@ class RegistrationsController < Devise::RegistrationsController
     end
   end
 
+  def account_edit
+    @booker = current_user
+    render 'devise/registrations/edit', :layout => false, :locals => { :resource => @booker, :resource_name => 'user'}
+  end
+
   # ====== Code Check: 2013/12/25 ====== [ panda: TODO: detail review ]
   # POST === Function: update user data
   # =========================================================================
