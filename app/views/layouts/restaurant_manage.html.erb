@@ -29,29 +29,34 @@
             <div id="logo_word">
               訂位不打烊，你我都是VIP
 
-          <span style="margin-left: 100px;font-size: 15px">
-            <% if @restaurant.id.blank? %>
-                <%= link_to "登入", booker_session_new_path %> |
-                <%= link_to "註冊", "/registrations/booker_new" %>
-            <% elsif !@restaurant.id.blank? %>
-                <span style="color: #000000">Hi,</span> <%= @restaurant.name %>
-                <span style="color: #000000">你好 </span>
-                <!--<a href="/booker_manage/index" id="my_dingba" style="color: rgb(233,147,88)">| 我的帳戶 |</a>-->
-                <!--<button type="button" class="fancybox">Click Me!</button>-->
-                <a id="my_account" href="#" class="fancybox" title="Sample title">| 我的帳戶 |</a>
-                <%= link_to "登出", destroy_u_session_path, method: :delete  %>
-            <% end %>
-          </span>
+              <span style="margin-left: 100px;font-size: 15px">
+                <% if @restaurant.id.blank? %>
+                    <%= link_to "登入", booker_session_new_path %> |
+                    <%= link_to "註冊", "/registrations/booker_new" %>
+                <% elsif !@restaurant.id.blank? %>
+                    <span style="color: #000000">Hi,</span> <%= @restaurant.name %>
+                    <span style="color: #000000">你好 </span>
+                    <!--<a href="/booker_manage/index" id="my_dingba" style="color: rgb(233,147,88)">| 我的帳戶 |</a>-->
+                    <!--<button type="button" class="fancybox">Click Me!</button>-->
+                    <a id="my_account" href="#" class="fancybox" title="Sample title">| 我的帳戶 |</a>
+                    <%= link_to "登出", destroy_u_session_path, method: :delete  %>
+                <% end %>
+              </span>
             </div>
             <% if !@restaurant.id.blank? %>
-                <a href="/r/<%= @restaurant.res_url %>" target="_blank"><img src="/assets/res/go_restaurant.png" alt="訂吧" style="margin-left: 600px"></a>
+                <a href="/r/<%= @restaurant.res_url %>" target="_blank"><img src="/assets/res/go_restaurant.png" alt="訂吧" style="margin-top: 10px;margin-left: 600px"></a>
             <% end %>
           </div>
         </div>
       </div>
       <img src="/assets/booker/line.png" id="line">
     </div>
-    <div class="row" style="margin: 0px 0">
+
+    <div style="text-align: center">
+      您的餐廳訂位網址&nbsp<input type="text" value='<%= @res_url %>' readonly="readonly" style="width: 220px">
+    </div>
+
+    <div class="row" style="margin: 20px 0">
       <%= yield %>
     </div>
   </div>
@@ -117,7 +122,13 @@
         $.get(nzData, function(html) {
             $.fancybox({
                 "content":html,
-                "width":400
+                "width":400,
+                padding: 20,
+                helpers: {
+                    overlay: {
+                        locked: false
+                    }
+                }
             });
         });
 
