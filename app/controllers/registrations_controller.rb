@@ -199,7 +199,7 @@ class RegistrationsController < Devise::RegistrationsController
         end
         sign_in resource_name, resource, :bypass => true
         #respond_with resource, :location => '/booker_manage/index' #after_update_path_for(resource)
-        result = '修改成功!'
+        result = '修改成功'
       else
         clean_up_passwords resource
         result = '修改失敗! 請確認輸入資料是否正確!,或資料長度超過限制'
@@ -210,7 +210,7 @@ class RegistrationsController < Devise::RegistrationsController
     if from.blank?
       redirect_to '/booker_manage/index#tabs-2', :alert => result
     else
-      return json
+      render json:{:success => true, :data => result, :registration => true }
     end
   end
 

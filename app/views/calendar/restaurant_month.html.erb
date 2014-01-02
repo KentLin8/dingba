@@ -57,6 +57,12 @@
                         </tr>
                     <% end %>
                 <% end %>
+                <% if !@books[i].other.blank? && @books[i].other > 0 %>
+                    <tr>
+                      <td>其他時段</td>
+                      <td style="text-align: right"><%= @books[i].other%></td>
+                    </tr>
+                <% end %>
               </table>
           <% end %>
         </div>

@@ -49,6 +49,7 @@ class CalendarController < ApplicationController
         b.zone4 = 0
         b.zone5 = 0
         b.zone6 = 0
+        b.other = 0
 
         @books.push(b)
         @calendar_data.push(c)
@@ -120,6 +121,8 @@ class CalendarController < ApplicationController
       first_day.wday.to_i.times do
         pre = Calendar.new
         pre.day = 0
+
+        @books.unshift(DayBooking.new)
         @calendar_data.unshift(pre)
       end
 
@@ -128,6 +131,7 @@ class CalendarController < ApplicationController
         difference.times do
           after = Calendar.new
           after.day = 0
+          @books.push(DayBooking.new)
           @calendar_data.push(after)
         end
       elsif @calendar_data.length > 35
@@ -135,6 +139,7 @@ class CalendarController < ApplicationController
         difference.times do
           after = Calendar.new
           after.day = 0
+          @books.push(DayBooking.new)
           @calendar_data.push(after)
         end
       end
@@ -163,7 +168,7 @@ class CalendarController < ApplicationController
     @zones_books = RestaurantManage.get_day_books(@restaurant.id, @select_date)
     @select_date = @select_date.to_date
     #render 'restaurant_manage/_day_booking', :layout => false
-    render json: {:success => true, :attachmentPartial => render_to_string('restaurant_manage/_day_booking', :layout => false) }
+    render json: {:success => true, :attachmentPartial => render_to_string('restaurant_manage/_day_booking', :layout => false )}
   end
 
   # ====== Code Check: 2013/12/07 ====== [ panda: TODO: 1.rename @res to @restaurant 2.think the auth solution ]

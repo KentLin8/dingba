@@ -307,6 +307,9 @@ $ ->
         return false
       $.post(this.action, $(this).serialize())
         .done( (response) =>
+          if response.registration
+            $.fancybox.close();
+
           if typeof response is 'string'
             refresh response
           else if typeof response is 'object'

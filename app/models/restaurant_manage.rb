@@ -322,10 +322,10 @@ class RestaurantManage
     target_condition.name = origin_condition[:name]
     if target_condition.is_special == 't'
       target_condition.range_begin = origin_condition[:range_begin]
-      target_condition.range_end = origin_condition[:range_begin]
+      target_condition.range_end = origin_condition[:range_begin] + " 23:59"
     else
       target_condition.range_begin = origin_condition[:range_begin]
-      target_condition.range_end = origin_condition[:range_end]
+      target_condition.range_end = origin_condition[:range_end] + " 23:59"
       target_condition.available_week = "#{origin_condition[:week1]},#{origin_condition[:week2]},#{origin_condition[:week3]},#{origin_condition[:week4]},#{origin_condition[:week5]},#{origin_condition[:week6]},#{origin_condition[:week7]}"
     end
     target_condition.status = 't'   # t = enable ,f = disable
@@ -431,7 +431,7 @@ class RestaurantManage
         condition.name = Date.parse(special_day.to_s).to_s
         condition.status = 't'
         condition.range_begin = special_day
-        condition.range_end = special_day
+        condition.range_end = Time.parse(special_day.to_s.strftime("%Y-%m-%d") + " 23:59")
         condition.available_week = '0,1,2,3,4,5,6'
         condition.sequence = 0
         condition.is_special = 't'
@@ -874,32 +874,42 @@ class RestaurantManage
     end
 
     conditions.each do |c|
-      zones = TimeZone.where(:supply_condition_id => c.id, :status => 't').order('sequence ASC')
+      #zones = TimeZone.where(:supply_condition_id => c.id, :status => 't').order('sequence ASC')
+      zones = TimeZone.where(:supply_condition_id => c.id).order('sequence ASC')
 
       day_booking_mix.each do |mix|
         if c.range_begin <= mix[0].day && c.range_end >= mix[0].day
           zones.each do |z|
             mix[1].each do |books|
               if z.range_begin <= books[2] && z.range_end > books[2]
-                if z.sequence == 0
-                  mix[0].zone1 = mix[0].zone1 + books[1]
-                elsif z.sequence == 1
-                  mix[0].zone2 = mix[0].zone2 + books[1]
-                elsif z.sequence == 2
-                  mix[0].zone3 = mix[0].zone3 + books[1]
-                elsif z.sequence == 3
-                  mix[0].zone4 = mix[0].zone4 + books[1]
-                  mix[1].delete(books)
-                elsif z.sequence == 4
-                  mix[0].zone5 = mix[0].zone5 + books[1]
-                  mix[1].delete(books)
-                elsif z.sequence == 5
-                else
+                if z.status == 'f'
                   mix[0].other = mix[0].other + books[1]
+                  mix[1].delete(books)
+                else
+                  if z.sequence == 0
+                    mix[0].zone1 = mix[0].zone1 + books[1]
+                    mix[1].delete(books)
+                  elsif z.sequence == 1
+                    mix[0].zone2 = mix[0].zone2 + books[1]
+                    mix[1].delete(books)
+                  elsif z.sequence == 2
+                    mix[0].zone3 = mix[0].zone3 + books[1]
+                    mix[1].delete(books)
+                  elsif z.sequence == 3
+                    mix[0].zone4 = mix[0].zone4 + books[1]
+                    mix[1].delete(books)
+                  elsif z.sequence == 4
+                    mix[0].zone5 = mix[0].zone5 + books[1]
+                    mix[1].delete(books)
+                  elsif z.sequence == 5
+                    mix[0].zone6 = mix[0].zone6 + books[1]
+                    mix[1].delete(books)
+                  end
                 end
               end
             end
           end
+
         end
         mix[0].save
       end
