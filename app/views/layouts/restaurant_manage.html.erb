@@ -98,24 +98,6 @@
 
 <script>
 
-    $(document).ready(function() {
-//        $('.fancybox').fancybox('<div><h1>Lorem Lipsum</h1><p>Lorem lipsum</p></div>', {
-//            title : 'Custom Title'
-//        });
-        //$('#account_fancybox').attr('href', window.location.hash.substring(1)).fancybox();
-
-//        $('.fancybox').fancybox({ content: '<div>my custom html</div>' }, {
-//            title : 'Custom Title'
-//        });
-
-//        var nzData = 'registrations/account_edit';
-//
-//        $('#account_fancybox').load(nzData, function(){
-//            var foo = $('#account_fancybox').html();
-//            $.fancybox(foo);
-//        });
-    });
-
     $('#my_account').click(function(){
         var nzData = '/registrations/account_edit';
 
@@ -127,16 +109,11 @@
                 helpers: {
                     overlay: {
                         locked: false
-                    }
+                    },
+                    title: null
                 }
             });
         });
-
-//        $.fancybox({
-//            //'autoScale' : true
-//            'width': 500
-//        });
-
     });
 
 </script>

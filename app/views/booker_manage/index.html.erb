@@ -19,7 +19,7 @@
   </div>
 </div>
 
-<div id="cancelBookingModal" class="modal hide fade in" tabindex="-1" role="dialog" aria-hidden="true">
+<!--<div id="cancelBookingModal" class="modal hide fade in" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true" name="close_modal">×</button>
     <h4 id="myModalLabel">取消訂位</h4>
@@ -37,6 +37,27 @@
   <div class="modal-footer">
     <button class="btn btn-primary" name="cancel_booking_btn_modal">取消訂位</button>
     <button type="button" class="btn" data-dismiss="modal" aria-hidden="true" name='close_modal'>關閉</button>
+  </div>
+</div>-->
+
+
+
+<div id="cancelBookingDiv" style="display: none; width: 400px">
+  <div>
+    <h4 id="myModalLabel">取消訂位</h4>
+  </div>
+  <div>
+    <input id="booking_id_hidden_cancel" type="hidden" value="">
+    <label style="font-size: 16px;letter-spacing: 1px"><input type="radio" name="cancel_radio" value="2">&nbsp同伴無法配合</label>
+    <label style="font-size: 16px;letter-spacing: 1px"><input type="radio" name="cancel_radio" value="3">&nbsp餐廳當天座位不夠</label>
+    <label style="font-size: 16px;letter-spacing: 1px"><input type="radio" name="cancel_radio" value="4">&nbsp選擇了其他餐廳</label>
+    <label style="font-size: 16px;letter-spacing: 1px"><input type="radio" name="cancel_radio" value="5">&nbsp餐廳臨時公休</label>
+    <label style="font-size: 16px;letter-spacing: 1px"><input type="radio" name="cancel_radio" value="6">&nbsp聚餐延期</label>
+    <label style="font-size: 16px;letter-spacing: 1px"><input type="radio" name="cancel_radio" value="7">&nbsp其他：</label>
+    <textarea id="cancel_note"></textarea>
+  </div>
+  <div >
+    <button class="btn btn-primary" name="cancel_booking_btn_modal">取消訂位</button>
   </div>
 </div>
 
@@ -140,12 +161,26 @@
 
     $('[name=cancel_booking_btn]').click(function(){
         $('#booking_id_hidden_cancel').val($(this).data('value'))
-        $('#cancelBookingModal').show()
+        //$('#cancelBookingModal').show()
+
+        var nzData = '/registrations/account_edit';
+        $.fancybox({
+            "href": "#cancelBookingDiv",
+            "width":400,
+            padding: 20,
+            helpers: {
+                overlay: {
+                    locked: false
+                },
+                title: null
+            }
+
+        });
     });
 
-    $('[name=close_modal]').click(function(){
-        $('#cancelBookingModal').hide();
-    });
+//    $('[name=close_modal]').click(function(){
+//        $('#cancelBookingModal').hide();
+//    });
 
     $('[name=cancel_booking_btn_modal]').click(function(){
 
@@ -162,9 +197,10 @@
             cache: false,
             async: false,
             success: function(response){
+                $.fancybox.close();
                 $('input[name="cancel_radio"]:checked').prop('checked', false);
                 $('#cancel_note').val('');
-                $('#cancelBookingModal').hide();
+                //$('#cancelBookingModal').hide();
 
                 if (response.success){
                     obj_label.text(response.status_string)
@@ -178,7 +214,7 @@
                 }
             },
             error: function(){
-                $('#cancelBookingModal').hide();
+                //$('#cancelBookingModal').hide();
                 alert('oops! 出現錯誤了!');
             }
         });
