@@ -307,6 +307,10 @@ $ ->
         return false
       $.post(this.action, $(this).serialize())
         .done( (response) =>
+          if response.sign_out
+            #window.location.reload();
+            window.location.href = '/sessions/restaurant_new'
+
           if response.registration
             $.fancybox.close();
 

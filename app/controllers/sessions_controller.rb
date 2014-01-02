@@ -84,4 +84,13 @@ class SessionsController < Devise::SessionsController
     #respond_with resource, :location => after_sign_in_path_for(resource)
   end
 
+  def destroy
+    signed_out = (Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name))
+
+    respond_to do |format|
+      format.json { render :json => {:sign_out => true } }
+      format.html { redirect_to :back}
+    end
+  end
+
 end

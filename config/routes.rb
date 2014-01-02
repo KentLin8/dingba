@@ -12,6 +12,7 @@ DingBa::Application.routes.draw do
     match 'sessions/restaurant_new' => 'sessions#restaurant_new',                :via => 'get',  :as => 'res_session_new'
     match 'sessions/booker_new' => 'sessions#booker_new',                        :via => 'get',  :as => 'booker_session_new'
     match 'sessions/create' => 'sessions#create',                                :via => 'post', :as => 'login_session'
+    match 'sessions/destroy' => 'sessions#destroy',                              :via => 'delete', :as => 'destroy_u_session'
 
     match '/users/auth/:provider' => 'omniauth_callbacks#passthru' ,             :via => 'get'
 
