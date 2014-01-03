@@ -3,9 +3,9 @@
 
   <div style="width:100%; border: 1px solid rgb(207,207,207);margin-bottom: 2px">
   </div>
-  <div style="float:left; width: 40%; height: 50%;text-align: center">
-    <h4><%= booking.booking_time.strftime("%Y-%m-%d %H:%M")%></h4>
-    <a href="/r/<%= booking.res_url %>"><img width="300" height="225" src="/res/<%= booking.restaurant_id %>/images/<%= booking.restaurant_pic %>" alt=""></a>
+  <div style="float:left; width: 40%; height: 50%;text-align: center;">
+    <label style="font-size: 16px;margin-top: 4px">訂位時間： <%= booking.booking_time.strftime("%Y-%m-%d %H:%M")%> </label>
+    <a class="record_pic" href="/r/<%= booking.res_url %>"><img src="/res/<%= booking.restaurant_id %>/images/<%= booking.restaurant_pic %>" alt=""></a>
   </div>
   <div style="float: right; width: 60%; height: 50%">
     <div style="width: 15%; font-size: 16px; text-align: right;float: left; margin-top: 10px; margin-bottom: 5px">
@@ -21,7 +21,7 @@
     </div>
     <div style="width: 85%; font-size: 16px; text-align: left;float: right; margin-top: 10px; margin-bottom: 5px">
       <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true" name="cancel_booking_btn" data-value="<%= booking.id %>" style="font-size: 26px">×</button>-->
-      <button type="button" class="close fancybox" name="cancel_booking_btn" data-value="<%= booking.id %>" style="font-size: 26px">×</button>
+      <!--<button type="button" class="close fancybox" name="cancel_booking_btn" data-value="<%= booking.id %>" style="font-size: 26px">×</button>-->
       <%= booking.restaurant_name %></br>
       <%= booking.restaurant_address %></br>
       <%= booking.name %></br>
@@ -33,26 +33,30 @@
 
       <% if booking.status == '0' %>
           <label id="<%= booking.id %>" style="font-size: 16px">
-            已訂位(未用餐)
+            已訂位( 未用餐 ) <a href="#" name="cancel_booking_btn" data-value="<%= booking.id %>" style="font-size: 16px;color: blue;padding-left: 10px">取消訂位</a>
           </label>
-      <% elsif booking.status == '1' %>
+      <% elsif booking.status == '1' && booking.feedback.blank? %>
           <label id="<%= booking.id %>" style="font-size: 16px;color: blue">
-            已訂位(用完餐)
+            已訂位( 待評論 )
+          </label>
+      <% elsif booking.status == '1' && !booking.feedback.blank? %>
+          <label id="<%= booking.id %>" style="font-size: 16px;color: blue">
+            已訂位( 已評論 )
           </label>
       <% else %>
           <label id="<%= booking.id %>" style="font-size: 16px;color: red">
             <% if booking.status == '2' %>
-            取消訂位(同伴無法配合)
+            取消訂位( 同伴無法配合 )
             <% elsif booking.status == '3' %>
-            取消訂位(餐廳當天座位不夠)
+            取消訂位( 餐廳當天座位不夠 )
             <% elsif booking.status == '4' %>
-            取消訂位(選擇了其他餐廳)
+            取消訂位( 選擇了其他餐廳 )
             <% elsif booking.status == '5' %>
-            取消訂位(餐廳臨時公休)
+            取消訂位( 餐廳臨時公休 )
             <% elsif booking.status == '6' %>
-            取消訂位(聚餐延期)
+            取消訂位( 聚餐延期 )
             <% elsif booking.status == '7' %>
-            取消訂位(原因:<%= booking.cancel_note%>)
+            取消訂位( 原因:<%= booking.cancel_note%> )
             <% end %>
           </label>
       <% end %>
@@ -60,7 +64,7 @@
 
     <hr color="#D6D6D6" size="5" width="100%">
 
-    <% if booking.status == '0' %>
+    <% if booking.status == '1' %>
     <div id="fd_<%= booking.id %>">
     <div style="width: 15%; font-size: 16px; text-align: right;float: left; margin-top: -10px; margin-bottom: 5px">
       消費感想：

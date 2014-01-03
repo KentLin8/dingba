@@ -3,11 +3,11 @@ class BookerManageController < ApplicationController
   before_action :get_booker, :only => [:index, :booking_record, :feedback]
 
   def index
-    @books = Booking.where(:user_id => @booker.id).order('booking_time DESC')
+    @books = BookerManage.get_books(@booker.id)
   end
 
   def booking_record
-    @books = Booking.where(:user_id => @booker.id).order('booking_time DESC')
+    @books = BookerManage.get_books(@booker.id)
   end
 
   def feedback
