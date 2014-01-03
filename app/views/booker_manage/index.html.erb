@@ -204,6 +204,7 @@
 
                 if (response.success){
                     obj_label.text(response.status_string)
+                    obj_label.addClass('red')
                     alert(response.data)
                 }
                 else if (response.error){

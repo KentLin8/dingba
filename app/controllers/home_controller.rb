@@ -1,5 +1,6 @@
 class HomeController < ApplicationController
-  layout 'home'
+  #layout 'home'
+  layout :resolve_layout
   before_action :get_user, :only => [:wait_confirm_email, :index, :booking_restaurant, :get_condition, :save_booking, :notice_friend, :cancel_booking, :save_cancel_booking]
 
   # =========================================================================
@@ -101,9 +102,25 @@ class HomeController < ApplicationController
         return
       end
 
-      result = MyMailer.notify_friend(notice_emails, booking_id).deliver
+      email = notice_emails.split(',')
+      if email.count == 1
+        email = email[0].split(';')
+      end
+
+      effect_email = []
+      email.each do |e|
+        if !e.blank? && !(e =~ /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/).blank?
+          effect_email.push(e)
+        end
+      end
+
+      result = MyMailer.notify_friend(effect_email).deliver
 
       if result.perform_deliveries
+
+        booking = Booking.find(booking_id)
+        booking.participants = effect_email.map{|k| "#{k}"}.join(',')
+        booking.save
         render json: {:success => true, :data => '通知成功!' }
       else
         render json: {:error => true, :message => '阿! 發生錯誤了! 通知失敗!'}
@@ -145,6 +162,17 @@ class HomeController < ApplicationController
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/controllers/home_controller.rb  ,Filter:get_user"
       flash.now[:alert] = 'oops! 出現錯誤了!'
       redirect_to home_path
+    end
+  end
+
+  private
+
+  def resolve_layout
+    case action_name
+      when "index"
+        "home_index"
+      else
+        "home"
     end
   end
 

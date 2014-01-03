@@ -31,29 +31,38 @@
       <%= booking.participants %></br>
       <%= booking.remark %></br>
 
-      <label id="<%= booking.id %>" style="font-size: 16px">
       <% if booking.status == '0' %>
-          已訂位(未用餐)
+          <label id="<%= booking.id %>" style="font-size: 16px">
+            已訂位(未用餐)
+          </label>
       <% elsif booking.status == '1' %>
-          已訂位(用完餐)
-      <% elsif booking.status == '2' %>
-          取消訂位(同伴無法配合)
-      <% elsif booking.status == '3' %>
-          取消訂位(餐廳當天座位不夠)
-      <% elsif booking.status == '4' %>
-          取消訂位(選擇了其他餐廳)
-      <% elsif booking.status == '5' %>
-          取消訂位(餐廳臨時公休)
-      <% elsif booking.status == '6' %>
-          取消訂位(聚餐延期)
-      <% elsif booking.status == '7' %>
-          取消訂位(原因:<%= booking.cancel_note%>)
+          <label id="<%= booking.id %>" style="font-size: 16px;color: blue">
+            已訂位(用完餐)
+          </label>
+      <% else %>
+          <label id="<%= booking.id %>" style="font-size: 16px;color: red">
+            <% if booking.status == '2' %>
+            取消訂位(同伴無法配合)
+            <% elsif booking.status == '3' %>
+            取消訂位(餐廳當天座位不夠)
+            <% elsif booking.status == '4' %>
+            取消訂位(選擇了其他餐廳)
+            <% elsif booking.status == '5' %>
+            取消訂位(餐廳臨時公休)
+            <% elsif booking.status == '6' %>
+            取消訂位(聚餐延期)
+            <% elsif booking.status == '7' %>
+            取消訂位(原因:<%= booking.cancel_note%>)
+            <% end %>
+          </label>
       <% end %>
-      </label>
+
+
     </div>
 
     <hr color="#D6D6D6" size="5" width="100%">
 
+    <% if booking.status == '1' %>
     <div style="width: 15%; font-size: 16px; text-align: right;float: left; margin-top: -10px; margin-bottom: 5px">
       消費感想：
     </div>
@@ -67,9 +76,8 @@
         <button class="btn" name='save_feedback'>確定</button>
         <button class="btn" name='close_edit'>關閉</button>
       </div>
-
-      <!--<a href="#myModal" role="button" data-toggle="modal" name="showModal" data-value="<% booking.id %>" id="feedback_btn" style="font-size: 16px;color: blue;padding-left: 10px">輸入感想</a>-->
     </div>
+    <% end %>
 
   </div>
 

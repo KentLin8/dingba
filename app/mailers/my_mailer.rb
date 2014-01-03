@@ -17,19 +17,8 @@ class MyMailer < ActionMailer::Base
     end
   end
 
-  def notify_friend(email, booking_id)
+  def notify_friend(effect_email)
     begin
-      @booking = Booking.find(booking_id)
-      #email = 'a17877yun@gmail.com,u9523039@yuntech.edu.tw'
-      email = email.split(',')
-
-      effect_email = []
-      email.each do |e|
-        if !e.blank? && !(e =~ /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/).blank?
-          effect_email.push(e)
-        end
-      end
-
       mail(to: effect_email,
            subject: '訂吧通知：您的朋友邀請您一起用餐！') do |format|
         format.html { render 'my_mailer/booking_friend' }
