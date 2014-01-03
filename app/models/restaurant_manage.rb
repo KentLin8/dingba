@@ -396,8 +396,9 @@ class RestaurantManage
 
   def self.special_create(origin_zones, special_day, restaurant_id)
     begin
-      special_day = Time.parse(special_day)
-      origin = SupplyCondition.where(:restaurant_id => restaurant_id, :is_special => 't').where('range_begin >= ?', special_day).where('range_end <= ?', special_day)
+      special_day_begin = Time.parse(special_day)
+      special_day_end = special_day_begin.strftime("%Y-%m-%d") + " 23:59"
+      origin = SupplyCondition.where(:restaurant_id => restaurant_id, :is_special => 't').where('range_begin >= ?', special_day_begin).where('range_end <= ?', special_day_end)
 
       origin_id = 0
       is_origin = false
@@ -428,10 +429,10 @@ class RestaurantManage
         condition = SupplyCondition.new
         condition.id = condition_id
         condition.restaurant_id = restaurant_id
-        condition.name = Date.parse(special_day.to_s).to_s
+        condition.name = Date.parse(special_day_begin.to_s).to_s
         condition.status = 't'
-        condition.range_begin = special_day
-        condition.range_end = Time.parse(special_day.to_s.strftime("%Y-%m-%d") + " 23:59")
+        condition.range_begin = special_day_begin
+        condition.range_end = special_day_end
         condition.available_week = '0,1,2,3,4,5,6'
         condition.sequence = 0
         condition.is_special = 't'
