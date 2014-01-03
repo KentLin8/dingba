@@ -209,7 +209,7 @@ class RestaurantManage
 
       change_pic_name = nil
       if !pic_name.blank?
-        if restaurant.front_cover == pic_id
+        #if restaurant.front_cover == pic_id
           if !restaurant.pic_name1.blank?
             change_pic_name = restaurant.pic_name1
             restaurant.front_cover = '1'
@@ -228,7 +228,7 @@ class RestaurantManage
           else
             restaurant.front_cover = nil
           end
-        end
+        #end
 
         Restaurant.transaction do
           restaurant.save
@@ -241,7 +241,6 @@ class RestaurantManage
 
           path = File.expand_path("./public/res/#{restaurant.id}/images/", Rails.root)
           File.delete(path + '/' + pic_name)
-
 
           image_path = {}
           image_path[1] = "res/#{restaurant.id}/images/" + restaurant.pic_name1 if !restaurant.pic_name1.blank?
