@@ -190,6 +190,9 @@
         var status_label = '#' + booking_id;
         var obj_label = $(status_label);
 
+        var fd_div = '#fd_' + booking_id;
+        var obj_fd = $(fd_div);
+
         $.ajax({
             url: '/home/save_cancel_booking',
             type: 'POST',
@@ -205,6 +208,7 @@
                 if (response.success){
                     obj_label.text(response.status_string)
                     obj_label.addClass('red')
+                    obj_fd.remove();
                     alert(response.data)
                 }
                 else if (response.error){
