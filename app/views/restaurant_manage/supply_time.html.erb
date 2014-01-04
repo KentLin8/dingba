@@ -1,11 +1,13 @@
 
+<div style="margin-top:5px; margin-bottom: 20px; color: red;font-size: 17px;letter-spacing: 1px">設定提供訂位的時間，還可以控制訂位數量喔~</div>
+
 <form action="restaurant_manage/supply_condition_save" id="new_supply" method="post" data-value="<%= @supply_time.is_special %>">
   <% if @supply_time.id != '' %>
     <input name="condition[id]" type="hidden" value="<%= @supply_time.id %>">
   <% end %>
   <table class="table">
     <colgroup>
-      <col style="width: 140px">
+      <col style="width: 160px">
       <col>
     </colgroup>
     <tr>
