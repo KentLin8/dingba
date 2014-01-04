@@ -1,10 +1,10 @@
 
-<div class="info">請挑選5張餐廳照片</div>
+<div style="margin-top:5px; margin-bottom: 20px; color: red;font-size: 17px;letter-spacing: 1px">上傳圖片，讓訂位者看到餐廳資訊</div>
 
 <div id="pics">
   <% (1..5).each do |i| %>
     <div class="float" data-id="<%= i %>">
-      <label class="radio"><input type="radio" name="radio_img" <%= @restaurant.front_cover == i.to_s ? 'checked="checked"' : '' %>>設成封面</label>
+      <label class="radio" style="font-size: 15px; letter-spacing: 1px"><input type="radio" name="radio_img" <%= @restaurant.front_cover == i.to_s ? 'checked="checked"' : '' %>>設成封面</label>
       <div class="placeholder  <%= @restaurant.front_cover == i.to_s ? 'cover' : '' %>">
         <% if pic_name = @restaurant.method("pic_name#{i}".to_sym).call %>
           <img src="/res/<%= @restaurant.id %>/images/<%= pic_name %>">
@@ -18,10 +18,10 @@
   <div class="clear"></div>
 </div>
 <a href="#" id="upload" class="not_ajax btn btn-primary">選擇檔案上傳</a>
-<div style="margin: 10px 0">
+<div style="margin: 10px 0; font-size: 15px;letter-spacing: 0.5px">
   上傳小秘訣：<br>
   1. 你可以用滑鼠一次圈選你電腦中的多張圖片同時上傳<br>
   2. 按住ctrl鍵不放，可以用滑鼠點選多張圖片<br>
-  3. 圖片尺寸為寬200像素，高180像素<br>
-  4. 圖片最大不可以超過 3M
+  <!--3. 圖片尺寸為寬200像素，高180像素<br>-->
+  3. 圖片最大不可以超過 3M
 </div>

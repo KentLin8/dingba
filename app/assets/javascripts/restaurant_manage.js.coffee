@@ -68,8 +68,10 @@ $ ->
           .done( (response) -> refresh response.attachmentPartial )
           .fail( -> alert 'fail' )
       else
-        from = $('#from').val()
-        to = $('#to').val()
+#        from = $('#from').val()
+#        to = $('#to').val()
+        from = $('.from').val()
+        to = $('.to').val()
         if from and to
           if from > to
             alert '前需比後小'

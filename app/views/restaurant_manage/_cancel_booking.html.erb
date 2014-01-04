@@ -25,7 +25,11 @@
           </tr>
           <tr>
             <td></td>
-            <td><input type="submit" value="訂位取消" class="btn btn-primary"></td>
+            <td>
+              <% if @booking.booking_time > Time.now %>
+                  <input type="submit" value="訂位取消" class="btn btn-primary">
+              <% end %>
+            </td>
           </tr>
         </table>
       <% end %>

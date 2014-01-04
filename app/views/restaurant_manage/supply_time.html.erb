@@ -75,7 +75,7 @@
             showOn: 'both',
             buttonText: '<i class="icon-calendar"></i>',
             onClose: function( selectedDate ) {
-                $("#to").datepicker( "option", "minDate", selectedDate );
+                $(".to").datepicker( "option", "minDate", selectedDate );
             }
         }).val(getTodaysDate(0)); // For current date;
 
@@ -86,7 +86,7 @@
             showOn: 'both',
             buttonText: '<i class="icon-calendar"></i>',
             onClose: function( selectedDate ) {
-                $("#from").datepicker( "option", "maxDate", selectedDate );
+                $(".from").datepicker( "option", "maxDate", selectedDate );
             }
         }).val(getTodaysDate(1));
 
@@ -104,7 +104,6 @@
             var str = '<%= @supply_time.range_end %>'
             return str.substring(0, 10)
         }
-
 
         var t = new Date;
         var year = t.getFullYear();

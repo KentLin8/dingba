@@ -190,6 +190,13 @@ class RestaurantManageController < ApplicationController
     #@books = RestaurantManage.query_books_by_date(@restaurant.id, params[:range_begin], params[:range_end])
     @books = RestaurantManage.query_books_by_date(@restaurant.id, @from, @to)
 
+    @total_upcoming_people = 0
+    @books.each do |b|
+      if b.status == '0'
+        @total_upcoming_people = @total_upcoming_people + b.num_of_people
+      end
+    end
+
     render json: {:success => true, :attachmentPartial => render_to_string('restaurant_manage/_booking_report', :layout => false) }
   end
 

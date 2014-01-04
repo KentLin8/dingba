@@ -87,7 +87,11 @@
           <tr>
             <td style="text-align: right">用餐人數</td>
             <td><%= f.text_field :num_of_people, :required => true, :style => 'width: 30px; text-align: center' %></td>
-            <td colspan="2"><input type="submit" value="確認修改" class="btn btn-primary"></td>
+            <td colspan="2">
+              <% if @booking.booking_time > Time.now %>
+              <input type="submit" value="確認修改" class="btn btn-primary">
+              <% end %>
+            </td>
           </tr>
         </table>
       <% end %>
