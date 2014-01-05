@@ -13,32 +13,42 @@
   <div class="row" style="margin: 35px 0">
     <%= yield %>
   </div>
+</div>
 
-
-  <div class="row">
-    <div id="statement" class="span12">
-      此訂位平台為免費資源，不收取任何費用，由 Codream 團隊提供。
+<div class="row-fluid" id="about">
+  <div class="container">
+    <div class="row-fluid">
+      <div class="span3"></div>
+      <div class="span6">
+        <a href="/home/about_codream" target="_blank" style="font-size: 16px">關於我們</a>
+        <a href="/home/clause" target="_blank" style="font-size: 16px">會員條款</a>
+        <a href="/home/q_and_a" target="_blank" style="font-size: 16px">常見問與答</a>
+      </div>
+      <div class="span3"></div>
+    </div>
+    <div class="row-fluid">
+      <div class="span12">
+        此定位平台為免費資源，不收取任何費用，由Codream團隊提供。
+      </div>
     </div>
   </div>
 </div>
-<div style="margin: 0px auto;width: 1024px">
-  <% if alert %>
-      <script type="text/javascript">alert("<%= alert %>");</script>
-  <% end %>
 
-  <div style="margin-left: 10%;margin-right: 10%; text-align: right">
-    <% if user_signed_in? %>
-
-        <%-# link_to "帳戶管理" , booker_manage_index_path , :class => 'navbar-link' %>
-        <%= link_to "登出", destroy_user_session_path, method: :delete, :class => 'navbar-link'  %>
-    <% else %>
-        <%= link_to "註冊", new_user_registration_path, :class => 'navbar-link'  %> |
-        <%= link_to "登入", new_user_session_path, :class => 'navbar-link'  %>
-    <% end %>
+<div class="container">
+  <div class="row-fluid" id="copyright">
+    <div class="span3"></div>
+    <div class="span6">
+      <div>2013 CoDream. All Rights Reserved.</div>
+      <a href="" id="fb" target="_blank"></a>
+      <a href="" id="blog" target="_blank"></a>
+      <a href="" id="gp" target="_blank"></a>
+      <a href="" id='yt' target="_blank"></a>
+    </div>
+    <div class="span3"></div>
   </div>
-
-
 </div>
+
+
 
 </body>
 </html>

@@ -1,3 +1,4 @@
+
 <div class="span5">
   <a href= "/home/index">
     <%= image_tag "res/cover.png", :size => "350", :style => 'display:block;margin:auto' %>
@@ -6,37 +7,51 @@
 </div>
 
 <div class="span6">
-  <h3>餐廳訂位管理平台</h3>
-  沒有帳號，我要<a href="/registrations/restaurant_new" class="base_brown">註冊訂吧帳號</a>
-  <div class="line"></div>
+  <div style="font-size: 25px;letter-spacing: 1px; margin-top: 50px">餐廳訂位管理平台</div>
+  <div style="font-size: 16px;color: #7F1700;letter-spacing: 1px;margin-top: 15px;margin-left: 3px">沒有帳號，我要
+    <a href="/registrations/restaurant_new" style="color: blue">註冊訂吧帳號</a>
+  </div>
+  <hr color="#D6D6D6" size="5" width="100%">
+
   <%= form_for(resource, :as => resource_name, :url => login_session_path(resource_name)) do |f| %>
 
       <%= f.hidden_field :role, :value => '0' %>
-      <div><%= f.label :email,"信箱" %>
-        <%= f.email_field :email, :autofocus => true, :required => true %></div>
 
-      <div><%= f.label :password,"密碼" %>
-        <%= f.password_field :password, :required => true %></div>
+      <div style="float: left; font-size: 16px; width: 30%;line-height: 35px;text-align: right;">
+        帳號 ( E-Mail )：<br>
+        密碼：<br>
 
-      <% if devise_mapping.rememberable? -%>
-          <label class="checkbox">
-            <%= f.check_box :remember_me %>
-             保持登入
-          </label>
-      <% end -%>
-      <a href="/users/password/new" class="base_brown">忘記密碼?</a>
-      <div><%= f.submit "Sign in" , { :class => 'btn btn-large btn-block' } %></div>
+        <a href="/users/password/new" class="base_brown" style="letter-spacing: 2px">忘記密碼?</a>
+      </div>
+
+      <div style="float: right; font-size: 16px; width: 67%; margin-bottom: 15px">
+        <%= f.email_field :email, :autofocus => true, :required => true %>
+        <%= f.password_field :password, :required => true %>
+
+        <% if devise_mapping.rememberable? -%>
+            <label class="checkbox" style="margin-top: 10px">
+              <%= f.check_box :remember_me %>
+              保持登入
+            </label>
+        <% end %>
+        <div><%= f.submit "登入" , { :class => 'btn btn-primary' } %></div>
+      </div>
+
   <% end %>
-  <div class="line"></div>
-  點擊「登入」或「其他社群帳號」登入的同時，<br>
-  表示您同意接受我們的個人資料提供同意書以及使用條款，<br>
-  也詳讀和完全了解我們的資料使用政策，<br>
-  包括Cookie的使用，詳細資訊及內容請參考<a href="" target="_blank" class="base_brown">訂吧 條款</a>
+  <hr color="#D6D6D6" size="5" width="100%">
+
+  <div style="font-size: 14px;letter-spacing: 1px;line-height: 24px">
+    點擊「登入」或「其他社群帳號」登入的同時，<br>
+    表示您同意接受我們的個人資料提供同意書以及使用條款，<br>
+    也詳讀和完全了解我們的資料使用政策，<br>
+    包括Cookie的使用，詳細資訊及內容請參考
+    <a href="/home/clause" target="_blank" class="base_brown" style="margin-left: 2px">訂吧條款</a>
+  </div>
 </div>
 
 <input type="hidden" name="target" value="/dashboard"/>
 <script>
-  $('form').submit(function(){
-    return validate(this);
-  });
+    $('form').submit(function(){
+        return validate(this);
+    });
 </script>

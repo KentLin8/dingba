@@ -1,3 +1,4 @@
+
 <div class="span5">
   <a href= "/home/index">
     <%= image_tag "res/cover.png", :size => "350", :style => 'display:block;margin:auto' %>
@@ -24,11 +25,11 @@
       </tr>
       <tr>
         <td colspan="2">
-          <label class="checkbox inline"><%= check_box_tag :tag_i_agree, 1, false, {required: 'required'} %> 我同意<a href="ry" target="_blank" class="base_brown">訂吧 條款</a></label>
+          <label class="checkbox inline"><%= check_box_tag :tag_i_agree, 1, false, {required: 'required'} %> 我同意<a href="/home/clause" target="_blank" class="base_brown">訂吧 條款</a></label>
         </td>
       </tr>
       <tr>
-        <td colspan="2"><%= submit_tag "註冊帳號" , { :class => 'btn btn-large btn-block' } %></td>
+        <td colspan="2"><%= submit_tag "註冊帳號" , { :class => 'btn btn-primary' } %></td>
       </tr>
     </table>
 
