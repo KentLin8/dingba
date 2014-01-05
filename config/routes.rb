@@ -25,6 +25,10 @@ DingBa::Application.routes.draw do
   #==========================================================================
   # home controller
   #==========================================================================
+  get  'home/about_codream'
+  get  'home/clause'
+  get  'home/q_and_a'
+
   get  'home/index'
   get  'r/:id' => 'home#booking_restaurant'
   get  'home/get_condition'

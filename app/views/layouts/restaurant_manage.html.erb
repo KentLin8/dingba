@@ -40,9 +40,6 @@
                     <%= link_to "註冊", "/registrations/booker_new" %>
                 <% elsif !@restaurant.id.blank? %>
                     <span style="color: #000000">Hi,</span> <%= @restaurant.name %>
-                    <!--<span style="color: #000000">你好 </span>-->
-                    <!--<a href="/booker_manage/index" id="my_dingba" style="color: rgb(233,147,88)">| 我的帳戶 |</a>-->
-                    <!--<button type="button" class="fancybox">Click Me!</button>-->
                     <a id="my_account" href="#" class="fancybox" title="Sample title">| 我的帳戶 |</a>
                     <%= link_to "登出", destroy_u_session_path, method: :delete  %>
                 <% end %>
@@ -67,9 +64,9 @@
     <div class="row-fluid">
       <div class="span3"></div>
       <div class="span6">
-        <a href="" target="_blank">關於我們</a>
-        <a href="" target="_blank">會員條款</a>
-        <a href="" target="_blank">常見問與答</a>
+        <a href="/home/about_codream" target="_blank" style="font-size: 16px">關於我們</a>
+        <a href="/home/clause" target="_blank" style="font-size: 16px">會員條款</a>
+        <a href="/home/q_and_a" target="_blank" style="font-size: 16px">常見問與答</a>
       </div>
       <div class="span3"></div>
     </div>

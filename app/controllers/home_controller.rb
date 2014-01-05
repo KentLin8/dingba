@@ -17,6 +17,15 @@ class HomeController < ApplicationController
   # booking status 7 = 其他
   # =========================================================================
 
+  def about_codream
+  end
+
+  def clause
+  end
+
+  def q_and_a
+  end
+
   def index
     #主要首頁,p1 不開放
   end
@@ -169,10 +178,10 @@ class HomeController < ApplicationController
 
   def resolve_layout
     case action_name
-      when "index"
-        "home_index"
+      when 'index', 'clause', 'about_codream', 'q_and_a'
+        'home_index'
       else
-        "home"
+        'home'
     end
   end
 
