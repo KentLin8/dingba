@@ -1,5 +1,10 @@
 class ConfirmationsController < Devise::ConfirmationsController
 
+  def resend_confirm_email
+    self.resource = resource_class.new
+    render :layout => false
+  end
+
   def show
     self.resource = resource_class.confirm_by_token(params[:confirmation_token])
 
