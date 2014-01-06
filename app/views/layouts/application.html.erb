@@ -13,6 +13,9 @@
 <body>
 
 <div class="container">
+  <% if alert %>
+      <script type="text/javascript">alert("<%= alert %>");</script>
+  <% end %>
   <div class="row" style="margin: 35px 0">
     <%= yield %>
   </div>

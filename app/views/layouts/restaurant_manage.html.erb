@@ -55,6 +55,9 @@
       <img src="/assets/booker/line.png" id="line">
     </div>
 
+    <% if alert %>
+        <script type="text/javascript">alert("<%= alert %>");</script>
+    <% end %>
     <div class="row" style="margin: 20px 0">
       <%= yield %>
     </div>

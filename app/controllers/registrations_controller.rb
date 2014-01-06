@@ -83,6 +83,7 @@ class RegistrationsController < Devise::RegistrationsController
   # Method === Function: save user
   # =========================================================================
   def devise_save(person)
+
     User.transaction do
       build_resource(person)
       if resource.save
@@ -108,8 +109,12 @@ class RegistrationsController < Devise::RegistrationsController
         end
       else
         clean_up_passwords resource
-        respond_with resource
+        #respond_with resource
+        error = resource.errors.first[1]
+        flash.now[:alert] = error
+        render 'devise/registrations/restaurant_new'
       end
+
     end
   end
 

@@ -25,7 +25,7 @@
         <%= text_field_tag :tag_name, params[:tag_name], :required => true %>
         <%= text_field_tag :tag_email, params[:tag_email], :required => true %>
         <%= text_field_tag :tag_phone, params[:tag_phone], :required => true %>
-        <%= password_field_tag :tag_password, nil, :required => true %>
+        <%= password_field_tag :tag_password, nil, :required => true, :placeholder => '密碼長度至少要7個字元' %>
 
         <label class="checkbox inline" style="font-size: 16px"><%= check_box_tag :tag_i_agree, 1, false, {required: 'required'} %>
           我同意

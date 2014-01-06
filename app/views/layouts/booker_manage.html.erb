@@ -52,6 +52,9 @@
   </div>
 </div>
 
+<% if alert %>
+    <script type="text/javascript">alert("<%= alert %>");</script>
+<% end %>
 <%= yield %>
 
 <div class="row-fluid" id="about">
