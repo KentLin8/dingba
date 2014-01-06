@@ -178,8 +178,10 @@ class HomeController < ApplicationController
 
   def resolve_layout
     case action_name
-      when 'index', 'clause', 'about_codream', 'q_and_a'
+      when 'index', 'clause', 'about_codream', 'q_and_a', 'wait_confirm_email'
         'home_index'
+      #when
+      #  'registration'
       else
         'home'
     end
