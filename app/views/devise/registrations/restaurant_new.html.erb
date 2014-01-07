@@ -19,6 +19,10 @@
         帳號 ( E-Mail )：<br>
         您的電話：<br>
         設定密碼：<br>
+
+        <% if APP_CONFIG['enable_invite_code'] == 'true' %>
+            邀請碼 : <br>
+        <% end %>
       </div>
 
       <div style="float: right; font-size: 16px; width: 67%; margin-bottom: 15px;line-height: 35px">
@@ -26,6 +30,10 @@
         <%= text_field_tag :tag_email, params[:tag_email], :required => true %>
         <%= text_field_tag :tag_phone, params[:tag_phone], :required => true %>
         <%= password_field_tag :tag_password, nil, :required => true, :placeholder => '密碼長度至少要7個字元' %>
+
+        <% if APP_CONFIG['enable_invite_code'] == 'true' %>
+            <%= text_field_tag :tag_invite_code, params[:tag_invite_code], :required => true %>
+        <% end %>
 
         <label class="checkbox inline" style="font-size: 16px"><%= check_box_tag :tag_i_agree, 1, false, {required: 'required'} %>
           我同意

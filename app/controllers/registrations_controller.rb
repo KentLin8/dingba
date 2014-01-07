@@ -51,6 +51,25 @@ class RegistrationsController < Devise::RegistrationsController
     password = params[:tag_password].strip
     i_agree = params[:tag_i_agree].strip    # nil mean not agree clause
 
+    #============================================== invite code
+    if APP_CONFIG['enable_invite_code'] == 'true'
+      invite_code = params[:tag_invite_code].strip
+      if invite_code.blank?
+        flash.now[:alert] = 'need invite code!'
+        render from_url
+        return
+      end
+
+      result = InviteCode.where(:code => invite_code)
+      if result.blank?
+        flash.now[:alert] = 'no this invite code!'
+        render from_url
+        return
+      end
+
+    end
+    #==============================================
+
     if (name.blank? || email.blank? || phone.blank? || password.blank? || i_agree.blank?)
       flash.now[:alert] = '有欄位未填喔!'
       render from_url

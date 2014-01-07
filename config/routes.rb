@@ -44,6 +44,8 @@ DingBa::Application.routes.draw do
 
   get  'home/wait_confirm_email'
 
+  get  'home/create_invite_code'                     #it must to delete after prototype
+
   #==========================================================================
   # restaurant_manage controller
   #==========================================================================

@@ -8,6 +8,7 @@ development:
   app_title: DingBa (DEV ENV)
   domain: "localhost:3000/r/"
   error: "=============Catch Error:"
+  enable_invite_code: "true"
 
 test:
   <<: *defaults
@@ -18,3 +19,4 @@ production:
   app_title: DingBa
   domain: "dingba.codream.tw/r/"
   error: "=============Catch Error:"
+  enable_invite_code: "false"

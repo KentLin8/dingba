@@ -174,6 +174,28 @@ class HomeController < ApplicationController
     end
   end
 
+  #==========================================================
+  def create_invite_code
+    result = InviteCode.where('id > ?', 1)
+    if result.blank?
+      code_array = []
+
+      while code_array.count() < 5000 do
+        code = 10000000 + SecureRandom.random_number(89999999).to_i
+        obj = InviteCode.new
+        obj.code = code
+
+        if !code_array.include?(obj)
+          x = obj.attributes
+          code_array.push(x)
+        end
+      end
+
+      InviteCode.create(code_array)
+    end
+  end
+  #==========================================================
+
   private
 
   def resolve_layout
