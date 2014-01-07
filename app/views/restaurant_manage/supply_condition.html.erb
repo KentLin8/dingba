@@ -1,118 +1,139 @@
-<div>
-  機動性時間為“專屬日曆”中“月設定管理”針對個別日期所做的“修改供位設定”調整。<br>
-  預設值以當天日期命名，臨時設定的內容為絕對優先(大於下方訂位的常態設定)。
-</div>
-<div class="base_blue" style="margin-top: 12px">臨時設定：</div>
-<div id="special_time">
-  <% @special_conditions.each do |c| %>
-    <div class="row">
-      <div class="dropdown">
-        <input name="con_id" type="hidden" value="<%= c.id %>">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><%= c.name %><b class="caret pull-right"></b></a>
-        <ul class="dropdown-menu" role="menu">
-          <li><a data-id="<%= c.id %>" class="edit_condition">編輯</a></li>
-          <li><a data-id="<%= c.id %>" class="destroy_condition">刪除</a></li>
-        </ul>
-      </div>
-      &nbsp;
-      <label class="radio inline">
-        <input type="radio" name="con_status<%= c.id %>" value="t" <%= c.status == 't' ? 'checked="checked"' : '' %>>
-        開啓
-      </label>
-      &nbsp;
-      <label class="radio inline">
-        <input type="radio" name="con_status<%= c.id %>" value="f" <%= c.status == 'f' ? 'checked="checked"' : '' %>>
-        關閉
-      </label>
+
+<% if !@special_conditions.blank? %>
+    <div class="base_blue" style="margin-top: 5px; margin-left: -20px; font-size: 18px; color: #7F1700">特定日設定：</div>
+
+    <div id="special_time" style="float: left; margin-left: -20px; width: 55%; border: 2px solid rgb(190,190,190)">
+      <% @special_conditions.each do |c| %>
+          <div class="row">
+            <div class="dropdown" style="margin-top: 3px">
+              <input name="con_id" type="hidden" value="<%= c.id %>">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#" style="width: 150px;font-size: 16px"><%= c.name %><b class="caret pull-right"></b></a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a data-id="<%= c.id %>" class="edit_condition">編輯</a></li>
+                <li><a data-id="<%= c.id %>" class="destroy_condition">刪除</a></li>
+              </ul>
+            </div>
+            &nbsp;
+            <label class="radio inline" style="font-size: 16px;">
+              <input type="radio" name="con_status<%= c.id %>" value="t" <%= c.status == 't' ? 'checked="checked"' : '' %>>
+              啟用
+            </label>
+            <label class="radio inline" style="font-size: 16px;">
+              <input type="radio" name="con_status<%= c.id %>" value="f" <%= c.status == 'f' ? 'checked="checked"' : '' %>>
+              關閉
+            </label>
+          </div>
+      <% end %>
     </div>
-  <% end %>
-</div>
-<div style="border: 1px dotted #CCCCCC; margin: 20px 0"></div>
+
+    <div style="float: right;width: 300px; font-size: 16px;letter-spacing: 2px; border:#CCCCCC 4px double; padding: 5px 15px 5px 15px;line-height: 28px; text-align: center">
+      <div style="font-size: 18px; color:#7F1700">特定日設定說明</div>
+      1.此種設定為<span style="color: red;">最優先使用</span>的設定<br>
+      2.只對<span style="color: red;">單一日期</span>所做的供位設定<br>
+      3.由<span style="color: blue;">專屬日曆</span>中<span style="color: blue;">月設定管理</span>建立<br>
+      4.設定名稱預設是以該日期命名<br>
+    </div>
+
+    <table style="width: 100%"></table>
+    <div style="border: 1px dotted #CCCCCC; margin: 20px 0; width: 100%"></div>
+<% end %>
 
 
-<div class="btn btn-primary" style="width: 275px; font-size: 13px; background-color: rgb(127,23,0); border: #ac381e;margin-bottom: 12px" id="new_condition">
-  <i class="icon-plus icon-white"></i>
-  新增一組可提供訂位的常態時間
+<div class="base_blue" style="margin-top: 5px; margin-left: -20px; font-size: 18px; color: #7F1700">平常日設定：
+  <div class="btn btn-primary" style="font-size: 16px; background-color: rgb(127,23,0); border: #ac381e;margin-bottom: 8px" id="new_condition">
+    <i class="icon-plus icon-white"></i>
+    新增
+  </div>
 </div>
 
-<div>
-  因特別時段 / 節慶設定的供位時間會與日常供位設定發生時間重疊，<br>
-  請餐廳經營者設立優先順序(<span class="base_blue">以滑鼠拖曳方式，最上面為首</span>)。
-</div>
-<div class="base_blue" style="margin-top: 12px">常態設定：</div>
-<div id="period_set">
+<div id="period_set" style="float: left; margin-left: -20px; width: 55%">
   <% @normal_conditions.each_with_index do |c, index|%>
-    <div class="sortable" data-sort="<%= index %>">
-      <div class="dropdown">
-        <input name="con_id" type="hidden" value="<%= c.id %>">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><%= c.name %><b class="caret pull-right"></b></a>
-        <ul class="dropdown-menu" role="menu">
-          <li><a data-id="<%= c.id %>" class="edit_condition">編輯</a></li>
-          <li><a data-id="<%= c.id %>" class="destroy_condition">刪除</a></li>
-        </ul>
+      <div class="sortable" data-sort="<%= index %>">
+        <div class="dropdown" style="margin-top: 3px; margin-bottom: 10px">
+          <input name="con_id" type="hidden" value="<%= c.id %>">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#" style="width: 150px;font-size: 16px"><%= c.name %><b class="caret pull-right"></b></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a data-id="<%= c.id %>" class="edit_condition">編輯</a></li>
+            <li><a data-id="<%= c.id %>" class="destroy_condition">刪除</a></li>
+          </ul>
+        </div>
+        &nbsp;
+        <label class="radio inline" style="font-size: 16px;">
+          <input type="radio" name="con_status<%= c.id %>" value="t" <%= c.status == 't' ? 'checked="checked"' : '' %>>
+          啟用
+        </label>
+        <label class="radio inline" style="font-size: 16px;">
+          <input type="radio" name="con_status<%= c.id %>" value="f" <%= c.status == 'f' ? 'checked="checked"' : '' %>>
+          關閉
+        </label>
       </div>
-      &nbsp;
-      <label class="radio inline">
-        <input type="radio" name="con_status<%= c.id %>" value="t" <%= c.status == 't' ? 'checked="checked"' : '' %>>
-        開啓
-      </label>
-      &nbsp;
-      <label class="radio inline">
-        <input type="radio" name="con_status<%= c.id %>" value="f" <%= c.status == 'f' ? 'checked="checked"' : '' %>>
-        關閉
-      </label>
-    </div>
   <% end %>
 </div>
-<table id="reserve_table">
-    <tr>
-      <td rowspan="2">最晚接受訂位期間</td>
-      <td>
-        <label class="radio inline">
-          <input type="radio" name="reserve_type" value="0">開放預約到
-        </label>
 
-        <input style="width: 30px; text-align: right" type="text" id="reserve_hour" value="<%= @restaurant.available_hour %>">小時之前的時間&nbsp;
-        <a class="ans" title="為確保訂位人數，建議餐廳設定最晚的訂位時間，爲該用餐時段前的幾個小時。">?</a>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <label class="radio inline"><input type="radio" name="reserve_type" value="1">開放預約到前一天</label>
-        <select style="width: 60px" id="reserve_previous_hour" data-value="<%= @restaurant.available_date %>">
-          <option value="1:00">1</option>
-          <option value="2:00">2</option>
-          <option value="3:00">3</option>
-          <option value="4:00">4</option>
-          <option value="5:00">5</option>
-          <option value="6:00">6</option>
-          <option value="7:00">7</option>
-          <option value="8:00">8</option>
-          <option value="9:00">9</option>
-          <option value="10:00">10</option>
-          <option value="11:00">11</option>
-          <option value="12:00">12</option>
-          <option value="13:00">13</option>
-          <option value="14:00">14</option>
-          <option value="15:00">15</option>
-          <option value="16:00">16</option>
-          <option value="17:00">17</option>
-          <option value="18:00">18</option>
-          <option value="19:00">19</option>
-          <option value="20:00">20</option>
-          <option value="21:00">21</option>
-          <option value="22:00">22</option>
-          <option value="23:00">23</option>
-          <option value="24:00">24</option>
-        </select>點
-        &nbsp;
-        <a class="ans" title="為確保訂位人數，建議餐廳接受最晚的訂位時間，爲前一日的幾點幾分。">?</a>
-      </td>
-    </tr>
+<div style="float: right;width: 300px; font-size: 16px;letter-spacing: 2px; border:#CCCCCC 4px double; padding: 5px 15px 5px 15px;line-height: 28px; text-align: center">
+  <div style="font-size: 18px; color:#7F1700">平常日設定說明</div>
+  1.以<span style="color: red;">滑鼠拖曳</span>方式設定優先順序<br>
+  2.<span style="color: red;">由上而下</span>方式依序分配優先權<br>
+  3.可以對<span style="color: red;">一範圍日期</span>做供位設定<br>
+  <!--<div>-->
+  <!--因特別時段 / 節慶設定的供位時間會與日常供位設定發生時間重疊，<br>-->
+  <!--請餐廳經營者設立優先順序(<span class="base_blue"><br>以滑鼠拖曳方式，最上面為首</span>)。-->
+  <!--</div>-->
+</div>
+
+<table style="width: 100%"></table>
+
+<div class="base_blue" style="margin-top: 5px; margin-left: -20px; font-size: 18px; color: #7F1700">最晚接受訂位時間：</div>
+
+<table id="reserve_table" style="margin-left: -20px; border: 2px solid rgb(190,190,190); width: 55%;padding-top: 10px">
+  <tr>
+    <td>
+      <label class="radio inline" style="margin-left: 35px;">
+        <input type="radio" name="reserve_type" value="0">開放預約到&nbsp;&nbsp;
+      </label>
+
+      <input style="width: 30px; text-align: right" type="text" id="reserve_hour" value="<%= @restaurant.available_hour %>">&nbsp;&nbsp;小時之前的時間&nbsp;
+      <a class="ans" title="為確保訂位人數，建議餐廳設定最晚的訂位時間，爲該用餐時段前的幾個小時。">?</a>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <label class="radio inline" style="margin-left: 35px">
+        <input type="radio" name="reserve_type" value="1">開放預約到前一天&nbsp;&nbsp;
+      </label>
+      <select style="width: 60px" id="reserve_previous_hour" data-value="<%= @restaurant.available_date %>">
+        <option value="1:00">1</option>
+        <option value="2:00">2</option>
+        <option value="3:00">3</option>
+        <option value="4:00">4</option>
+        <option value="5:00">5</option>
+        <option value="6:00">6</option>
+        <option value="7:00">7</option>
+        <option value="8:00">8</option>
+        <option value="9:00">9</option>
+        <option value="10:00">10</option>
+        <option value="11:00">11</option>
+        <option value="12:00">12</option>
+        <option value="13:00">13</option>
+        <option value="14:00">14</option>
+        <option value="15:00">15</option>
+        <option value="16:00">16</option>
+        <option value="17:00">17</option>
+        <option value="18:00">18</option>
+        <option value="19:00">19</option>
+        <option value="20:00">20</option>
+        <option value="21:00">21</option>
+        <option value="22:00">22</option>
+        <option value="23:00">23</option>
+        <option value="24:00">24</option>
+      </select>&nbsp;&nbsp;點
+      &nbsp;<a class="ans" title="為確保訂位人數，建議餐廳接受最晚的訂位時間，爲前一日的幾點。">?</a>
+    </td>
+  </tr>
 </table>
 
-<a href="#" id="period_save" class="btn btn-primary">確定修改</a>
-<a href="#" id="period_reset" class="btn">取消</a>
+<a href="#" id="period_save" class="btn btn-primary" style="margin-top: 5px; margin-left: -20px;">確定修改</a>
+<a href="#" id="period_reset" class="btn" style="margin-top: 5px; margin-left: -5px;">取消</a>
 
 <script>
     //===========================================================================

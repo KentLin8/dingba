@@ -64,8 +64,8 @@ $ ->
   # window.onbeforeunload = -> if not_finish
   #   '您的訂位尚未完成，確定要離開本頁嗎？'
 
-  $('#pics div').add('#main_pic').click ->
-    $('#lightbox').show().children().attr('src', this.src)
+#  $('#pics div').add('#main_pic').click ->
+#    $('#lightbox').show().children().attr('src', this.src)
 
   $('#go_notice').click -> $('#scroll').animate(left: -1880)
 

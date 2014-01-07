@@ -1,32 +1,26 @@
 class Home
-
   def self.get_restaurant(restaurant_url)
     begin
-      return Restaurant.where(:res_url => restaurant_url).first
+      restaurant = Restaurant.new
+      restaurant = Restaurant.where(:res_url => restaurant_url).first
+      return restaurant
     rescue => e
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/Models/home.rb  ,Method:get_restaurant(restaurant_url)"
-      return Restaurant.new
+      restaurant = Restaurant.new
+      return restaurant
     end
   end
 
   def self.get_condition(restaurant, booking_day)
     begin
-      #restaurant = Restaurant.where(:res_url => restaurant_url).first
-      restaurant = restaurant
+      #restaurant = restaurant
       booking_condition = BookingCondition.new
+      booking_condition.option_of_time = []
 
       if booking_day.blank?
         booking_day = Date.parse(Time.now.to_s)
       else
         booking_day = Date.parse(booking_day)
-
-        #if booking_day <= Date.parse(Time.now.to_s)
-        #  booking_condition = BookingCondition.new
-        #  booking_condition.error = true
-        #  booking_condition.message = '不能選過去的時間喔!'
-        #  return booking_condition
-        #  #return {:error => true, :message => '不能選過去的時間喔!'}
-        #end
       end
 
       booking_day_begin = Time.parse(booking_day.strftime("%Y-%m-%d") + " 00:00")
@@ -36,10 +30,10 @@ class Home
 
       if conditions.blank?
         booking_condition = BookingCondition.new
+        booking_condition.option_of_time = []
         booking_condition.error = true
         booking_condition.message = '目前這個時段，餐廳沒有開放的訂位，請選擇較後面的日期查看喲!'
         return booking_condition
-        #return {:error => true, :message => '目前這個時段，餐廳沒有開放的訂位，請選擇較後面的日期查看喲!'}
       end
       #=========================================================================
 
@@ -57,10 +51,10 @@ class Home
 
       if effect_condition.blank?
         booking_condition = BookingCondition.new
+        booking_condition.option_of_time = []
         booking_condition.error = true
         booking_condition.message = '目前這個時段，餐廳沒有開放的訂位，請選擇較後面的日期查看喲!'
         return booking_condition
-        #return {:error => true, :message => '目前這個時段，餐廳沒有開放的訂位，請選擇較後面的日期查看喲!'}
       end
       #=========================================================================
 
@@ -68,10 +62,10 @@ class Home
 
       if zones.blank?
         booking_condition = BookingCondition.new
+        booking_condition.option_of_time = []
         booking_condition.error = true
         booking_condition.message = '目前這個時段，餐廳沒有開放的訂位，請選擇較後面的日期查看喲!'
         return booking_condition
-        #return {:error => true, :message => '目前這個時段，餐廳沒有開放的訂位，請選擇較後面的日期查看喲!'}
       end
       #=========================================================================
       if !restaurant.available_type.blank? && restaurant.available_type == '0'
@@ -80,17 +74,9 @@ class Home
         limit_day_time = restaurant.available_date
       end
 
-      is_today = false
-      if booking_day == Date.parse(Time.now.to_s)
-        is_today = true
-      end
-
-      if is_today && !limit_day_time.blank?
-        booking_condition = BookingCondition.new
-        booking_condition.error = true
-        booking_condition.message = '目前這個時段，餐廳沒有開放的訂位，請選擇較後面的日期查看喲!'
-        return booking_condition
-        #return {:error => true, :message => '目前這個時段，餐廳沒有開放的訂位，請選擇較後面的日期查看喲!'}
+      is_today_or_pass_time = false
+      if booking_day <= Date.parse(Time.now.to_s)
+        is_today_or_pass_time = true
       end
       #=========================================================================
 
@@ -101,8 +87,153 @@ class Home
       booking_condition.option_of_time = []       # ['12:00', '12:15' ....]
       booking_condition.option_of_zone = []       # ['zone name', 'zone sequence']
 
-      use_type = 0
-      if !is_today && !limit_day_time.blank?      # =========================================
+      use_type = -1
+      if is_today_or_pass_time && !limit_day_time.blank?
+        use_type = 0
+        booking_day_begin = Time.parse(booking_day.strftime("%Y-%m-%d") + " 00:00")
+        booking_day_end = Time.parse(booking_day.strftime("%Y-%m-%d") + " 23:59")
+        temp_bookings = Booking.where(:restaurant_id => restaurant.id).where('booking_time >= ?', booking_day_begin).where('booking_time <= ?', booking_day_end).group('booking_time').sum(:num_of_people)
+
+        bookings_of_select_day = []
+
+        temp_bookings.each do |b|
+          b[0] = b[0].strftime("%H:%M")       #把相同時段的]人數統計出來
+          bookings_of_select_day.push(b)
+        end
+
+        zones.each do |z|
+          option_of_z_item = []
+          option_of_z_item.push(z.name)
+          option_of_z_item.push(z.sequence)
+          booking_condition.option_of_zone.push(option_of_z_item)
+          if limit_day_time >= z.range_begin
+            zone_option_of_people = []
+            zone_option_of_people.push(z.each_allow)
+            zone_option_of_people.push(z.id)
+            zone_option_of_people.push(z.name)
+            booking_condition.option_of_people.push(zone_option_of_people)
+
+            temp_begin = z.range_begin.split(':')
+            temp_begin_hour = temp_begin[0]
+            temp_begin_minute = temp_begin[1]     # if this != 00 then after delete 2
+
+            if limit_day_time > z.range_end
+              range_end = z.range_end
+            else
+              range_end = limit_day_time
+            end
+
+            origin_range_end = z.range_end.split(':')
+            origin_end_hour = origin_range_end[0]
+            origin_end_hour = '24' if origin_range_end == '00'
+            origin_end_minute = origin_range_end[1]       # if this != 00 then after add 2
+
+            zone_option_of_time = []
+            zone_total_people = 0
+
+            temp_begin_hour = temp_begin_hour.to_i
+            origin_end_hour = origin_end_hour.to_i
+            (temp_begin_hour..origin_end_hour).each do |h|
+              h00 = false
+              h15 = false
+              h30 = false
+              h45 = false
+              h00_data = nil
+              h15_data = nil
+              h30_data = nil
+              h45_data = nil
+
+              bookings_of_select_day.each do |b|
+                if b[0] == h.to_s + ":00"
+                  h00 = true
+                  zone_total_people = zone_total_people + b[1]
+                  h00_data = [1, h.to_s + ":00", b[1]]
+                elsif b[0] == h.to_s + ":15"
+                  h15 = true
+                  zone_total_people = zone_total_people + b[1]
+                  h15_data = [1, h.to_s + ":15", b[1]]
+                elsif b[0] == h.to_s + ":30"
+                  h30 = true
+                  zone_total_people = zone_total_people + b[1]
+                  h30_data = [1, h.to_s + ":30", b[1]]
+                elsif b[0] == h.to_s + ":45"
+                  h45 = true
+                  zone_total_people = zone_total_people + b[1]
+                  h45_data = [1, h.to_s + ":45", b[1]]
+                end
+              end
+
+              if h00 == true
+                zone_option_of_time.push(h00_data)
+              elsif h00 == false
+                zone_option_of_time.push([1, h.to_s + ":00", 0])
+              end
+
+              if h15 == true
+                zone_option_of_time.push(h15_data)
+              elsif h15 == false
+                zone_option_of_time.push([1, h.to_s + ":15", 0])
+              end
+
+              if h30 == true
+                zone_option_of_time.push(h30_data)
+              elsif h30 == false
+                zone_option_of_time.push([1, h.to_s + ":30", 0])
+              end
+
+              if h45 == true
+                zone_option_of_time.push(h45_data)
+              elsif h45 == false
+                zone_option_of_time.push([1, h.to_s + ":45", 0])
+              end
+            end
+
+            if zone_total_people >= z.total_allow
+              zone_option_of_time.each do |zt|
+                zt[0] = 1
+              end
+            end
+
+            if temp_begin_minute == '30'
+              2.times do
+                zone_option_of_time.delete_at(0)
+              end
+            end
+
+            if origin_end_minute == '00'
+              3.times do
+                zone_option_of_time.delete_at(zone_option_of_time.length - 1)
+              end
+            elsif origin_end_minute == '30'
+              zone_option_of_time.delete_at(zone_option_of_time.length - 1)
+            end
+
+            zone_option_of_time.unshift(z.id, z.fifteen_allow, z.total_allow, zone_total_people, z.each_allow, z.sequence)
+            booking_condition.option_of_time.push(zone_option_of_time)
+          end
+        end
+
+        max_people = 0
+        target_index = 0
+        booking_condition.option_of_time.length.times do |i|
+
+          if booking_condition.option_of_people[i][0] > max_people
+            max_people = booking_condition.option_of_people[i][0]
+            target_index = i
+          end
+
+          if booking_condition.option_of_time.length != (i + 1)
+            booking_condition.option_of_time[i] = booking_condition.option_of_time[i][0..5] + (booking_condition.option_of_time[i][6..booking_condition.option_of_time[i].length] - booking_condition.option_of_time[i + 1][6..booking_condition.option_of_time[i + 1].length])
+          end
+        end
+
+        booking_condition.option_of_people[target_index][0].times do |i|
+          booking_condition.option_max_people.push(i + 1)
+        end
+
+        return booking_condition
+
+      elsif !is_today_or_pass_time && !limit_day_time.blank?      # =========================================
         # booking day not today and use limit_day_time condition
         use_type = 1
 
@@ -161,140 +292,73 @@ class Home
             temp_begin_hour = temp_begin_hour.to_i
             origin_end_hour = origin_end_hour.to_i
             (temp_begin_hour..origin_end_hour).each do |h|
-              if h <= temp_end_hour
+              h00 = false
+              h15 = false
+              h30 = false
+              h45 = false
+              h00_data = nil
+              h15_data = nil
+              h30_data = nil
+              h45_data = nil
 
-                h00 = false
-                h15 = false
-                h30 = false
-                h45 = false
-                h00_data = nil
-                h15_data = nil
-                h30_data = nil
-                h45_data = nil
-
-                bookings_of_select_day.each do |b|
-                  if b[0] == h.to_s + ":00"
-                    h00 = true
-                    zone_total_people = zone_total_people + b[1]
-                    if b[1] >= z.fifteen_allow
-                      h00_data = [1, h.to_s + ":00", b[1]]              # [[gray],[time],[booking_people]]  1 = gray
-                    elsif b[1] < z.fifteen_allow
-                      h00_data = [0, h.to_s + ":00", b[1]]
-                    end
-                  elsif b[0] == h.to_s + ":15"
-                    h15 = true
-                    zone_total_people = zone_total_people + b[1]
-                    if b[1] >= z.fifteen_allow
-                      h15_data = [1, h.to_s + ":15", b[1]]
-                    elsif b[1] < z.fifteen_allow
-                      h15_data = [0, h.to_s + ":15", b[1]]
-                    end
-                  elsif b[0] == h.to_s + ":30"
-                    h30 = true
-                    zone_total_people = zone_total_people + b[1]
-                    if b[1] >= z.fifteen_allow
-                      h30_data = [1, h.to_s + ":30", b[1]]
-                    elsif b[1] < z.fifteen_allow
-                      h30_data = [0, h.to_s + ":30", b[1]]
-                    end
-                  elsif b[0] == h.to_s + ":45"
-                    h45 = true
-                    zone_total_people = zone_total_people + b[1]
-                    if b[1] >= z.fifteen_allow
-                      h45_data = [1, h.to_s + ":45", b[1]]
-                    elsif b[1] < z.fifteen_allow
-                      h45_data = [0, h.to_s + ":45", b[1]]
-                    end
+              bookings_of_select_day.each do |b|
+                if b[0] == h.to_s + ":00"
+                  h00 = true
+                  zone_total_people = zone_total_people + b[1]
+                  if b[1] >= z.fifteen_allow
+                    h00_data = [1, h.to_s + ":00", b[1]]              # [[gray],[time],[booking_people]]  1 = gray
+                  elsif b[1] < z.fifteen_allow
+                    h00_data = [0, h.to_s + ":00", b[1]]
                   end
-                end
-
-                if h00 == true
-                  zone_option_of_time.push(h00_data)
-                elsif h00 == false
-                  zone_option_of_time.push([0, h.to_s + ":00", 0])
-                end
-
-                if h15 == true
-                  zone_option_of_time.push(h15_data)
-                elsif h15 == false
-                  zone_option_of_time.push([0, h.to_s + ":15", 0])
-                end
-
-                if h30 == true
-                  zone_option_of_time.push(h30_data)
-                elsif h30 == false
-                  zone_option_of_time.push([0, h.to_s + ":30", 0])
-                end
-
-                if h45 == true
-                  zone_option_of_time.push(h45_data)
-                elsif h45 == false
-                  zone_option_of_time.push([0, h.to_s + ":45", 0])
-                end
-
-                #zone_option_of_time.push([0,h.to_s + ":00"])
-                #zone_option_of_time.push([0,h.to_s + ":15"])
-                #zone_option_of_time.push([0,h.to_s + ":30"])
-                #zone_option_of_time.push([0,h.to_s + ":45"])
-              else
-
-                h00 = false
-                h15 = false
-                h30 = false
-                h45 = false
-                h00_data = nil
-                h15_data = nil
-                h30_data = nil
-                h45_data = nil
-
-                bookings_of_select_day.each do |b|
-                  if b[0] == h.to_s + ":00"
-                    h00 = true
-                    zone_total_people = zone_total_people + b[1]
-                    h00_data = [1, h.to_s + ":00", b[1]]
-                  elsif b[0] == h.to_s + ":15"
-                    h15 = true
-                    zone_total_people = zone_total_people + b[1]
+                elsif b[0] == h.to_s + ":15"
+                  h15 = true
+                  zone_total_people = zone_total_people + b[1]
+                  if b[1] >= z.fifteen_allow
                     h15_data = [1, h.to_s + ":15", b[1]]
-                  elsif b[0] == h.to_s + ":30"
-                    h30 = true
-                    zone_total_people = zone_total_people + b[1]
+                  elsif b[1] < z.fifteen_allow
+                    h15_data = [0, h.to_s + ":15", b[1]]
+                  end
+                elsif b[0] == h.to_s + ":30"
+                  h30 = true
+                  zone_total_people = zone_total_people + b[1]
+                  if b[1] >= z.fifteen_allow
                     h30_data = [1, h.to_s + ":30", b[1]]
-                  elsif b[0] == h.to_s + ":45"
-                    h45 = true
-                    zone_total_people = zone_total_people + b[1]
+                  elsif b[1] < z.fifteen_allow
+                    h30_data = [0, h.to_s + ":30", b[1]]
+                  end
+                elsif b[0] == h.to_s + ":45"
+                  h45 = true
+                  zone_total_people = zone_total_people + b[1]
+                  if b[1] >= z.fifteen_allow
                     h45_data = [1, h.to_s + ":45", b[1]]
+                  elsif b[1] < z.fifteen_allow
+                    h45_data = [0, h.to_s + ":45", b[1]]
                   end
                 end
+              end
 
-                if h00 == true
-                  zone_option_of_time.push(h00_data)
-                elsif h00 == false
-                  zone_option_of_time.push([1, h.to_s + ":00", 0])
-                end
+              if h00 == true
+                zone_option_of_time.push(h00_data)
+              elsif h00 == false
+                zone_option_of_time.push([0, h.to_s + ":00", 0])
+              end
 
-                if h15 == true
-                  zone_option_of_time.push(h15_data)
-                elsif h15 == false
-                  zone_option_of_time.push([1, h.to_s + ":15", 0])
-                end
+              if h15 == true
+                zone_option_of_time.push(h15_data)
+              elsif h15 == false
+                zone_option_of_time.push([0, h.to_s + ":15", 0])
+              end
 
-                if h30 == true
-                  zone_option_of_time.push(h30_data)
-                elsif h30 == false
-                  zone_option_of_time.push([1, h.to_s + ":30", 0])
-                end
+              if h30 == true
+                zone_option_of_time.push(h30_data)
+              elsif h30 == false
+                zone_option_of_time.push([0, h.to_s + ":30", 0])
+              end
 
-                if h45 == true
-                  zone_option_of_time.push(h45_data)
-                elsif h45 == false
-                  zone_option_of_time.push([1, h.to_s + ":45", 0])
-                end
-
-                #zone_option_of_time.push([1,h.to_s + ":00"])
-                #zone_option_of_time.push([1,h.to_s + ":15"])
-                #zone_option_of_time.push([1,h.to_s + ":30"])
-                #zone_option_of_time.push([1,h.to_s + ":45"])
+              if h45 == true
+                zone_option_of_time.push(h45_data)
+              elsif h45 == false
+                zone_option_of_time.push([0, h.to_s + ":45", 0])
               end
             end
 
@@ -303,16 +367,6 @@ class Home
                 zt[0] = 1
               end
             end
-            # end add ========
-
-            #temp_begin_hour = temp_begin_hour.to_i
-            #temp_end_hour = temp_end_hour.to_i
-            #(temp_begin_hour..temp_end_hour).each do |h|
-            #  zone_option_of_time.push(h.to_s + ":00")
-            #  zone_option_of_time.push(h.to_s + ":15")
-            #  zone_option_of_time.push(h.to_s + ":30")
-            #  zone_option_of_time.push(h.to_s + ":45")
-            #end
 
             if temp_begin_minute == '30'
               2.times do
@@ -328,18 +382,9 @@ class Home
               zone_option_of_time.delete_at(zone_option_of_time.length - 1)
             end
 
-            #if temp_end_minute == '00'
-            #  3.times do
-            #    zone_option_of_time.delete_at(zone_option_of_time.length - 1)
-            #  end
-            #elsif temp_end_minute == '30'
-            #  zone_option_of_time.delete_at(zone_option_of_time.length - 1)
-            #end
-
             zone_option_of_time.unshift(z.id, z.fifteen_allow, z.total_allow, zone_total_people, z.each_allow, z.sequence)
             booking_condition.option_of_time.push(zone_option_of_time)
           end
-
         end
 
         max_people = 0
@@ -487,10 +532,6 @@ class Home
                 elsif h45 == false
                   zone_option_of_time.push([1, h.to_s + ":45", 0])
                 end
-                #zone_option_of_time.push([1,h.to_s + ":00"])
-                #zone_option_of_time.push([1,h.to_s + ":15"])
-                #zone_option_of_time.push([1,h.to_s + ":30"])
-                #zone_option_of_time.push([1,h.to_s + ":45"])
               else
                 h00 = false
                 h15 = false
@@ -575,11 +616,6 @@ class Home
                     zone_option_of_time.push([0, h.to_s + ":45", 0])
                   end
                 end
-
-                #zone_option_of_time.push([0,h.to_s + ":00"])
-                #zone_option_of_time.push([0,h.to_s + ":15"])
-                #zone_option_of_time.push([0,h.to_s + ":30"])
-                #zone_option_of_time.push([0,h.to_s + ":45"])
               end
             end
 
@@ -588,39 +624,12 @@ class Home
                 zt[0] = 1
               end
             end
-            # end add ========
-
-
-            #temp_begin_hour = temp_begin_hour.to_i
-            #temp_end_hour = temp_end_hour.to_i
-            #(temp_begin_hour..temp_end_hour).each do |h|
-            #  zone_option_of_time.push(h.to_s + ":00")
-            #  zone_option_of_time.push(h.to_s + ":15")
-            #  zone_option_of_time.push(h.to_s + ":30")
-            #  zone_option_of_time.push(h.to_s + ":45")
-            #end
 
             if temp_begin_minute == '30'
               2.times do
                 zone_option_of_time.delete_at(0)
               end
             end
-
-            #if temp_begin_minute > '00' && temp_begin_minute <= '15'        # >= 00 or > 00
-            #  zone_option_of_time.delete_at(0)
-            #elsif (temp_begin_minute > '15' && temp_begin_minute <= '30')
-            #  2.times do
-            #    zone_option_of_time.delete_at(0)
-            #  end
-            #elsif temp_begin_minute > '30' && temp_begin_minute <= '45'
-            #  3.times do
-            #    zone_option_of_time.delete_at(0)
-            #  end
-            #elsif temp_begin_minute > '45' && temp_begin_minute <= '59'
-            #  4.times do
-            #    zone_option_of_time.delete_at(0)
-            #  end
-            #end
 
             if origin_end_minute == '00'
               3.times do
@@ -629,14 +638,6 @@ class Home
             elsif origin_end_minute == '30'
               zone_option_of_time.delete_at(zone_option_of_time.length - 1)
             end
-
-            #if temp_end_minute == '00'
-            #  3.times do
-            #    zone_option_of_time.delete_at(zone_option_of_time.length - 1)
-            #  end
-            #elsif temp_end_minute == '30'
-            #  zone_option_of_time.delete_at(zone_option_of_time.length - 1)
-            #end
 
             zone_option_of_time.unshift(z.id, z.fifteen_allow, z.total_allow, zone_total_people, z.each_allow, z.sequence)
             booking_condition.option_of_time.push(zone_option_of_time)
@@ -657,7 +658,6 @@ class Home
           end
         end
 
-
         booking_condition.option_of_people[target_index][0].times do |i|
           booking_condition.option_max_people.push(i + 1)
         end
@@ -668,6 +668,7 @@ class Home
     rescue => e
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/Models/home.rb  ,Method:get_condition(restaurant_url, booking_day)"
       booking_condition = BookingCondition.new
+      booking_condition.option_of_time = []
       booking_condition.error = true
       booking_condition.message = '目前這個時段，餐廳沒有開放的訂位，請選擇較後面的日期查看喲!'
       return booking_condition
@@ -755,7 +756,7 @@ class Home
         booking.restaurant_id = restaurant.id
         booking.res_url = restaurant.res_url
         booking.restaurant_name = restaurant.name
-        booking.restaurant_address = restaurant.city + restaurant.area + restaurant.address
+        booking.restaurant_address = "#{restaurant.city} #{restaurant.area} #{restaurant.address}"
         booking.booking_time = booking_time
         booking.num_of_people = booking_people
         booking.name = origin_booking[:booker_name]
@@ -800,6 +801,7 @@ class Home
 
         if !booking.email.blank? && !(booking.email =~ /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/).blank?
           send_mail_result = MyMailer.booking_success(booking.email, booking).deliver   # Send mail fail may be the email problem, check time out
+          #send_mail_result = MyMailer.delay(run_at: 1.minutes.from_now).booking_success(booking.email, booking)
         end
 
         has_mail = false

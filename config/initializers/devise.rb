@@ -273,4 +273,8 @@ Devise.setup do |config|
 
   #require "omniauth-yahoo"
   #config.omniauth :facebook, "dj0yJmk9OUlFMXAxbVRtR3cxJmQ9WVdrOU4yOXpjMG94TnpnbWNHbzlNQS0tJnM9Y29uc3VtZXJzZWNyZXQmeD0zNA--", "3ab86722e0fc7864e8afe41528dd76095aad9859"
+
+  #config.warden do |manager|
+  #  manager.default_strategies.unshift :custom_strategy_name
+  #end
 end

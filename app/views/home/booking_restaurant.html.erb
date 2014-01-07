@@ -1,22 +1,35 @@
-<%-# content_for :javascript_includes do %>
-    <%-# javascript_include_tag 'booking_restaurant'  %>
-<%-# end %>
-
 <div id="main" class="container">
   <div id="scroll">
     <div id="booking" class="container">
-      <div class="row-fluid" id="res_info">
-        <div class="span5">
+      <div class="row-fluid" id="res_info" style="height: 200px">
+        <div style="width: 38%">
           <div id="pics">
-            <!-- 這邊換成圖片 -->
-            <% 4.times do %>
-                <div></div>
+            <% if @restaurant.pic_name1 != nil %>
+            <div><img src="/res/<%= @restaurant.id %>/images/<%= @restaurant.pic_name1 %>"></div><% end %>
+            <% if @restaurant.pic_name2 != nil %>
+            <div><img src="/res/<%= @restaurant.id %>/images/<%= @restaurant.pic_name2 %>"></div><% end %>
+            <% if @restaurant.pic_name3 != nil %>
+            <div><img src="/res/<%= @restaurant.id %>/images/<%= @restaurant.pic_name3 %>"></div><% end %>
+            <% if @restaurant.pic_name4 != nil %>
+            <div><img src="/res/<%= @restaurant.id %>/images/<%= @restaurant.pic_name4 %>"></div><% end %>
+            <% if @restaurant.pic_name5 != nil %>
+            <div><img src="/res/<%= @restaurant.id %>/images/<%= @restaurant.pic_name5 %>"></div><% end %>
+          </div>
+          <div id="main_pic">
+            <% if @restaurant.front_cover == '1' %>
+                <img src="/res/<%= @restaurant.id %>/images/<%= @restaurant.pic_name1 %>">
+            <% elsif @restaurant.front_cover == '2' %>
+                <img src="/res/<%= @restaurant.id %>/images/<%= @restaurant.pic_name2 %>">
+            <% elsif @restaurant.front_cover == '3' %>
+                <img src="/res/<%= @restaurant.id %>/images/<%= @restaurant.pic_name3 %>">
+            <% elsif @restaurant.front_cover == '4' %>
+                <img src="/res/<%= @restaurant.id %>/images/<%= @restaurant.pic_name4 %>">
+            <% elsif @restaurant.front_cover == '5' %>
+                <img src="/res/<%= @restaurant.id %>/images/<%= @restaurant.pic_name5 %>">
             <% end %>
           </div>
-          <!-- 這邊是封面 id保留 -->
-          <div id="main_pic"></div>
         </div>
-        <div class="span7">
+        <div style="width: 62%;float: right">
           <table>
             <tr>
               <td style="font-size: 16px">餐廳名稱：</td>
@@ -24,7 +37,7 @@
             </tr>
             <tr>
               <td style="font-size: 16px">餐廳地址：</td>
-              <td><%= @restaurant.city + @restaurant.area + @restaurant.address %></td>
+              <td><%= @address %></td>
             </tr>
             <tr>
               <td style="font-size: 16px">餐廳電話：</td>
@@ -41,15 +54,15 @@
             <tr>
               <td style="font-size: 16px">付款方式：</td>
               <td>
-                <% if @restaurant.pay_type.include?('1') %>
+                <% if @pay_type.include?('1') %>
                     現金
                 <% end %>
 
-                <% if @restaurant.pay_type.include?('2') %>
+                <% if @pay_type.include?('2') %>
                     信用卡
                 <% end %>
 
-                <% if @restaurant.pay_type.include?('3') %>
+                <% if @pay_type.include?('3') %>
                     悠遊卡
                 <% end %>
               </td>
@@ -65,46 +78,55 @@
               </td>
             </tr>
           </table>
+
+          <!--<hr color="#lelele" size="3" width="100%" style="margin-top:25px">-->
         </div>
       </div>
-        <div class="row-fluid" id="booking_form_content">
-          <div class="span12" style="background-color: rgb(230,230,230)">
-            步驟一 => 步驟二
-          </div>
-          <div class="row-fluid">
-            <form action="home/save_booking" id="booking_form" method="post">
 
-              <div class="span6" id="get_info">
-                <%= render :partial => 'booking_zone', :locals => {:booking_condition => @booking_condition}  %>
-              </div>
-              <div class="span6">
-                <table>
-                  <tr>
-                    <td style="width:26%; padding-left: 5px; font-size: 16px">訂位者大名：</td>
-                    <td><input type="text" id="b_name" name="booker_name" style="width:250px; text-align: left; font-size: 16px; padding-left: 5px" value="<%= @booker.name %>"></td>
-                  </tr>
-                  <tr>
-                    <td style="padding-left: 5px;font-size: 16px">訂位者電話：</td>
-                    <td><input type="text" id="b_phone" name="booker_phone" style="width:250px; text-align: left; font-size: 16px; padding-left: 5px" value="<%= @booker.phone %>"></td>
-                  </tr>
-                  <tr>
-                    <td style="padding-left: 5px;font-size: 16px">訂位 E-Mail：</td>
-                    <td><input type="text" id="b_email" name="booker_email" style="width:250px; text-align: left; font-size: 16px; padding-left: 5px" value="<%= @booker.email %>"></td>
-                  </tr>
-                  <tr>
-                    <td colspan="2"><textarea style="width: 85%; height:60px" placeholder="  留言給餐廳" name="remark"></textarea></td>
-                  </tr>
-                  <tr>
-                    <td colspan="2">
-                      <input type="submit" value="訂位" class="btn btn-primary">
-                      <input type="reset" value="取消" class="btn">
-                    </td>
-                  </tr>
-                </table>
-              </div>
-            </form>
-          </div>
+      <div class="row-fluid" id="booking_form_content" style="border-color: rgb(230,230,230); border-width: 3px;">
+        <div class="span12" style="background-color: rgb(230,230,230); height: 50px; text-align: center; vertical-align: middle ">
+          <div style="font-size: 25px;float: left; color: #876139">步驟一 <span style="font-size: 16px">&nbsp&nbsp填寫訂位資料</span></div>
+          <div style="font-size: 35px;float: left;">→</div>
+          <div style="font-size: 25px;float: left; color: #lelele">步驟二 <span style="font-size: 16px">&nbsp&nbsp通知好友訂位資訊</span></div>
         </div>
+        <!--<div class="span12" style="font-size: 25px;float: left; color: #876139; margin-left: 345px">-->
+          <!--填寫訂位資料-->
+        <!--</div>-->
+        <div class="row-fluid">
+
+          <form action="home/save_booking" id="booking_form" method="post">
+            <div style="float: left; width: 3%">&nbsp</div>
+            <div id="get_info" style="float: left; width: 43%">
+              <%= render :partial => 'booking_zone', :locals => {:booking_condition => @booking_condition}  %>
+            </div>
+            <div style="float: left; width: 54%">
+              <table>
+              <tr>
+                <td style="width:22%; padding-left: px; font-size: 16px">訂位者大名：</td>
+                <td><input type="text" id="b_name" name="booker_name" style="width:262px; text-align: left; font-size: 16px; padding-left: 5px" value="<%= @booker.name %>"></td>
+              </tr>
+              <tr>
+                <td style="padding-left: px;font-size: 16px">訂位者電話：</td>
+                <td><input type="text" id="b_phone" name="booker_phone" style="width:262px; text-align: left; font-size: 16px; padding-left: 5px" value="<%= @booker.phone %>"></td>
+              </tr>
+              <tr>
+                <td style="padding-left: px;font-size: 16px">訂位 E-Mail：</td>
+                <td><input type="text" id="b_email" name="booker_email" style="width:262px; text-align: left; font-size: 16px; padding-left: 5px" value="<%= @booker.email %>"></td>
+              </tr>
+              <tr>
+                <td colspan="2"><textarea style="width: 78%; height:60px" placeholder="  留言給餐廳" name="remark"></textarea></td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  <input type="submit" value="訂位" class="btn btn-primary">
+                  <!--<input type="reset" value="取消" class="btn">-->
+                </td>
+              </tr>
+              </table>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
 
     <div id="finish" class="container">
@@ -142,7 +164,7 @@
   <img class="content" src="/assets/booker/blog.jpg" alt="">
 </div>
 
-<div id="bookingModal" class="modal hide fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div id="bookingModal" class="modal hide fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="height:auto">
   <input id="booking_id_hidden" type="hidden" value="">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true" name="close_bookingModal">×</button>
@@ -150,6 +172,11 @@
   </div>
   <div class="modal-body" style="font-size: 16px">
     我們已經收到你的訂位，<div id="has_mail_div" style="font-size: 16px">並且已經發送E-Mail 提醒您。</div>謝謝你使用DingBa提供的訂位服務。
+    <hr id="step_2_hr" color="#D6D6D6" size="3" width="100%">
+    <div id="step_2" class="base_orange">
+      <span style="font-size: 24px">步驟 2</span>
+      <span style="line-height: 24px; vertical-align: bottom;">通知好友訂位資訊</span>
+    </div>
     <textarea id="notice_emails" placeholder="直接輸入E-mail, 並以”,”區分不同收件者"></textarea>
   </div>
   <div class="modal-footer">
@@ -159,6 +186,25 @@
 </div>
 
 
+<script>
+
+  $('#pics div').mouseover(function(){
+
+      $(this).find("img").each(function(){
+          //$('#lightbox').show().children().attr('src',$(this).attr('src'))
+          var scr = $(this).attr('src');
+          $('#main_pic').find("img").each(function(){
+              $(this).attr('src',scr)
+          });
+      });
+  });
+
+  $('#main_pic').click(function(){
+
+      $('#lightbox').show().children().attr('src', $('#main_pic img').attr('src'))
+  });
+
+</script>
 
 <script>
     $('[name=bookingModal]').click(function(){
@@ -206,9 +252,9 @@
     $("#booking_date").datepicker({
         dateFormat: 'yy-mm-dd',
         changeMonth: true
-    }).val(getTodaysDate()); // For current date;
+    }) //.val(getTodaysDate(1)); // For current date;
 
-    function getTodaysDate () {
+    function getTodaysDate (add_day) {
         var t = new Date;
         var year = t.getFullYear();
         var day = t.getDate()
@@ -323,6 +369,8 @@
                     if (response.booking_notice_type == 'one'){
                         $('#noticeFriend').hide();
                         $('#notice_emails').hide();
+                        $('#step_2_hr').hide();
+                        $('#step_2').hide();
                     }
 
                     if (response.has_mail == false){

@@ -65,17 +65,19 @@ $ ->
     ).change( ->
       if this.id is 'show_day'
         $.get('/calendar/restaurant_day', {select_date: this.value}, 'html')
-          .done( (response) -> refresh response )
+          .done( (response) -> refresh response.attachmentPartial )
           .fail( -> alert 'fail' )
       else
-        from = $('#from').val()
-        to = $('#to').val()
+#        from = $('#from').val()
+#        to = $('#to').val()
+        from = $('.from').val()
+        to = $('.to').val()
         if from and to
           if from > to
             alert '前需比後小'
             return
           $.get('restaurant_manage/query_books_by_date', {from: from, to: to}, 'html')
-            .done( (response) -> refresh response )
+            .done( (response) -> refresh response.attachmentPartial )
             .fail( -> alert 'fail' )
     )
     # 填入select
@@ -98,6 +100,12 @@ $ ->
           $('#upload span').html('選擇檔案上傳')
           if response.success
             show_cover response.image_path
+            $('.cover').removeClass('cover')
+            $('#pics .float').each () ->
+              if parseInt($(this).data('id')) == parseInt(response.cover_id)
+                $(this).find('.placeholder').addClass('cover')
+                $(this).find(".radio input[type='radio']").prop('checked', true)
+                return
           else if response.error
             alert "上傳失敗，原因：#{response.message}"
           else
@@ -161,18 +169,63 @@ $ ->
     hook_event()
 
   load_page = (url, set_href = false) ->
-    $.get(url, {}, 'html')
-      .done( (html) ->
-        refresh html
-        if set_href
-          if location.href.match '#'
-            tmp = location.href.split '#'
-            tmp[1] = url
-            location.href = tmp.join '#'
+    $.getJSON(url, {})
+      .done( (response) ->
+        if response.error
+          if response.step == '1'
+            $('.now').removeClass('now')
+            $('#sub_choice').animate(height: 44, 'border-width': 1, 'margin-bottom': 10) #TODO 66 -> 44 mark 賬戶密碼
+            $('#sub_choice2').animate(height: 0, 'border-width': 0, 'margin-bottom': 0)
+            $('#step1_mark').addClass('now')
+            $('#step1').addClass('now')
+            $('#sub_res_info').addClass('now')
+            alert(response.message)
+          else if response.step == '2'
+            $('.now').removeClass('now')
+            $('#sub_choice').animate(height: 44, 'border-width': 1, 'margin-bottom': 10) #TODO 66 -> 44 mark 賬戶密碼
+            $('#sub_choice2').animate(height: 0, 'border-width': 0, 'margin-bottom': 0)
+            $('#step1_mark').addClass('now')
+            $('#step1').addClass('now')
+            $('#sub_res_img').addClass('now')
+            alert(response.message)
+
+          refresh (response.attachmentPartial)
+          if set_href
+            if location.href.match '#'
+              tmp = location.href.split '#'
+              tmp[1] = response.url
+              location.href = tmp.join '#'
+            else
+              location.href += '#' + response.url
           else
-            location.href += '#' + url
+        else
+          refresh (response.attachmentPartial)
+          if set_href
+            if location.href.match '#'
+              tmp = location.href.split '#'
+              tmp[1] = url
+              location.href = tmp.join '#'
+            else
+              location.href += '#' + url
       )
       .fail( -> alert '連線失敗，請稍後再試' )
+
+
+  #  load_page = (url, set_href = false) ->
+#    $.get(url, {}, 'html')
+#      .done( (data) ->
+#        alert(data.message)
+#        refresh html
+#        if set_href
+#          alert(html)
+#          if location.href.match '#'
+#            tmp = location.href.split '#'
+#            tmp[1] = url
+#            location.href = tmp.join '#'
+#          else
+#            location.href += '#' + url
+#      )
+#      .fail( -> alert '連線失敗，請稍後再試' )
 
   form_place = $('#form_place')
 
@@ -180,12 +233,13 @@ $ ->
     check = true
     periods = []
     # 檢查日期前後順序
-    if $('input[data-type=date]').length > 0
-      [from, to] = $('input[data-type=date]').get()
-      if from.value > to.value
-        check = false
-        $([from, to]).addClass('invalid')
-        alert '日期要從小到大'
+    if $('#new_supply').data('value') == ''
+      if $('input[data-type=date]').length > 0
+        [from, to] = $('input[data-type=date]').get()
+        if from.value > to.value
+          check = false
+          $([from, to]).addClass('invalid')
+          #alert '日期要從小到大'
     $('.period').find('tr').removeClass('invalid').each ->
       _this = $(this)
       ban = true
@@ -231,18 +285,21 @@ $ ->
   $('#lightbox_wrap').click (e) -> $(this).hide() if e.target is this
 
   $(document).on 'click', '#calendar .cell', ->
-    $.get('restaurant_manage/special_time', {condition_id: $(this).data('id'), special_day: $('#year').val() + '/' + $(this).find('.date').html()})
-    .done( (response) ->
-        if typeof response is 'string'
-          $('#tabs').tabs(active: 0)
-          $('#tab_time').html($.parseHTML(response, document, true))
-          $('.ans').tooltip()
-          $('select').each ->
-            $(this).val $(this).data('value')
-      )
-    .fail( -> alert '資料傳遞失敗' )
-    false
-    $('#lightbox_wrap').show()
+    da = $(this).find('.date').html()
+    if da is undefined
+    else
+      $.get('restaurant_manage/special_time', {condition_id: $(this).data('id'), special_day: $('#year').val() + '/' + da})
+      .done( (response) ->
+          if typeof response is 'string'
+            $('#tabs').tabs(active: 0)
+            $('#tab_time').html($.parseHTML(response, document, true))
+            $('.ans').tooltip()
+            $('select').each ->
+              $(this).val $(this).data('value')
+        )
+      .fail( -> alert '資料傳遞失敗' )
+      false
+      $('#lightbox_wrap').show()
 
   if document.getElementById 'res_header'
     $(document).on 'submit', 'form', (e) ->
@@ -252,6 +309,13 @@ $ ->
         return false
       $.post(this.action, $(this).serialize())
         .done( (response) =>
+          if response.sign_out
+            #window.location.reload();
+            window.location.href = '/sessions/restaurant_new'
+
+          if response.registration
+            $.fancybox.close();
+
           if typeof response is 'string'
             refresh response
           else if typeof response is 'object'
@@ -286,7 +350,7 @@ $ ->
   $('#step1').click ->
     $('#step1_mark').addClass('now')
     $('#sub_choice').children().eq(0).addClass('now')
-    $('#sub_choice').animate(height: 66, 'border-width': 1, 'margin-bottom': 10)
+    $('#sub_choice').animate(height: 44, 'border-width': 1, 'margin-bottom': 10) #TODO 66 -> 44 mark 賬戶密碼
     $('#sub_choice2').animate(height: 0, 'border-width': 0, 'margin-bottom': 0)
   $('#step2').click ->
     $('#step2_mark').addClass('now')
@@ -313,7 +377,7 @@ $ ->
           $('.cover').removeClass('cover')
           p.find('.placeholder').addClass('cover')
         else if response.error
-          alert "封面設定失敗，原因：#{response.message}"
+          alert "#{response.message}"
         else
           alert '封面設定失敗'
       )
@@ -326,10 +390,19 @@ $ ->
       .done( (response) ->
         if response.success
           show_cover response.image_path
+          $('.cover').removeClass('cover')
+          $('#pics .float').each () ->
+            if response.cover_id == null
+              $(".radio input[type='radio']").prop('checked', false)
+              return
+            else if parseInt($(this).data('id')) == parseInt(response.cover_id)
+              $(this).find('.placeholder').addClass('cover')
+              $(this).find(".radio input[type='radio']").prop('checked', true)
+              return
         else if response.error
-          alert "封面設定失敗，原因：#{response.message}"
+          alert "#{response.message}"
         else
-          alert '封面設定失敗'
+          alert '刪除圖片失敗'
       )
       .fail( -> alert '圖片刪除失敗' )
 
@@ -342,17 +415,17 @@ $ ->
     m = $('#month').val()
     if y? and m?
       $.get('/calendar/restaurant_month', {year: y, month: m}, 'html')
-        .done( (response) -> refresh(response) )
+        .done( (response) -> refresh(response.attachmentPartial) )
         .fail( -> alert 'fail' )
 
   $(document).on 'click', '#new_condition', ->
     $.get('/restaurant_manage/supply_time', {}, 'html')
-      .done( (response) -> refresh response )
+      .done( (response) -> refresh response.attachmentPartial )
       .fail( -> alert('oops! 出現錯誤了!') )
 
   $(document).on 'click', '.edit_condition', ->
     $.get('/restaurant_manage/supply_time', {condition_id: $(this).data('id')}, 'html')
-      .done( (response) -> refresh response )
+      .done( (response) -> refresh response.attachmentPartial )
       .fail( -> alert('oops! 出現錯誤了!') )
 
   $(document).on 'click', '.destroy_condition', ->

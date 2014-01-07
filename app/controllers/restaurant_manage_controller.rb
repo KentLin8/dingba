@@ -15,74 +15,66 @@ class RestaurantManageController < ApplicationController
   def restaurant
   end
 
-  # ====== Code Check: 2013/12/07 ====== [ panda ok ]
-  # ====== Code Check: 2013/12/09 ====== [ kent: TODO: to fix something ]
   # GET ==== Function: show restaurant information view
-  # =========================================================================
   def restaurant_info
-    render 'restaurant_manage/restaurant_info', :layout => false
+    render json: {:success => true, :attachmentPartial => render_to_string('restaurant_manage/restaurant_info', :layout => false ) }
   end
 
-  # ====== Code Check: 2013/12/07 ====== [ panda: TODO: wait for res.pay_type ]
   # POST === Function: save restaurant information
-  # =========================================================================
   def restaurant_info_save
     result = RestaurantManage.restaurant_info_save(params[:restaurant])
     get_restaurant()
     render json: result
   end
 
-  # ====== Code Check: 2013/12/07 ====== [ panda: ok ]
   # GET ==== Function: show upload restaurant images view
-  # =========================================================================
   def restaurant_image
-    render 'restaurant_manage/restaurant_image', :layout => false
+    if !check_step_info(@restaurant)
+      return
+    end
+
+    render json: {:success => true, :attachmentPartial => render_to_string('restaurant_manage/restaurant_image', :layout => false ) }
   end
 
-  # ====== Code Check: 2013/12/07 ====== [ panda: TODO: 1.no file path no alert message, 2.alert too much ex: two img will alert success twice]
   # POST === Function: upload restaurant images
-  # =========================================================================
   def upload_img
     result = RestaurantManage.upload_img(@restaurant, params[:qqfile], request.body.read)
     get_restaurant()
     render json: result
   end
 
-  # ====== Code Check: 2013/12/07 ====== [ panda: TODO: wait Front-end engineering ]
   # GET ==== Function: save the image which is front cover
-  # =========================================================================
   def image_cover_save
     result = RestaurantManage.image_cover_save(@restaurant, params[:cover_id])
     get_restaurant()
     render json: result
   end
 
-  # ====== Code Check: 2013/12/07 ====== [ panda: TODO: wait Front-end engineering ]
   # GET ==== Function: destroy select image
-  # =========================================================================
   def image_destroy
     result = RestaurantManage.image_destroy(@restaurant, params[:pic_id])
     get_restaurant()
     render json: result
   end
 
-  # ====== Code Check: 2013/12/07 ====== [ panda: ok ]
   # GET ==== Function: show supply condition view
-  # =========================================================================
   def supply_condition
+    if !check_step_image(@restaurant)
+      return
+    end
+
     @conditions = SupplyCondition.where(:restaurant_id => @restaurant.id).order('sequence ASC')
     if @conditions.blank?
-      redirect_to res_manage_supply_time_path
+      redirect_to '/restaurant_manage/supply_time'
     else
       @special_conditions = @conditions.select { |x| x.is_special == 't' }
       @normal_conditions = @conditions.select { |x| x.is_special != 't' }
-      render 'restaurant_manage/supply_condition', :layout => false
+
+      render json: {:success => true, :attachmentPartial => render_to_string('restaurant_manage/supply_condition', :layout => false) }
     end
   end
 
-  # ====== Code Check: 2013/12/07 ====== [ panda: ok ]
   # GET ==== Function: show supply time view
-  # =========================================================================
   def supply_time
     condition_id = params[:condition_id]
     begin
@@ -101,12 +93,11 @@ class RestaurantManageController < ApplicationController
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/controllers/restaurant_manage_controller.rb  ,Action:supply_time"
       @time_zones = RestaurantManage.get_time_zones(nil)
     end
-    render 'restaurant_manage/supply_time', :layout => false
+
+    render json: {:success => true, :attachmentPartial => render_to_string('restaurant_manage/supply_time', :layout => false) }
   end
 
-  # ====== Code Check: 2013/12/08 ====== [ panda: ok ]
   # POST === Function: save supply condition
-  # =========================================================================
   def supply_condition_save
     condition = params[:condition]
     zones = []
@@ -130,9 +121,7 @@ class RestaurantManageController < ApplicationController
     render json: result
   end
 
-  # ====== Code Check: 2013/12/08 ====== [ panda: ok ]
   # POST === Function: save condition state
-  # =========================================================================
   def condition_state_save
     data = request.raw_post
     @conditions = RestaurantManage.condition_state_save(data, @restaurant)
@@ -156,18 +145,14 @@ class RestaurantManageController < ApplicationController
     render json: result
   end
 
-  # ====== Code Check: 2013/12/07 ====== [ panda: ok ]
   # GET ==== Function: show special time view
-  # =========================================================================
   def special_time
     @select_date = params[:special_day]
     @time_zones = RestaurantManage.get_time_zones(params[:condition_id])
     render 'restaurant_manage/_time_zones', :layout => false
   end
 
-  # ====== Code Check: 2013/12/07 ====== [ panda: ok ]
   # POST === Function: save special condition
-  # =========================================================================
   def special_create
     zones = []
     zones.push(params[:zone0])
@@ -185,18 +170,16 @@ class RestaurantManageController < ApplicationController
     render json: result
   end
 
-  # ====== Code Check: 2013/12/07 ====== [ panda: ok ]
   # GET ==== Function: show day booking view
-  # =========================================================================
   def day_booking
     @zones_books = RestaurantManage.get_day_books(@restaurant.id, params[:special_day])
     @select_date = params[:special_day]
+
     render 'restaurant_manage/_day_booking', :layout => false
+    #render json: {:success => true, :attachmentPartial => render_to_string('restaurant_manage/_day_booking', :layout => false) }
   end
 
-  # ====== Code Check: 2013/12/07 ====== [ panda: ok ]
   # GET ==== Function: show booking report view
-  # =========================================================================
   def query_books_by_date
     @from, @to = params[:from], params[:to]
     if @from.blank? || @to.blank?
@@ -206,12 +189,18 @@ class RestaurantManageController < ApplicationController
     end
     #@books = RestaurantManage.query_books_by_date(@restaurant.id, params[:range_begin], params[:range_end])
     @books = RestaurantManage.query_books_by_date(@restaurant.id, @from, @to)
-    render 'restaurant_manage/_booking_report', :layout => false
+
+    @total_upcoming_people = 0
+    @books.each do |b|
+      if b.status == '0'
+        @total_upcoming_people = @total_upcoming_people + b.num_of_people
+      end
+    end
+
+    render json: {:success => true, :attachmentPartial => render_to_string('restaurant_manage/_booking_report', :layout => false) }
   end
 
-  # ====== Code Check: 2013/12/08 ====== [ panda: TODO: wait Front-end engineering ]
   # GET ==== Function: show modify booking view
-  # =========================================================================
   def modify_booking
     begin
       @booking = Booking.find(params[:booking_id].to_i)
@@ -222,14 +211,13 @@ class RestaurantManageController < ApplicationController
     render 'restaurant_manage/_modify_booking', :layout => false
   end
 
-  # ====== Code Check: 2013/12/08 ====== [ panda: TODO: wait Front-end engineering ]
   # POST === Function: save modify booking
-  # =========================================================================
   def modify_booking_save
-    result = RestaurantManage.modify_booking_save(params[:booking])
+    result = RestaurantManage.modify_booking_save(params[:booking], params[:ti])
     render json: result
   end
 
+  # GET === Function: show cancel booking view
   def cancel_booking
     begin
       @booking = Booking.find(params[:booking_id].to_i)
@@ -240,20 +228,17 @@ class RestaurantManageController < ApplicationController
     render 'restaurant_manage/_cancel_booking', :layout => false
   end
 
-  # ====== Code Check: 2013/12/08 ====== [ panda: TODO: wait Front-end engineering ]
   # POST === Function: cancel booking
-  # =========================================================================
   def cancel_booking_save
     booking = params[:booking]
     result = RestaurantManage.cancel_booking(booking[:id], booking[:status], booking[:cancel_note])
     render json: result
   end
 
-  # ====== Code Check: 2013/12/07 ====== [ panda: TODO: think the auth solution ]
   # func ==== Function: auth user and get restaurant
-  # =========================================================================
   def get_restaurant
     begin
+      @pay_type = []
       if current_user.blank?
         flash.now[:alert] = '您還沒登入喔!~~ '
         redirect_to res_session_new_path
@@ -266,7 +251,6 @@ class RestaurantManageController < ApplicationController
             @restaurant = Restaurant.find(target.restaurant_id)
             @res_url = APP_CONFIG['domain'] + @restaurant.res_url.to_s
 
-            @pay_type = []
             if !@restaurant.pay_type.blank?
               @pay_type = @restaurant.pay_type.split(',')
             end
@@ -280,6 +264,30 @@ class RestaurantManageController < ApplicationController
       flash.now[:alert] = 'oops! 出現錯誤了!'
       redirect_to res_session_new_path
     end
+  end
+
+  def check_step_info(restaurant)
+    if !RestaurantManage.check_restaurant_info(restaurant)
+      render json: {:error => true, :message => '餐廳資料,必填欄位完善才能進行下一步喔!', :step => '1', :url => '/restaurant_manage/restaurant_info', :attachmentPartial => render_to_string('restaurant_manage/restaurant_info', :layout => false ) }
+      return false
+
+    end
+
+    return true
+  end
+
+  def check_step_image(restaurant)
+    if !RestaurantManage.check_restaurant_info(restaurant)
+      render json: {:error => true, :message => '餐廳資料,必填欄位完善才能進行下一步喔!', :step => '1', :url => '/restaurant_manage/restaurant_info', :attachmentPartial => render_to_string('restaurant_manage/restaurant_info', :layout => false ) }
+      return false
+    end
+
+    if !RestaurantManage.check_restaurant_image(restaurant)
+      render json: {:error => true, :message => '餐廳圖片,必填至少上傳一張才能進行下一步喔!', :step => '2', :url => '/restaurant_manage/restaurant_image', :attachmentPartial => render_to_string('restaurant_manage/restaurant_image', :layout => false ) }
+      return false
+    end
+
+    return true
   end
 
   # test action

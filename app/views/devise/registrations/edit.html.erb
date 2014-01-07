@@ -1,36 +1,35 @@
-<%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put }) do |f| %>
-    <div>
-      <%= f.label :email, "E-Mail" %>
-      <%= f.email_field :email, :autofocus => false, :disabled=>"disabled" %>
+
+<div style="width: 500px">
+<%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => {:id => 'devise_edit', :method => :put }) do |f| %>
+
+    <div style="float: left;width: 200px;font-size: 16px; line-height:40px;text-align: right;padding-right: 5px">
+      <input type="hidden" name="from" value="<%= @from %>" />
+      帳號 ( E-Mail )：</br>
+      姓名：</br>
+      手機：</br>
+      新密碼：</br>
+      確認新密碼：</br>
+      修改驗證碼 ( 目前密碼 )：
     </div>
 
-    <div><%= f.label :password, "新密碼" %> <i>(如果沒有要修改密碼請留空)</i><br />
-      <%= f.password_field :password, :autocomplete => "off" %>
+    <div style="float: left;width: 250px;font-size: 16px; line-height:40px">
+      <%= f.email_field :email, :autofocus => false, :disabled=>"disabled", :style => 'padding-left:10px' %>
+      <%= f.text_field :name, :style => 'padding-left:10px' %>
+      <%= f.text_field :phone, :style => 'padding-left:10px' %>
+      <%= f.password_field :password, :autocomplete => "off", :placeholder => '沒有要修改密碼請留空', :style => 'padding-left:10px' %>
+      <%= f.password_field :password_confirmation, :placeholder => '沒有要修改密碼請留空', :style => 'padding-left:10px' %>
+      <%= f.password_field :current_password, :placeholder => '修改資料必填欄位', :style => 'padding-left:10px' %>
+      <%= f.submit "確認修改" , :class => 'btn btn-primary' %>
+      <input class="btn" type="reset" value="清除">
     </div>
 
-    <div><%= f.label :password_confirmation, "確認新密碼" %>
-      <%= f.password_field :password_confirmation %>
-    </div>
-
-    <div>
-      <%= f.label :name, "姓名" %>
-      <%= f.text_field :name %>
-    </div>
-
-    <div>
-      <%= f.label :phone, "手機" %>
-      <%= f.phone_field :phone %>
-    </div>
-
-    <div><%= f.label :current_password,"輸入目前密碼驗證" %>
-      <%= f.password_field :current_password %>
-    </div>
-
-    <div><%= f.submit "確認修改" %></div>
+    <table style="width: 100%"></table>
 <% end %>
+</div>
+
 <script>
   $('form').submit(function(){
-    return validate(this);
+    //return validate(this);
   });
 </script>
 

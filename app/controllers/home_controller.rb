@@ -1,7 +1,7 @@
 class HomeController < ApplicationController
-  layout 'home'
-  before_action :get_user, :only => [:index, :booking_restaurant, :get_condition, :save_booking, :notice_friend, :cancel_booking, :save_cancel_booking]
-  #before_action :get_restaurant, :only => [:booking_restaurant]
+  #layout 'home'
+  layout :resolve_layout
+  before_action :get_user, :only => [:wait_confirm_email, :index, :booking_restaurant, :get_condition, :save_booking, :notice_friend, :cancel_booking, :save_cancel_booking]
 
   # =========================================================================
   # panda: 我比較偏向不使用path,因為命名這件事讓trace code變得麻煩一點(must see routes),雖然path可以讓rename 好管理,但基本上!! rename畢竟是很少發生的情況
@@ -17,8 +17,27 @@ class HomeController < ApplicationController
   # booking status 7 = 其他
   # =========================================================================
 
+  def about_codream
+  end
+
+  def clause
+  end
+
+  def q_and_a
+  end
+
   def index
     #主要首頁,p1 不開放
+  end
+
+  def wait_confirm_email
+    if !@booker.id.blank?
+      if @booker.role == '0'
+        redirect_to confirmation_getting_started_path
+      elsif @booker.role == '1'
+        redirect_to booker_manage_index_path
+      end
+    end
   end
 
   # GET the booking url ,when restaurant 2000 ,build home page, and move booking page to this place
@@ -26,16 +45,32 @@ class HomeController < ApplicationController
     restaurant_url = params[:id]
     booking_day = params[:booking_day]
 
-    #@booking_day = (Date.parse(Time.now.to_s) + 1.days).to_s
-    #if !booking_day.blank?
-    #  @booking_day = booking_day
-    #end
-    @restaurant = Restaurant.new
-    @restaurant = Home.get_restaurant(restaurant_url)
+
+    @booking_day = (Date.parse(Time.now.to_s) + 1.days).to_s
+    if !booking_day.blank?
+      @booking_day = booking_day
+    end
+
+    restaurant_url = restaurant_url[0..5]
+    restaurant = Restaurant.new
+    restaurant = Home.get_restaurant(restaurant_url)
+    @res_url = restaurant_url
+
+    if restaurant.blank?
+      redirect_to home_path
+      return
+    end
+
+    @pay_type = "#{restaurant.pay_type}"
+    @address = "#{restaurant.city} #{restaurant.area} #{restaurant.address}"
+    @restaurant = restaurant
+
     @booking_condition = BookingCondition.new
+    @booking_condition.option_of_time = []
     if !@restaurant.blank?
       @booking_condition = BookingCondition.new
-      @booking_condition = Home.get_condition(@restaurant, booking_day)
+      @booking_condition.option_of_time = []
+      @booking_condition = Home.get_condition(@restaurant, @booking_day)
     else
       redirect_to home_path
     end
@@ -44,7 +79,7 @@ class HomeController < ApplicationController
   def get_condition
     restaurant_url = params[:id]
     @booking_day = params[:booking_day]
-
+    restaurant_url = restaurant_url[0..5]
     @restaurant = Restaurant.new
     @restaurant = Home.get_restaurant(restaurant_url)
     @booking_condition = BookingCondition.new
@@ -73,11 +108,28 @@ class HomeController < ApplicationController
 
       if booking_id.blank? || notice_emails.blank?
         render json: {:error => true, :message => '阿! 發生錯誤了! 通知失敗!'}
+        return
       end
 
-      result = MyMailer.notify_friend(notice_emails, booking_id).deliver
+      email = notice_emails.split(',')
+      if email.count == 1
+        email = email[0].split(';')
+      end
+
+      effect_email = []
+      email.each do |e|
+        if !e.blank? && !(e =~ /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/).blank?
+          effect_email.push(e)
+        end
+      end
+
+      result = MyMailer.notify_friend(effect_email).deliver
 
       if result.perform_deliveries
+
+        booking = Booking.find(booking_id)
+        booking.participants = effect_email.map{|k| "#{k}"}.join(',')
+        booking.save
         render json: {:success => true, :data => '通知成功!' }
       else
         render json: {:error => true, :message => '阿! 發生錯誤了! 通知失敗!'}
@@ -119,6 +171,19 @@ class HomeController < ApplicationController
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/controllers/home_controller.rb  ,Filter:get_user"
       flash.now[:alert] = 'oops! 出現錯誤了!'
       redirect_to home_path
+    end
+  end
+
+  private
+
+  def resolve_layout
+    case action_name
+      when 'index', 'clause', 'about_codream', 'q_and_a', 'wait_confirm_email'
+        'home_index'
+      #when
+      #  'registration'
+      else
+        'home'
     end
   end
 

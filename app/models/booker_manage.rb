@@ -13,7 +13,20 @@ class BookerManage
     end
   end
 
+  def self.get_books(booker_id)
+    begin
+      books = Booking.where(:user_id => booker_id).order('booking_time DESC')
+      books.each do |b|
+        if b.booking_time <= Time.now && b.status == '0'
+          b.status == '1'
+          b.save
+        end
+      end
 
-
+      return books
+    rescue => e
+      Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/models/booker_manage.rb  ,Method:get_books"
+    end
+  end
 
 end
