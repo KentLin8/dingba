@@ -4,7 +4,7 @@
 
     <div id="special_time" style="float: left; margin-left: -20px; width: 55%; border: 2px solid rgb(190,190,190)">
       <% @special_conditions.each do |c| %>
-          <div class="row">
+          <div class="row" style="float: left;width: 100%">
             <div class="dropdown" style="margin-top: 3px">
               <input name="con_id" type="hidden" value="<%= c.id %>">
               <a class="dropdown-toggle" data-toggle="dropdown" href="#" style="width: 150px;font-size: 16px"><%= c.name %><b class="caret pull-right"></b></a>
@@ -48,7 +48,7 @@
 
 <div id="period_set" style="float: left; margin-left: -20px; width: 55%">
   <% @normal_conditions.each_with_index do |c, index|%>
-      <div class="sortable" data-sort="<%= index %>">
+      <div class="sortable" data-sort="<%= index %>" style="float: left;width: 100%">
         <div class="dropdown" style="margin-top: 3px; margin-bottom: 10px">
           <input name="con_id" type="hidden" value="<%= c.id %>">
           <a class="dropdown-toggle" data-toggle="dropdown" href="#" style="width: 150px;font-size: 16px"><%= c.name %><b class="caret pull-right"></b></a>

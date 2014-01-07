@@ -13,7 +13,8 @@
     <a id="resend_confirm_email" href="#" class="base_brown" style="letter-spacing: 2px;">已經註冊，沒收到確認信?</a>
   </div>
   <hr color="#D6D6D6" size="3" width="100%">
-  <%= form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f| %>
+  <%= form_for(resource, :as => resource_name, :url => login_session_path(resource_name)) do |f| %>
+                                                       <!--session_path-->
       <%= f.hidden_field :role, :value => '1' %>
       <div style="float: left; font-size: 16px; width: 30%;line-height: 35px;text-align: right;">
         帳號 ( E-Mail )：<br>
