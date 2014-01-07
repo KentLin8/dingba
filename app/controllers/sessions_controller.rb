@@ -75,6 +75,19 @@ class SessionsController < Devise::SessionsController
 
 
     begin
+      if target_user.confirmation_token.length != 20
+        if user[:role] == '0'
+          flash.now[:alert] = '信箱尚未驗證!!'
+          new(sign_in_params, '0')
+          render 'devise/sessions/restaurant_new'
+        elsif user[:role] == '1'
+          flash.now[:alert] = '信箱尚未驗證!!'
+          new(sign_in_params, '1')
+          render 'devise/sessions/booker_new'
+        end
+        return
+      end
+
       self.resource = warden.authenticate(auth_options)  #warden.authenticate!(auth_options)
 
       if self.resource.blank?
@@ -95,15 +108,8 @@ class SessionsController < Devise::SessionsController
       #respond_with resource, :location => after_sign_in_path_for(resource)
 
     rescue => e
-      if user[:role] == '0'
-        flash.now[:alert] = '信箱尚未驗證!!'
-        new(sign_in_params, '0')
-        render 'devise/sessions/restaurant_new'
-      elsif user[:role] == '1'
-        flash.now[:alert] = '信箱尚未驗證!!'
-        new(sign_in_params, '1')
-        render 'devise/sessions/booker_new'
-      end
+      Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/controllers/sessions_controller.rb  ,Action:create"
+      redirect_to home_path
       return
     end
   end
