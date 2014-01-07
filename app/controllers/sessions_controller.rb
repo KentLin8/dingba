@@ -73,28 +73,39 @@ class SessionsController < Devise::SessionsController
       return
     end
 
-    self.resource = warden.authenticate(auth_options)  #warden.authenticate!(auth_options)
 
-    if self.resource.blank?
-      flash.now[:alert] = '密碼錯誤!'
+    begin
+      self.resource = warden.authenticate(auth_options)  #warden.authenticate!(auth_options)
+
+      if self.resource.blank?
+        flash.now[:alert] = '密碼錯誤!'
+        if user[:role] == '0'
+          new(sign_in_params, '0')
+          render 'devise/sessions/restaurant_new'
+        elsif user[:role] == '1'
+          new(sign_in_params, '1')
+          render 'devise/sessions/booker_new'
+        end
+        return
+      end
+
+      sign_in(resource_name, resource)
+      yield resource if block_given?
+      redirect_to after_sign_in_path_for(resource)
+      #respond_with resource, :location => after_sign_in_path_for(resource)
+
+    rescue => e
       if user[:role] == '0'
+        flash.now[:alert] = '信箱尚未驗證!!'
         new(sign_in_params, '0')
         render 'devise/sessions/restaurant_new'
       elsif user[:role] == '1'
+        flash.now[:alert] = '信箱尚未驗證!!'
         new(sign_in_params, '1')
         render 'devise/sessions/booker_new'
       end
       return
     end
-
-    if is_flashing_format?
-      set_flash_message(:notice, :signed_in)
-    end
-
-    sign_in(resource_name, resource)
-    yield resource if block_given?
-    redirect_to after_sign_in_path_for(resource)
-    #respond_with resource, :location => after_sign_in_path_for(resource)
   end
 
   def destroy
