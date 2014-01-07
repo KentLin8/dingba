@@ -20,7 +20,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
     if @user.persisted?
       sign_in_and_redirect @user, :event => :authentication #this will throw if @user is not activated
     else
-      session['devise.facebook_data'] = request.env['omniauth.auth']
+      #session['devise.facebook_data'] = request.env['omniauth.auth']
       render res_new_path
     end
   end
@@ -32,7 +32,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
     if @user.persisted?
       sign_in_and_redirect @user, :event => :authentication
     else
-      session['devise.google_data'] = request.env['omniauth.auth']
+      #session['devise.google_data'] = request.env['omniauth.auth']
       render res_new_path
     end
   end
