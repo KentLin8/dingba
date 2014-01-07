@@ -55,14 +55,15 @@ class SessionsController < Devise::SessionsController
       target_user = User.where(:email => user[:email])
 
       if target_user.blank?
-        #flash.now[:alert] = '沒有此E-Mail 資料!'
-
+        flash.now[:alert] = '沒有此E-Mail 資料!'
         if user[:role] == '0'
-          redirect_to res_session_new_path
-          #render 'devise/sessions/restaurant_new'
+          #redirect_to res_session_new_path
+          new(sign_in_params, '0')
+          render 'devise/sessions/restaurant_new'
         elsif user[:role] == '1'
-          redirect_to booker_session_new_path
-          #render 'devise/sessions/booker_new'
+          #redirect_to booker_session_new_path
+          new(sign_in_params, '1')
+          render 'devise/sessions/booker_new'
         end
         return
       end
@@ -72,7 +73,19 @@ class SessionsController < Devise::SessionsController
       return
     end
 
-    self.resource = warden.authenticate!(auth_options)
+    self.resource = warden.authenticate(auth_options)  #warden.authenticate!(auth_options)
+
+    if self.resource.blank?
+      flash.now[:alert] = '密碼錯誤!'
+      if user[:role] == '0'
+        new(sign_in_params, '0')
+        render 'devise/sessions/restaurant_new'
+      elsif user[:role] == '1'
+        new(sign_in_params, '1')
+        render 'devise/sessions/booker_new'
+      end
+      return
+    end
 
     if is_flashing_format?
       set_flash_message(:notice, :signed_in)

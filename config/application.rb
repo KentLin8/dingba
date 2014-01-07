@@ -30,7 +30,7 @@ module DingBa
 
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
-    # config.i18n.default_locale = :de
+
     config.i18n.default_locale = "zh-TW"
     Week = ['星期一','星期二','星期三','星期四','星期五','星期六','星期日']
   end
