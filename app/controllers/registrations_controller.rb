@@ -55,14 +55,14 @@ class RegistrationsController < Devise::RegistrationsController
     if APP_CONFIG['enable_invite_code'] == 'true'
       invite_code = params[:tag_invite_code].strip
       if invite_code.blank?
-        flash.now[:alert] = 'need invite code!'
+        flash.now[:alert] = '您好，現在Dingba 處於私密測試階段，為了維持訂吧網路服務的品質，我們需要取得邀請碼後才能進行免費的餐廳服務申請。  若您還對我們服務有興趣，可以先留下:餐廳名稱:   聯絡人:  餐廳官方網站或FB:   並 Email 至 cs@codream.tw，我們會盡快協助您加入訂吧的免費服務。'
         render from_url
         return
       end
 
-      result = InviteCode.where(:code => invite_code)
+      result = InviteCode.where(:code => invite_code, :user_id => nil)
       if result.blank?
-        flash.now[:alert] = 'no this invite code!'
+        flash.now[:alert] = '沒有此筆邀請碼喔~ 很抱歉!'
         render from_url
         return
       end
@@ -95,13 +95,13 @@ class RegistrationsController < Devise::RegistrationsController
                 'password' => password,
                 'password_confirmation' => password }
 
-    devise_save(person)
+    devise_save(person, invite_code)
   end
 
   # ====== Code Check: 2013/12/25 ====== [ panda: TODO: detail review ]
   # Method === Function: save user
   # =========================================================================
-  def devise_save(person)
+  def devise_save(person, invite_code)
 
     User.transaction do
       build_resource(person)
@@ -114,6 +114,12 @@ class RegistrationsController < Devise::RegistrationsController
             raise ActiveRecord::Rollback
             #make_error =  1/0  # template solve the hack attack or man make error situation
           end
+        end
+
+        if !invite_code.blank?
+          code_record = InviteCode.where(:code => invite_code).first
+          code_record.user_id = resource.id
+          code_record.save
         end
 
         if resource.active_for_authentication?

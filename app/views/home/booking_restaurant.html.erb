@@ -118,7 +118,7 @@
               </tr>
               <tr>
                 <td colspan="2">
-                  <input type="submit" value="訂位" class="btn btn-primary">
+                  <input type="button" value="訂位" class="btn btn-primary" id="booking_save_btn">
                   <!--<input type="reset" value="取消" class="btn">-->
                 </td>
               </tr>
@@ -324,10 +324,11 @@
         //show_zone(num_of_people)
     });
 
-    $('#booking_form').submit(function(e){
+    $('#booking_save_btn').click(function(e){
         e.preventDefault()
 
-        var booker_data = $(this).serializeArray();
+        $("#booking_save_btn").attr('disabled', 'disabled');
+        var booker_data = $("#booking_form").serializeArray();
         var booking = {};
 
         for(item in booker_data){
@@ -382,9 +383,12 @@
                     alert(response.message)
                 else
                     alert('發生未預期的回應，請告知CoDream小組處理!')
+
+                $("#booking_save_btn").removeAttr('disabled');
             },
             error: function(){
                 alert('oops! 出現錯誤了!');
+                $("#booking_save_btn").removeAttr('disabled');
             }
         });
     });
