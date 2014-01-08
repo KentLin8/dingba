@@ -19,4 +19,4 @@ production:
   app_title: DingBa
   domain: "dingba.codream.tw/r/"
   error: "=============Catch Error:"
-  enable_invite_code: "false"
+  enable_invite_code: "true"
