@@ -87,6 +87,10 @@ class CalendarController < ApplicationController
               c.is_special = true
             end
 
+            if con.is_vacation == 't'
+              c.is_vacation = true
+            end
+
             zones.each { |z|
               if z.sequence == 0
                 c.n1 = z.name

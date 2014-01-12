@@ -46,22 +46,26 @@
           <% if x.con_id == 0 %>
               不提供訂位
           <% else %>
-              <table class="clean-table">
-                <% (1..6).each do |j| %>
-                    <% unless x.method("n#{j}".to_sym).call.blank? %>
+              <% if x.is_vacation %>
+                  休假
+              <% else %>
+                  <table class="clean-table">
+                    <% (1..6).each do |j| %>
+                        <% unless x.method("n#{j}".to_sym).call.blank? %>
+                            <tr>
+                              <td><%= x.method("n#{j}".to_sym).call %></td>
+                              <td style="text-align: right"><%= @books[i].method("zone#{j}".to_sym).call %>/ <%= x.method("z#{j}".to_sym).call %></td>
+                            </tr>
+                        <% end %>
+                    <% end %>
+                    <% if !@books[i].other.blank? && @books[i].other > 0 %>
                         <tr>
-                          <td><%= x.method("n#{j}".to_sym).call %></td>
-                          <td style="text-align: right"><%= @books[i].method("zone#{j}".to_sym).call %>/ <%= x.method("z#{j}".to_sym).call %></td>
+                          <td>其他時段</td>
+                          <td style="text-align: right"><%= @books[i].other%></td>
                         </tr>
                     <% end %>
-                <% end %>
-                <% if !@books[i].other.blank? && @books[i].other > 0 %>
-                    <tr>
-                      <td>其他時段</td>
-                      <td style="text-align: right"><%= @books[i].other%></td>
-                    </tr>
-                <% end %>
-              </table>
+                  </table>
+              <% end %>
           <% end %>
         </div>
       </td>

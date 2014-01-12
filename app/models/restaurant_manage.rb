@@ -393,7 +393,7 @@ class RestaurantManage
     end
   end
 
-  def self.special_create(origin_zones, special_day, restaurant_id)
+  def self.special_create(origin_zones, special_day, restaurant_id, is_vacation)
     begin
       special_day_begin = Time.parse(special_day)
       special_day_end = special_day_begin.strftime("%Y-%m-%d") + " 23:59"
@@ -435,10 +435,12 @@ class RestaurantManage
         condition.available_week = '0,1,2,3,4,5,6'
         condition.sequence = 0
         condition.is_special = 't'
+        condition.is_vacation = is_vacation
         condition.save
 
         # special time zone save
         time_zone_save(origin_zones, condition_id, target_zones)
+        calculate_day_booking_special(restaurant_id, condition_id)
         return {:success => true, :data => '新增特定日供位條件成功!'}
       end
     rescue => e
@@ -861,6 +863,98 @@ class RestaurantManage
     bookings = Booking.where(:restaurant_id => restaurant_id).where('booking_time >= ?', origin_condition.range_begin).where('booking_time <= ?', origin_condition.range_end).group('booking_time').sum(:num_of_people)#.order('booking_time ASC')
 
     calculate_day_booking(day_bookings, conditions, bookings)
+  end
+
+  def self.calculate_day_booking_special(restaurant_id, condition_id)
+    # don't catch this method error , transaction issue
+    origin_condition = SupplyCondition.find(condition_id)
+    day_bookings = DayBooking.where(:restaurant_id => restaurant_id).where('day >= ?', origin_condition.range_begin).where('day <= ?', origin_condition.range_end).order('day ASC')
+    if day_bookings.blank?
+      return
+    end
+
+    bookings = Booking.where(:restaurant_id => restaurant_id).where('booking_time >= ?', origin_condition.range_begin).where('booking_time <= ?', origin_condition.range_end).group('booking_time').sum(:num_of_people)#.order('booking_time ASC')
+    # ====
+    day_booking_mix = []
+    day_bookings.each do |db|
+      day_booking_group = []
+      db.zone1 = 0
+      db.zone2 = 0
+      db.zone3 = 0
+      db.zone4 = 0
+      db.zone5 = 0
+      db.zone6 = 0
+      db.other = 0
+      day_booking_group.push(db)
+      db_begin = Time.parse(db.day.strftime("%Y-%m-%d") + " 00:00")
+      db_end = Time.parse(db.day.strftime("%Y-%m-%d") + " 23:59")
+
+      bookings_of_group = []
+      bookings.each do |b|
+        if db_begin <= b[0] && db_end >= b[0]
+          b.push(b[0].strftime("%H:%M"))                # [time,sum(num_of_people),'11:00']
+          bookings_of_group.push(b)
+        else
+          break;
+        end
+      end
+
+      day_booking_group.push(bookings_of_group)           # [day_booking, bookings_of_group]
+      day_booking_mix.push(day_booking_group)
+    end
+
+    if origin_condition.is_vacation == 't'
+      #把所有bookings 直接以other 丟到day_booking
+      day_booking_mix.each do |mix|
+        mix[1].each do |books|
+          mix[0].other = mix[0].other + books[1]
+        end
+
+        mix[0].save
+      end
+    else
+      origin_condition.each do |c|
+        #zones = TimeZone.where(:supply_condition_id => c.id, :status => 't').order('sequence ASC')
+        zones = TimeZone.where(:supply_condition_id => c.id).order('sequence ASC')
+
+        day_booking_mix.each do |mix|
+          if c.range_begin <= mix[0].day && c.range_end >= mix[0].day
+            zones.each do |z|
+              mix[1].each do |books|
+                if z.range_begin <= books[2] && z.range_end > books[2]
+                  if z.status == 'f'
+                    mix[0].other = mix[0].other + books[1]
+                    mix[1].delete(books)
+                  else
+                    if z.sequence == 0
+                      mix[0].zone1 = mix[0].zone1 + books[1]
+                      mix[1].delete(books)
+                    elsif z.sequence == 1
+                      mix[0].zone2 = mix[0].zone2 + books[1]
+                      mix[1].delete(books)
+                    elsif z.sequence == 2
+                      mix[0].zone3 = mix[0].zone3 + books[1]
+                      mix[1].delete(books)
+                    elsif z.sequence == 3
+                      mix[0].zone4 = mix[0].zone4 + books[1]
+                      mix[1].delete(books)
+                    elsif z.sequence == 4
+                      mix[0].zone5 = mix[0].zone5 + books[1]
+                      mix[1].delete(books)
+                    elsif z.sequence == 5
+                      mix[0].zone6 = mix[0].zone6 + books[1]
+                      mix[1].delete(books)
+                    end
+                  end
+                end
+              end
+            end
+
+          end
+          mix[0].save
+        end
+      end
+    end
   end
 
   def self.calculate_day_booking(day_bookings, conditions, bookings)

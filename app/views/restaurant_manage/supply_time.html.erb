@@ -26,6 +26,12 @@
             <input type="text" data-type="date" name="condition[range_begin]" class="datepicker from input-small" required="required">&nbsp;
           </td>
         </tr>
+        <tr>
+          <td></td>
+          <td>
+            <label class="checkbox inline"><input type="checkbox" name="condition[is_vacation]" value="t" <%= @supply_time.is_vacation == 't' ? 'checked="checked"' : '' %>>休假日</label>
+          </td>
+        </tr>
 
     <% elsif @supply_time.is_special != 't' %>
         <tr>

@@ -42,7 +42,7 @@
       </tr>
 
       <% z.books.each do |b| %>
-          <% if b.status != '0'%>
+          <% if b.status != '0' && b.status != '1'%>
               <tr data-id="<%= b.id %>" style="text-decoration:line-through;">
           <% else %>
               <tr data-id="<%= b.id %>">

@@ -1,4 +1,22 @@
-修改 <span style="color: rgb(127,23,0)"><%= @select_date %></span> 的供位設定爲<br>
+
+<% if @select_date %>
+
+    <div style="font-size: 18px;letter-spacing: 0.5px;margin-bottom: 10px">
+      建立
+      <span style="color: rgb(127,23,0)"><%= @select_date %></span>
+      供位條件：
+    </div>
+
+    <div style="font-size: 16px;letter-spacing: 0.5px;margin-bottom: 15px;margin-left: 2em">
+      <label style="font-size: 16px;letter-spacing: 0.5px">
+        <input style="margin-top: -2px" type="checkbox" name="is_vacation" value="t" <%= @is_vacation == 't' ? 'checked="checked"' : '' %>>
+        休假日 <span style="color: red">( 此選項勾選時，表示此日全天不開放訂位 )</span>
+      </label>
+
+    </div>
+
+<% end %>
+
 <table class="period table table-bordered">
   <tr>
     <td style="width: 6%;">啟用</td>
