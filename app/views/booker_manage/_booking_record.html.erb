@@ -61,17 +61,16 @@
         <% end %>
       </div>
 
-      <hr color="#D6D6D6" size="5" width="100%">
-
       <% if booking.status == '1' %>
+          <hr color="#D6D6D6" size="3" width="100%">
           <div id="fd_<%= booking.id %>">
             <div style="width: 15%; font-size: 16px; text-align: right;float: left; margin-top: -10px; margin-bottom: 5px">
               消費感想：
             </div>
             <div name="feedback_div" style="width: 85%; font-size: 16px; text-align: left;float: right; margin-top: -10px; margin-bottom: 5px">
-              <label name="feedback_label" style="color: rgb(238,132,64)">
+              <label name="feedback_label" style="color: #1e1e1e">
                 <%= booking.feedback %>
-                <a href="#" name="showEdit" data-value="<%= booking.id %>" style="font-size: 16px;color: blue;padding-left: 10px">輸入感想</a>
+                <a href="#" name="showEdit" data-value="<%= booking.id %>" style="font-size: 16px;color: #7F1700;padding-left: 10px;margin-left: -9px">點我,輸入感想</a>
               </label>
 
               <textarea name="feedback_area" style="display: none"><%= booking.feedback %></textarea>
@@ -82,6 +81,8 @@
               </div>
             </div>
           </div>
+      <% else %>
+          <hr color="#ffffff" size="1" width="100%">
       <% end %>
     </div>
 

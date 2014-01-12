@@ -15,15 +15,11 @@ class BookerManage
 
   def self.get_books(booker_id)
     begin
-      books = Booking.where(:user_id => booker_id).order('booking_time DESC')
-      books.each do |b|
-        if b.booking_time <= Time.now && b.status == '0'
-          b.status == '1'
-          b.save
-        end
-      end
+      books = Booking.where(:user_id => booker_id,:status => '0').where('booking_time <= ?', Time.now).order('booking_time DESC')
+      books.update_all(:status => '1')
 
-      return books
+      updated_books = Booking.where(:user_id => booker_id).order('booking_time DESC')
+      return updated_books
     rescue => e
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/models/booker_manage.rb  ,Method:get_books"
     end
