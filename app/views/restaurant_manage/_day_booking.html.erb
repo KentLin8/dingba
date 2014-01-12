@@ -42,15 +42,23 @@
       </tr>
 
       <% z.books.each do |b| %>
-          <tr data-id="<%= b.id %>">
-            <td class="table_content"><%= b.booking_time.strftime('%H:%M') %></td>
-            <td class="table_content" style="text-align: right; padding-right: 10px"><%= b.num_of_people %></td>
-            <td class="table_content"><%= b.name %></td>
-            <td class="table_content"><%= b.phone %></td>
-            <td class="table_content"><a href="mailto:<%= b.email %>"><%= b.email %></a></td>
-            <td class="table_content"><%= b.remark %></td>
-            <td><i class="icon-pencil modify" title="修改"></i></td>
-            <td><i class="icon-remove-circle delete" title="取消訂位"></i></td>
+          <% if b.status != '0'%>
+              <tr data-id="<%= b.id %>" style="text-decoration:line-through;">
+          <% else %>
+              <tr data-id="<%= b.id %>">
+          <% end %>
+          <td class="table_content"><%= b.booking_time.strftime('%H:%M') %></td>
+          <td class="table_content" style="text-align: right; padding-right: 10px"><%= b.num_of_people %></td>
+          <td class="table_content"><%= b.name %></td>
+          <td class="table_content"><%= b.phone %></td>
+          <td class="table_content"><a href="mailto:<%= b.email %>"><%= b.email %></a></td>
+          <td class="table_content"><%= b.remark %></td>
+          <td>
+            <% if b.status == '0' %>
+                <i class="icon-pencil modify" title="修改"></i>
+            <% end %>
+          </td>
+          <td><i class="icon-remove-circle delete" title="取消訂位"></i></td>
           </tr>
       <% end %>
     </table>

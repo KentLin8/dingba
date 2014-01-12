@@ -26,6 +26,8 @@ DingBa::Application.configure do
   # This option may cause significant delays in view rendering with a large
   # number of complex assets.
   config.assets.debug = true
+  config.action_controller.asset_host = "http://localhost:3000"
+  config.action_mailer.asset_host = "http://localhost:3000"
 
   config.action_mailer.delivery_method = :smtp
 
@@ -42,8 +44,8 @@ DingBa::Application.configure do
       :openssl_verify_mode  => 'none'
   }
 end
-class NilClass
-  def method_missing *args
-    nil
-  end
-end
+#class NilClass
+#  def method_missing *args
+#    nil
+#  end
+#end

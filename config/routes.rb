@@ -41,6 +41,8 @@ DingBa::Application.routes.draw do
   post 'home/save_booking'
   post 'home/notice_friend'
   post 'home/save_cancel_booking'
+  get  'home/cancel_booking_by_email'
+  post 'home/save_cancel_booking_by_email'
 
   get  'home/wait_confirm_email'
 

@@ -210,24 +210,24 @@ class RestaurantManage
       change_pic_name = nil
       if !pic_name.blank?
         #if restaurant.front_cover == pic_id
-          if !restaurant.pic_name1.blank?
-            change_pic_name = restaurant.pic_name1
-            restaurant.front_cover = '1'
-          elsif !restaurant.pic_name2.blank?
-            change_pic_name = restaurant.pic_name2
-            restaurant.front_cover = '2'
-          elsif !restaurant.pic_name3.blank?
-            change_pic_name = restaurant.pic_name3
-            restaurant.front_cover = '3'
-          elsif !restaurant.pic_name4.blank?
-            change_pic_name = restaurant.pic_name4
-            restaurant.front_cover = '4'
-          elsif !restaurant.pic_name5.blank?
-            change_pic_name = restaurant.pic_name5
-            restaurant.front_cover = '5'
-          else
-            restaurant.front_cover = nil
-          end
+        if !restaurant.pic_name1.blank?
+          change_pic_name = restaurant.pic_name1
+          restaurant.front_cover = '1'
+        elsif !restaurant.pic_name2.blank?
+          change_pic_name = restaurant.pic_name2
+          restaurant.front_cover = '2'
+        elsif !restaurant.pic_name3.blank?
+          change_pic_name = restaurant.pic_name3
+          restaurant.front_cover = '3'
+        elsif !restaurant.pic_name4.blank?
+          change_pic_name = restaurant.pic_name4
+          restaurant.front_cover = '4'
+        elsif !restaurant.pic_name5.blank?
+          change_pic_name = restaurant.pic_name5
+          restaurant.front_cover = '5'
+        else
+          restaurant.front_cover = nil
+        end
         #end
 
         Restaurant.transaction do
@@ -664,58 +664,66 @@ class RestaurantManage
   def self.modify_booking_save(origin_booking, ti)
     begin
       Booking.transaction do
-      booking = Booking.find(origin_booking[:id].to_i)
-      db_num_of_people = booking.num_of_people
-      booking.name = origin_booking[:name]
-      booking.phone = origin_booking[:phone]
-      booking.email = origin_booking[:email]
+        booking = Booking.find(origin_booking[:id].to_i)
 
-      da = Time.parse(origin_booking[:booking_time].to_s).strftime("%Y-%m-%d")
-      da = "#{da} #{ti}"
-      booking.booking_time = Time.parse(da)
-      booking.num_of_people = origin_booking[:num_of_people].to_i
-      booking.remark = origin_booking[:remark]
-      booking.save
-
-      day_booking = DayBooking.where(:restaurant_id => booking.restaurant_id, :day => Date.parse(booking.booking_time.to_s))
-      if day_booking.blank?
-        Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/models/restaurant_manage.rb  ,Method:modify_booking_save(origin_booking)"
-        return {:error => true, :message => '阿! 發生錯誤了! 修改訂位失敗!'}
-      end
-      day_booking = day_booking.first
-      day_begin = Time.parse(booking.booking_time.strftime("%Y-%m-%d") + " 00:00")
-      conditions = SupplyCondition.where(:restaurant_id => booking.restaurant_id, :status => 't').where('range_begin <= ?', day_begin).where('range_end >= ?',day_begin).order('sequence ASC')
-
-      if conditions.blank?
-        day_booking.other = day_booking.zone1 + day_booking.zone2 + day_booking.zone3 + day_booking.zone4 + day_booking.zone5 + day_booking.zone6
-        day_booking.save
-        return {:success => true, :data => '已修改訂位!'}
-      end
-
-      condition = conditions.first
-      zones = TimeZone.where(:supply_condition_id => condition.id, :status => 't')
-      zones.each do |z|
-        if z.range_begin <= booking.booking_time.strftime("%H:%M") && z.range_end > booking.booking_time.strftime("%H:%M")
-          if z.sequence == 0
-            day_booking.zone1 = day_booking.zone1 - db_num_of_people + booking.num_of_people
-          elsif z.sequence == 1
-            day_booking.zone2 = day_booking.zone2 - db_num_of_people + booking.num_of_people
-          elsif z.sequence == 2
-            day_booking.zone3 = day_booking.zone3 - db_num_of_people + booking.num_of_people
-          elsif z.sequence == 3
-            day_booking.zone4 = day_booking.zone4 - db_num_of_people + booking.num_of_people
-          elsif z.sequence == 4
-            day_booking.zone5 = day_booking.zone5 - db_num_of_people + booking.num_of_people
-          elsif z.sequence == 5
-            day_booking.zone6 = day_booking.zone6 - db_num_of_people + booking.num_of_people
-          end
-          break;
+        if booking.status != '0'
+          return {:error => true, :message => '目前的訂位狀態無法修改!'}
         end
-      end
 
-      day_booking.save
-      MyMailer.modify_booking(booking.email ,booking).deliver
-      return {:success => true, :data => '修改成功!'}
+        db_num_of_people = booking.num_of_people
+        booking.name = origin_booking[:name]
+        booking.phone = origin_booking[:phone]
+        booking.email = origin_booking[:email]
+
+        da = Time.parse(origin_booking[:booking_time].to_s).strftime("%Y-%m-%d")
+        da = "#{da} #{ti}"
+        booking.booking_time = Time.parse(da)
+        booking.num_of_people = origin_booking[:num_of_people].to_i
+        booking.remark = origin_booking[:remark]
+        booking.save
+
+        day_booking = DayBooking.where(:restaurant_id => booking.restaurant_id, :day => Date.parse(booking.booking_time.to_s))
+        if day_booking.blank?
+          Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/models/restaurant_manage.rb  ,Method:modify_booking_save(origin_booking)"
+          return {:error => true, :message => '阿! 發生錯誤了! 修改訂位失敗!'}
+        end
+        day_booking = day_booking.first
+        day_begin = Time.parse(booking.booking_time.strftime("%Y-%m-%d") + " 00:00")
+        conditions = SupplyCondition.where(:restaurant_id => booking.restaurant_id, :status => 't').where('range_begin <= ?', day_begin).where('range_end >= ?',day_begin).order('sequence ASC')
+
+        if conditions.blank?
+          day_booking.other = day_booking.zone1 + day_booking.zone2 + day_booking.zone3 + day_booking.zone4 + day_booking.zone5 + day_booking.zone6
+          day_booking.save
+          return {:success => true, :data => '已修改訂位!'}
+        end
+
+        condition = conditions.first
+        zones = TimeZone.where(:supply_condition_id => condition.id, :status => 't')
+        zones.each do |z|
+          if z.range_begin <= booking.booking_time.strftime("%H:%M") && z.range_end > booking.booking_time.strftime("%H:%M")
+            if z.sequence == 0
+              day_booking.zone1 = day_booking.zone1 - db_num_of_people + booking.num_of_people
+            elsif z.sequence == 1
+              day_booking.zone2 = day_booking.zone2 - db_num_of_people + booking.num_of_people
+            elsif z.sequence == 2
+              day_booking.zone3 = day_booking.zone3 - db_num_of_people + booking.num_of_people
+            elsif z.sequence == 3
+              day_booking.zone4 = day_booking.zone4 - db_num_of_people + booking.num_of_people
+            elsif z.sequence == 4
+              day_booking.zone5 = day_booking.zone5 - db_num_of_people + booking.num_of_people
+            elsif z.sequence == 5
+              day_booking.zone6 = day_booking.zone6 - db_num_of_people + booking.num_of_people
+            end
+            break;
+          end
+        end
+
+        day_booking.save
+        booking.phone = nil
+        booking.res_url = APP_CONFIG['domain'] + "#{booking.res_url}"
+        booking.cancel_key = APP_CONFIG['domain_clear'] + "home/cancel_booking_by_email?cancel_key=" + "#{booking.cancel_key}"  + "&booking_key=" + "#{booking.id}"
+        MyMailer.modify_booking(booking.email ,booking).deliver
+        return {:success => true, :data => '修改成功!'}
       end
     rescue => e
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/models/restaurant_manage.rb  ,Method:modify_booking_save(origin_booking)"
@@ -723,9 +731,33 @@ class RestaurantManage
     end
   end
 
+  def self.cancel_booking_email(cancel_booking)
+    begin
+      booker_phone = cancel_booking[:phone].strip
+      booking_id = cancel_booking[:id]
+      cancel_status = cancel_booking[:status]
+      cancel_note = cancel_booking[:cancel_note]
+
+      if booker_phone.blank?
+        return {:error => true, :message => '手機號碼要填喔~!'}
+      end
+
+      booking = Booking.find(booking_id.to_i)
+
+      if booking.phone != booker_phone
+        return {:error => true, :message => '手機號碼錯誤~!' }
+      end
+
+      return cancel_booking(booking_id, cancel_status, cancel_note)
+    rescue => e
+      Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/models/restaurant_manage.rb  ,Method:cancel_booking_email(cancel_booking)"
+      return {:error => true, :message => '阿! 發生錯誤了! 取消訂位失敗!'}
+    end
+  end
+
   def self.cancel_booking(booking_id, status, cancel_note)
     begin
-        Booking.transaction do
+      Booking.transaction do
         booking = Booking.find(booking_id.to_i)
 
         if booking.status.blank?
@@ -756,32 +788,32 @@ class RestaurantManage
         if conditions.blank?
           day_booking.other = day_booking.zone1 + day_booking.zone2 + day_booking.zone3 + day_booking.zone4 + day_booking.zone5 + day_booking.zone6
           day_booking.save
-          return {:success => true, :data => '已取消訂位!'}
-        end
-
-        condition = conditions.first
-        zones = TimeZone.where(:supply_condition_id => condition.id, :status => 't')
-        zones.each do |z|
-          if z.range_begin <= booking.booking_time.strftime("%H:%M") && z.range_end > booking.booking_time.strftime("%H:%M")
-            if z.sequence == 0
-              day_booking.zone1 = day_booking.zone1 - booking.num_of_people
-            elsif z.sequence == 1
-              day_booking.zone2 = day_booking.zone2 - booking.num_of_people
-            elsif z.sequence == 2
-              day_booking.zone3 = day_booking.zone3 - booking.num_of_people
-            elsif z.sequence == 3
-              day_booking.zone4 = day_booking.zone4 - booking.num_of_people
-            elsif z.sequence == 4
-              day_booking.zone5 = day_booking.zone5 - booking.num_of_people
-            elsif z.sequence == 5
-              day_booking.zone6 = day_booking.zone6 - booking.num_of_people
+        else
+          condition = conditions.first
+          zones = TimeZone.where(:supply_condition_id => condition.id, :status => 't')
+          zones.each do |z|
+            if z.range_begin <= booking.booking_time.strftime("%H:%M") && z.range_end > booking.booking_time.strftime("%H:%M")
+              if z.sequence == 0
+                day_booking.zone1 = day_booking.zone1 - booking.num_of_people
+              elsif z.sequence == 1
+                day_booking.zone2 = day_booking.zone2 - booking.num_of_people
+              elsif z.sequence == 2
+                day_booking.zone3 = day_booking.zone3 - booking.num_of_people
+              elsif z.sequence == 3
+                day_booking.zone4 = day_booking.zone4 - booking.num_of_people
+              elsif z.sequence == 4
+                day_booking.zone5 = day_booking.zone5 - booking.num_of_people
+              elsif z.sequence == 5
+                day_booking.zone6 = day_booking.zone6 - booking.num_of_people
+              end
+              break;
             end
-            break;
           end
+          day_booking.save
         end
 
-        day_booking.save
-
+        booking.phone = nil
+        booking.res_url = APP_CONFIG['domain'] + "#{booking.res_url}"
         MyMailer.cancel_booking(booking.email ,booking).deliver
 
         if booking.status == '2'

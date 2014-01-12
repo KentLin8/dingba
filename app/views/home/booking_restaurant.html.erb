@@ -344,16 +344,19 @@
 
         if (no_select) {
             alert("訂位時間還沒有選擇喔~!")
+            $("#booking_save_btn").removeAttr('disabled');
             return false
         }
 
         if ($.trim($('#b_name').val()) == ''){
             alert("訂位者姓名不能為空喔!")
+            $("#booking_save_btn").removeAttr('disabled');
             return false
         }
 
         if ($.trim($('#b_phone').val()) == ''){
             alert("訂位者電話不能為空喔!")
+            $("#booking_save_btn").removeAttr('disabled');
             return false
         }
 
