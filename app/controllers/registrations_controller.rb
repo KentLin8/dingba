@@ -49,10 +49,10 @@ class RegistrationsController < Devise::RegistrationsController
     email = params[:tag_email].strip
     phone = params[:tag_phone].strip
     password = params[:tag_password].strip
-    i_agree = params[:tag_i_agree].strip    # nil mean not agree clause
+    i_agree = params[:tag_i_agree]    # nil mean not agree clause
 
     #============================================== invite code
-    if APP_CONFIG['enable_invite_code'] == 'true'
+    if APP_CONFIG['enable_invite_code'] == 'true' && from_url.include?('restaurant')
       invite_code = params[:tag_invite_code].strip
       if invite_code.blank?
         flash.now[:alert] = '您好，現在Dingba 處於私密測試階段，為了維持訂吧網路服務的品質，我們需要取得邀請碼後才能進行免費的餐廳服務申請。  若您還對我們服務有興趣，可以先留下:餐廳名稱:   聯絡人:  餐廳官方網站或FB:   並 Email 至 cs@codream.tw，我們會盡快協助您加入訂吧的免費服務。'
@@ -94,8 +94,8 @@ class RegistrationsController < Devise::RegistrationsController
                 'role' => role,              # 0 = restaurant, 1 = booker
                 'password' => password,
                 'password_confirmation' => password }
-
-    devise_save(person, invite_code)
+    render from_url
+    #devise_save(person, invite_code)
   end
 
   # ====== Code Check: 2013/12/25 ====== [ panda: TODO: detail review ]

@@ -230,6 +230,7 @@ $ ->
   form_place = $('#form_place')
 
   $(document).on 'submit', '#new_supply', (e) ->
+    $(":submit").attr('disabled', 'disabled');
     check = true
     periods = []
     # 檢查日期前後順序
@@ -265,7 +266,7 @@ $ ->
           ban = false
       _this.addClass('invalid') unless ban
       return
-
+    $(":submit").removeAttr('disabled');
     alert '請檢查已啟用的時段是否有欄位空白或非數字，或是開始時間比結束時間早' unless check
 
     # 時段不衝突
@@ -279,6 +280,7 @@ $ ->
     unless check
       e.preventDefault()
       e.stopImmediatePropagation()
+      $(":submit").removeAttr('disabled');
 
   $("#tabs").tabs()
 
@@ -304,11 +306,14 @@ $ ->
   if document.getElementById 'res_header'
     $(document).on 'submit', 'form', (e) ->
       e.preventDefault()
+      $(":submit").attr('disabled', 'disabled');
       unless validate(this)
         alert 'validate fail'
+        $(":submit").removeAttr('disabled');
         return false
       $.post(this.action, $(this).serialize())
-        .done( (response) =>
+        .done( (response) ->
+          $(":submit").removeAttr('disabled');
           if response.sign_out
             #window.location.reload();
             window.location.href = '/sessions/restaurant_new'
@@ -328,7 +333,7 @@ $ ->
             else if response.error
               alert response.message
         )
-        .fail( -> alert '資料傳遞失敗' )
+        .fail( -> alert '資料傳遞失敗')
       false
 
   # 將sidebar連結改用ajax處理

@@ -144,6 +144,8 @@
 
     $("#period_save").click(function(e){
         e.preventDefault()
+
+        $("#period_save").attr('disabled', 'disabled');
         var ids = ''
         var status = ''
 
@@ -175,6 +177,7 @@
             data:  JSON.stringify(con_state),
             cache: false,
             success: function(response){
+                $("#period_save").removeAttr('disabled');
                 if (response.success)
                     alert(response.data)
                 else if (response.error)
@@ -183,6 +186,7 @@
                     alert('發生未預期的回應，請告知CoDream小組處理!')
             },
             error: function(){
+                $("#period_save").removeAttr('disabled');
                 alert('oops! 出現錯誤了!');
             }
         });
