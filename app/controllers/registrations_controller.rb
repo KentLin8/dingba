@@ -94,8 +94,7 @@ class RegistrationsController < Devise::RegistrationsController
                 'role' => role,              # 0 = restaurant, 1 = booker
                 'password' => password,
                 'password_confirmation' => password }
-    render from_url
-    #devise_save(person, invite_code)
+    devise_save(person, invite_code)
   end
 
   # ====== Code Check: 2013/12/25 ====== [ panda: TODO: detail review ]
