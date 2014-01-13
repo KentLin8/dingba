@@ -1,5 +1,5 @@
 class MyMailer < ActionMailer::Base
-  default from: "a17877yun@gmail.com"
+  #default from: "a17877yun@gmail.com"
 
   def booking_success(email, booking)
     begin
