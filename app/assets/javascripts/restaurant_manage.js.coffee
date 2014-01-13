@@ -76,9 +76,10 @@ $ ->
           if from > to
             alert '前需比後小'
             return
-          $.get('restaurant_manage/query_books_by_date', {from: from, to: to}, 'html')
-            .done( (response) -> refresh response.attachmentPartial )
-            .fail( -> alert 'fail' )
+          if this.id is 'report_date_from' or this.id is 'report_date_to'
+            $.get('restaurant_manage/query_books_by_date', {from: from, to: to}, 'html')
+              .done( (response) -> refresh response.attachmentPartial )
+              .fail( -> alert 'fail' )
     )
     # 填入select
     $('select').val -> $(this).data('value')
@@ -144,14 +145,40 @@ $ ->
       ids = []
       # 日曆文字顏色
       color = [
-        '#9f735e'
-        '#82d790'
-        '#5ea862'
+        '#9f735e'   # no set this
+        '#1E8F25'
+        '#004EA0'
+        '#FF4500'
+        '#800000'
+        '#0000ff'
+        '#4B0082'
+        '#000000'
+        '#895117'
+        '#888917'
         '#d93e22'
         '#6081e9'
         '#e091b2'
         '#e47836'
         '#9a73e3'
+        '#ff0000'
+        '#FF1493'
+        '#444444'
+        '#BDB76B'
+        '#895117'
+        '#A0004E'
+        '#181789'
+        '#888917'
+        '#2F4F4F'
+        '#C71585'
+        '#FF6347'
+        '#000080'
+        '#2F4F4F'
+        '#FF8C00'
+        '#9f735e'
+        '#EE82EE'
+        '#4B0082'
+        '#4682B4'
+        '#696969'
       ]
       $('#calendar .cell').each ->
         id = $(this).data('id')
@@ -162,7 +189,7 @@ $ ->
       $('#calendar .cell').each ->
         _this = $(this)
         _this.css('color', color_bind[_this.data('id')])
-      $('#show').html(("""<span style="color: #{color_bind[id]}">#{name}</span>""" for id, name of id_with_name).join(',&nbsp;'))
+      $('#show').html(("""<span style="color: #{color_bind[id]}">&nbsp;設定名稱：#{name}</span>""" for id, name of id_with_name).join('<br>'))
 
   refresh = (html) ->
     form_place.html $.parseHTML(html, document, true)

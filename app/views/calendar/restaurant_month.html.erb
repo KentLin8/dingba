@@ -1,4 +1,4 @@
-<select id="year" class="month_picker" style="width: 80px" data-value="<%= @year %>">
+<select id="year" class="month_picker" style="margin-left: -30px;width: 80px" data-value="<%= @year %>">
   <option value="2014">2014</option>
   <option value="2015">2015</option>
   <option value="2016">2016</option>
@@ -20,7 +20,7 @@
 </select>
 月
 
-<table id="calendar" class="table table-bordered">
+<table id="calendar" class="table table-bordered" style="margin-left: -30px;width: 870px">
   <tr>
     <th>日</th>
     <th>一</th>
@@ -37,31 +37,31 @@
 
       <%= tag('tr') if i % 7 == 0 %>
 
-      <td data-id="<%= x.con_id %>" class="cell">
+      <td data-id="<%= x.con_id %>" class="cell" style="vertical-align:baseline">
         <% if x.day != 0 %>
-            <div class="date"><%= @month %>/<%= x.day %></div>
+            <div style="font-size: 16px;margin-top: 0;color: #5E5E5E;margin-bottom: 5px;"><%= @month %>/<%= x.day %></div>
         <% end %>
 
-        <div class="info">
+        <div>
           <% if x.con_id == 0 %>
               不提供訂位
           <% else %>
               <% if x.is_vacation %>
                   休假
               <% else %>
-                  <table class="clean-table">
+                  <table class="clean-table" style="font-size: 14px">
                     <% (1..6).each do |j| %>
                         <% unless x.method("n#{j}".to_sym).call.blank? %>
                             <tr>
-                              <td><%= x.method("n#{j}".to_sym).call %></td>
-                              <td style="text-align: right"><%= @books[i].method("zone#{j}".to_sym).call %>/ <%= x.method("z#{j}".to_sym).call %></td>
+                              <td style="vertical-align:baseline;width: 55%"><%= x.method("n#{j}".to_sym).call %></td>
+                              <td style="text-align: right;vertical-align:baseline"><%= @books[i].method("zone#{j}".to_sym).call %>/ <%= x.method("z#{j}".to_sym).call %></td>
                             </tr>
                         <% end %>
                     <% end %>
                     <% if !@books[i].other.blank? && @books[i].other > 0 %>
                         <tr>
-                          <td>其他時段</td>
-                          <td style="text-align: right"><%= @books[i].other%></td>
+                          <td style="vertical-align:baseline">其他時段</td>
+                          <td style="text-align: right;vertical-align:baseline"><%= @books[i].other%></td>
                         </tr>
                     <% end %>
                   </table>
