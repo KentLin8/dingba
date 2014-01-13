@@ -216,6 +216,7 @@ $ ->
             $('#sub_res_img').addClass('now')
             alert(response.message)
 
+
           refresh (response.attachmentPartial)
           if set_href
             if location.href.match '#'
@@ -226,6 +227,14 @@ $ ->
               location.href += '#' + response.url
           else
         else
+          if response.step == '3'
+            $('.now').removeClass('now')
+            $('#sub_choice').animate(height: 0, 'border-width': 0, 'margin-bottom': 0) #TODO 66 -> 44 mark 賬戶密碼
+            $('#sub_choice2').animate(height: 44, 'border-width': 1, 'margin-bottom': 10)
+            $('#step3_mark').addClass('now')
+            $('#step3').addClass('now')
+            $('#sub_res_day').addClass('now')
+
           refresh (response.attachmentPartial)
           if set_href
             if location.href.match '#'
