@@ -21,7 +21,7 @@ role :db,  %w{beta.streams.tw}
 # definition into the server list. The second argument
 # something that quacks like a hash can be used to set
 # extended properties on the server.
-server 'beta.streams.tw', user: 'deploy', roles: %w{web app db} 
+server 'beta.streams.tw', user: 'deploy', roles: %w{web app db}
 
 
 # you can set custom ssh options

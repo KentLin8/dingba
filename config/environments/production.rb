@@ -82,15 +82,23 @@ DingBa::Application.configure do
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
 
-  config.action_mailer.default_url_options = { :host => 'http://dingba.codream.tw' }
-  ActionMailer::Base.smtp_settings = {
-      :address        => "smtp.gmail.com",
-      :port           => 587,
-      :authentication => :plain,
-      :user_name      => "dingba-admin@codream.tw",
-      :password       => "asdf1234",
-      :openssl_verify_mode  => 'none'
-  }
+  #設定寄信方式是用內建的sendmail(所以要先安裝好postfix)
+  config.action_mailer.delivery_method = :sendmail
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.default_options = {from: 'dingba-admin@codream.tw'}
+
+
+
+  #config.action_mailer.default_url_options = { :host => 'http://dingba.codream.tw' }
+  #ActionMailer::Base.smtp_settings = {
+  #    :address        => "smtp.gmail.com",
+  #    :port           => 587,
+  #    :authentication => :plain,
+  #    :user_name      => "dingba-admin@codream.tw",
+  #    :password       => "asdf1234",
+  #    :openssl_verify_mode  => 'none'
+  #}
 end
 #class NilClass
 #  def method_missing *args
