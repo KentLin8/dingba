@@ -8,7 +8,7 @@ class HomeController < ApplicationController
   # flash.now[:alert] = result
   # render no stop the process, must add return
   # booking status 0 = 已訂位
-  # booking status 1 = 已用餐
+  # booking status 1 = 待評論 feedback != nil 已評論
   # booking status 2 = 同伴無法配合
   # booking status 3 = 餐廳當天座位不夠
   # booking status 4 = 選擇了其他餐廳
@@ -116,6 +116,8 @@ class HomeController < ApplicationController
         email = email[0].split(';')
       end
 
+      booking = Booking.find(booking_id)
+
       effect_email = []
       email.each do |e|
         if !e.blank? && !(e =~ /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/).blank?
@@ -123,11 +125,13 @@ class HomeController < ApplicationController
         end
       end
 
-      result = MyMailer.notify_friend(effect_email).deliver
+      booking.phone = nil
+      booking.res_url = APP_CONFIG['domain'] + "#{booking.res_url}"
+      result = MyMailer.notify_friend(effect_email ,booking).deliver
 
       if result.perform_deliveries
 
-        booking = Booking.find(booking_id)
+        #booking = Booking.find(booking_id)
         booking.participants = effect_email.map{|k| "#{k}"}.join(',')
         booking.save
         render json: {:success => true, :data => '通知成功!' }
@@ -156,6 +160,55 @@ class HomeController < ApplicationController
     render json: result
   end
 
+  def cancel_booking_by_email
+    begin
+      booking_key = params[:booking_key]
+      cancel_key = params[:cancel_key]
+
+      if booking_key.blank? || cancel_key.blank?
+        render json: '阿! 發生錯誤了! 資料異常!'
+        return
+      end
+      @booking = Booking.find(booking_key.to_i)
+      if @booking.cancel_key != cancel_key
+        render json: '阿! 發生錯誤了! 資料異常!'
+        return
+      end
+
+      @booking.phone = nil
+      @booking.res_url = APP_CONFIG['domain'] + "#{@booking.res_url}"
+      @restaurant = Restaurant.find(@booking.restaurant_id)
+      @pay_type = "#{@restaurant.pay_type}"
+      render 'cancel_booking'
+    rescue => e
+      #Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/controllers/home_controller.rb ,Action:cancel_booking_by_email"
+      render json: '阿! 發生錯誤了! 資料異常!'
+    end
+  end
+
+  def save_cancel_booking_by_email
+
+    result = RestaurantManage.cancel_booking_email(params[:booking])
+
+    error = result[:error]
+    success = result[:success]
+
+    if error
+      result_message = result[:message]
+    elsif success
+      result_message = result[:data]
+    end
+
+    flash.now[:alert] = result_message
+
+    @booking = Booking.find(params[:booking][:id].to_i)
+    @booking.res_url = APP_CONFIG['domain'] + "#{@booking.res_url}"
+    @booking.phone = nil
+    @restaurant = Restaurant.find(@booking.restaurant_id)
+    @pay_type = "#{@restaurant.pay_type}"
+    render 'cancel_booking'
+  end
+
   def get_user
     begin
       @booker = User.new
@@ -174,11 +227,33 @@ class HomeController < ApplicationController
     end
   end
 
+  #==========================================================
+  def create_invite_code
+    result = InviteCode.where('id > ?', 1)
+    if result.blank?
+      code_array = []
+
+      while code_array.count() < 5000 do
+        code = 10000000 + SecureRandom.random_number(89999999).to_i
+        obj = InviteCode.new
+        obj.code = code
+
+        if !code_array.include?(obj)
+          x = obj.attributes
+          code_array.push(x)
+        end
+      end
+
+      InviteCode.create(code_array)
+    end
+  end
+  #==========================================================
+
   private
 
   def resolve_layout
     case action_name
-      when 'index', 'clause', 'about_codream', 'q_and_a', 'wait_confirm_email'
+      when 'index', 'clause', 'about_codream', 'q_and_a', 'wait_confirm_email', 'cancel_booking_by_email', 'save_cancel_booking_by_email'
         'home_index'
       #when
       #  'registration'

@@ -24,7 +24,7 @@
           </div>
           <div class="float-r" style="position: relative; bottom: 19px">
             <input class="btn btn-primary" type="submit" value="確定新增">
-            <input class="btn" type="reset" value="清除">
+            <input class="btn" value="關閉" id="close_create_btn" style="width: 50px">
           </div>
         </form>
       </div>
@@ -69,6 +69,10 @@
     $("#tabs").on("tabsactivate", function(event, ui) {
         //alert('pressed tab! ,solution 2')
         tab_change(ui.newTab.index())
+    });
+
+    $("#close_create_btn").click(function(){
+        $("#lightbox_wrap").css('display','none');
     });
 
 </script>

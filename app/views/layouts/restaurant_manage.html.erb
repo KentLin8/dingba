@@ -10,49 +10,45 @@
   <script type="text/javascript" src="/fancybox/jquery.fancybox.pack.js"></script>
 </head>
 <body>
-
 <div id="res_header">
   <div class="container">
     <div class="row-fluid">
-      <div class="span2">
-        <img src="/assets/booker/logo.png" alt="訂吧" id="logo">
+      <div class="span3">
+        <img src="/assets/common/rae_logo_chef.png" alt="dingba" style="width: 200px;margin-top: 10px">
       </div>
-      <div class="span9">
-        <div class="row-fluid">
-          <div class="span6">
-            <div style="font-size: 50px;top: 57px;width: 500px;font-style:italic;">
-              24
-              <span style="font-size: 20px;margin-left: -10px;font-style:italic;">hr</span>
-              <span style="font-size: 20px;font-style:normal;letter-spacing: 1px;">餐廳網路訂位平台</span>
-            </div>
 
-            <div style="text-align: left; margin-left: 290px;width: 150px;top:19px;color: rgb(233,147,88)">
-              您的餐廳訂位網址&nbsp
-              <input type="text" value='<%= @res_url %>' readonly="readonly" style="width: 220px;padding: 2px 2px 2px 3px">
-            </div>
+      <div class = "span3" style="margin-top: 60px;margin-left: -20px">
+        <img src="/assets/common/slogan.png" alt="dingba" style="width: 240px">
+      </div>
 
-            <div id="logo_word" style="width: 500px">
-              訂位不打烊，你我都是VIP
-
-              <span style="margin-left: 35px;font-size: 15px">
-                <% if @restaurant.id.blank? %>
-                    <%= link_to "登入", booker_session_new_path %> |
-                    <%= link_to "註冊", "/registrations/booker_new" %>
-                <% elsif !@restaurant.id.blank? %>
-                    <span style="color: #000000">Hi,</span> <%= @restaurant.name %>
-                    <a id="my_account" href="#" class="fancybox" title="Sample title">| 我的帳戶 |</a>
-                    <%= link_to "登出", destroy_u_session_path, method: :delete  %>
-                <% end %>
-              </span>
-            </div>
-            <% if !@restaurant.id.blank? %>
-                <a href="/r/<%= @restaurant.res_url %>" target="_blank"><img src="/assets/res/go_restaurant.png" alt="訂吧" style="margin-top: -30px;margin-left: 600px"></a>
-            <% end %>
-          </div>
+      <div class="span6" style="margin-top: 13px;">
+        <div style="line-height: 24px;font-size: 16px;text-align: left; margin-left: 0px;width: 150px;top:20px;color: rgb(231, 56, 32)">
+          您的餐廳訂位網址&nbsp
+          <label style="background-color: rgb(254,239,215);width: 220px;padding: 2px 2px 2px 3px;border: 1px rgb(215,215,215) solid"><%= @res_url %></label>
         </div>
 
+        <div id="logo_word">
+          <span style="margin-left: 0px;font-size: 15px;width: 280px">
+            <% if @restaurant.id.blank? %>
+                <%= link_to "登入", booker_session_new_path %> <span style="color:rgb(0, 0, 0)">|</span>
+                <%= link_to "註冊", "/registrations/booker_new" %>
+            <% elsif !@restaurant.id.blank? %>
+                <div style="text-align: left;margin-top: 3px">
+                  <span style="color: #000000">Hi,</span> <%= @restaurant.name %>
+                </div>
+
+                <span style="margin-top: 0px;float: left">
+                <a id="my_account" href="#" class="fancybox" style="color: rgb(0, 0, 0)"><!--<span style="color:rgb(0, 0, 0)">|</span>--> 我的帳戶 <span style="color:rgb(0, 0, 0)">|</span></a>
+                <%= link_to "登出", destroy_u_session_path, method: :delete  %>
+                 </span>
+            <% end %>
+          </span>
+        </div>
       </div>
-      <img src="/assets/booker/line.png" id="line">
+      <% if !@restaurant.id.blank? %>
+          <a href="/r/<%= @restaurant.res_url %>" target="_blank"><img src="/assets/common/rae_my_booking.png" alt="dingba" id="go_pic"></a>
+      <% end %>
+      <img src="/assets/common/line.png" id="line">
     </div>
 
     <% if alert %>
@@ -85,10 +81,10 @@
       <div class="span3"></div>
       <div class="span6">
         <div>2013 CoDream. All Rights Reserved.</div>
-        <a href="" id="fb" target="_blank"></a>
-        <a href="" id="blog" target="_blank"></a>
-        <a href="" id="gp" target="_blank"></a>
-        <a href="" id='yt' target="_blank"></a>
+        <a href="https://www.facebook.com/dingba8" id="fb" target="_blank"></a>
+        <a href="http://blog.codream.tw/tagged/dingba" id="blog" target="_blank"></a>
+        <a href="mailto:cs.dingba@codream.tw" id="gp" target="_blank"></a>
+        <!--<a href="" id='yt' target="_blank"></a>-->
       </div>
       <div class="span3"></div>
     </div>
@@ -105,8 +101,8 @@
 
         $.get(nzData, function(html) {
             $.fancybox({
-                "content":html,
-                "width":400,
+                content: html,
+                width: 400,
                 padding: 20,
                 helpers: {
                     overlay: {

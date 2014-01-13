@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131223140828) do
+ActiveRecord::Schema.define(version: 20140111104012) do
 
   create_table "bookings", force: true do |t|
     t.integer  "user_id"
@@ -32,6 +32,7 @@ ActiveRecord::Schema.define(version: 20131223140828) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "restaurant_pic"
+    t.string   "cancel_key"
   end
 
   add_index "bookings", ["booking_time"], name: "index_bookings_on_booking_time", using: :btree
@@ -54,6 +55,14 @@ ActiveRecord::Schema.define(version: 20131223140828) do
 
   add_index "day_bookings", ["day"], name: "index_day_bookings_on_day", using: :btree
   add_index "day_bookings", ["restaurant_id"], name: "index_day_bookings_on_restaurant_id", using: :btree
+
+  create_table "invite_codes", force: true do |t|
+    t.string   "code",       limit: 8
+    t.integer  "user_id"
+    t.string   "remark",     limit: 50
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "restaurant_users", force: true do |t|
     t.integer  "restaurant_id"

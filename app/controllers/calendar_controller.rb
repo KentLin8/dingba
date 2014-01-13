@@ -87,6 +87,10 @@ class CalendarController < ApplicationController
               c.is_special = true
             end
 
+            if con.is_vacation == 't'
+              c.is_vacation = true
+            end
+
             zones.each { |z|
               if z.sequence == 0
                 c.n1 = z.name
@@ -168,7 +172,7 @@ class CalendarController < ApplicationController
     @zones_books = RestaurantManage.get_day_books(@restaurant.id, @select_date)
     @select_date = @select_date.to_date
     #render 'restaurant_manage/_day_booking', :layout => false
-    render json: {:success => true, :attachmentPartial => render_to_string('restaurant_manage/_day_booking', :layout => false )}
+    render json: {:success => true, :step => '3', :attachmentPartial => render_to_string('restaurant_manage/_day_booking', :layout => false )}
   end
 
   # ====== Code Check: 2013/12/07 ====== [ panda: TODO: 1.rename @res to @restaurant 2.think the auth solution ]

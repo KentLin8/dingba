@@ -2,18 +2,20 @@
 <table>
   <% if @booking_condition.error == true %>
   <tr>
-    <td style="width: 25%"></td>
-    <td style="width: 75%"></td>
+    <td style="width: 27%"></td>
+    <td style="width: 73%"></td>
   </tr>
   <tr>
     <td colspan="2">
-      <div class="alert"><%= @booking_condition.message %></div>
+      <div style="margin-left: -10px;width: 300px;border-radius: 15px;background-color: rgb(254,219,107);padding: 10px 10px 10px 20px;color: rgb(222,34,26);font-size: 16px;letter-spacing: 1px;line-height: 26px">
+        <%= @booking_condition.message %>
+      </div>
     </td>
   </tr>
   <% end %>
   <tr>
-    <td style="width: 25%; padding-left: 13px; font-size: 16px">用餐日期：</td>
-    <td style="width: 75%;">
+    <td style="width: 27%;padding-left: 13px; font-size: 16px">用餐日期：</td>
+    <td style="width: 73%">
       <input name="restaurant_id" type="hidden" value="<%= @restaurant.id %>">
       <input name="booker_id" type="hidden" value="<%= @booker.id %>">
       <input type="text" id="booking_date" style="width:110px; text-align: left; font-size: 16px; padding-left: 5px" value="<%= @booking_day %>">

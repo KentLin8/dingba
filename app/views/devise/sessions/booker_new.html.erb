@@ -1,9 +1,10 @@
 
 <div class="span5">
   <a href= "/home/index">
-    <%= image_tag "booker/cover.png", :size => "350", :style => 'display:block;margin:auto' %>
+    <%= image_tag "common/rae_logo_guest.png", :size => "280", :style => 'display:block;margin:auto;margin-top:100px' %>
+    <%= image_tag "common/slogan.png", :size => "280", :style => 'display:block;margin:auto' %>
   </a>
-  <a href="/sessions/restaurant_new" class="base_brown" style="display: block;font-size: 18px;text-align: center;text-decoration: underline;color:blue;letter-spacing: 1px">餐廳用戶登入請點此</a>
+  <a href="/sessions/restaurant_new" class="base_brown" style="display: block;font-size: 18px;text-align: center;text-decoration: underline;color:blue;letter-spacing: 1px;margin-top: 20px">餐廳用戶登入請點此</a>
 </div>
 
 <div class="span6" data-value="<%= @res_url %>">
@@ -13,7 +14,8 @@
     <a id="resend_confirm_email" href="#" class="base_brown" style="letter-spacing: 2px;">已經註冊，沒收到確認信?</a>
   </div>
   <hr color="#D6D6D6" size="3" width="100%">
-  <%= form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f| %>
+  <%= form_for(resource, :as => resource_name, :url => login_session_path(resource_name)) do |f| %>
+                                                       <!--session_path-->
       <%= f.hidden_field :role, :value => '1' %>
       <div style="float: left; font-size: 16px; width: 30%;line-height: 35px;text-align: right;">
         帳號 ( E-Mail )：<br>
@@ -31,17 +33,17 @@
               保持登入
             </label>
         <% end %>
-        <div><%= f.submit "登入" , { :class => 'btn btn-primary' } %></div>
+        <div><%= f.submit "登入" , { :class => 'btn btn-primary',:disable_with => 'Processing...' } %></div>
       </div>
   <% end %>
   <hr color="#D6D6D6" size="3" width="100%">
   <div style="font-size: 16px;border:#CCCCCC 2px solid;padding: 3px 3px 3px 3px; width: 210px;margin-left: 150px">
-    <img src="/assets/booker/facebook.jpg">
+    <img src="/assets/common/facebook.jpg">
     <%= link_to "用 Facebook 帳號登入", user_omniauth_authorize_path(:facebook) %>
   </div>
 
   <div style="font-size: 16px;border:#CCCCCC 2px solid;padding: 3px 3px 3px 3px; width: 210px;margin-top: 10px;margin-left: 150px">
-    <img src="/assets/booker/google.jpg">
+    <img src="/assets/common/google.jpg">
     <%= link_to "用 Google 帳號登入", user_omniauth_authorize_path(:google_oauth2) %>
   </div>
 

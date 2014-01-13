@@ -765,6 +765,7 @@ class Home
         booking.remark = origin_booking[:remark]
         booking.status = '0'
         booking.restaurant_pic = restaurant_pic
+        booking.cancel_key = SecureRandom.hex(20)
         booking.save
 
         time_zone = TimeZone.find( origin_booking[:time_zone_id].to_i)
@@ -800,6 +801,9 @@ class Home
         day_booking.save
 
         if !booking.email.blank? && !(booking.email =~ /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/).blank?
+          booking.phone = nil
+          booking.res_url = APP_CONFIG['domain'] + "#{booking.res_url}"
+          booking.cancel_key = APP_CONFIG['domain_clear'] + "home/cancel_booking_by_email?cancel_key=" + "#{booking.cancel_key}"  + "&booking_key=" + "#{booking.id}"
           send_mail_result = MyMailer.booking_success(booking.email, booking).deliver   # Send mail fail may be the email problem, check time out
           #send_mail_result = MyMailer.delay(run_at: 1.minutes.from_now).booking_success(booking.email, booking)
         end

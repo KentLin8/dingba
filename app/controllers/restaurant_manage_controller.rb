@@ -147,9 +147,17 @@ class RestaurantManageController < ApplicationController
 
   # GET ==== Function: show special time view
   def special_time
-    @select_date = params[:special_day]
-    @time_zones = RestaurantManage.get_time_zones(params[:condition_id])
-    render 'restaurant_manage/_time_zones', :layout => false
+    begin
+      @select_date = params[:special_day]
+      condition_id = params[:condition_id]
+      @time_zones = RestaurantManage.get_time_zones(condition_id)
+      condition = SupplyCondition.find(condition_id.to_i)
+      @is_vacation = condition.is_vacation
+      render 'restaurant_manage/_time_zones', :layout => false
+    rescue => e
+      Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/controllers/restaurant_manage_controller.rb  ,Action:special_time"
+      @time_zones = RestaurantManage.get_time_zones(nil)
+    end
   end
 
   # POST === Function: save special condition
@@ -162,7 +170,8 @@ class RestaurantManageController < ApplicationController
     zones.push(params[:zone4])
     zones.push(params[:zone5])
 
-    result =  RestaurantManage.special_create(zones, params[:special_day], @restaurant.id)
+
+    result =  RestaurantManage.special_create(zones, params[:special_day], @restaurant.id, params[:is_vacation])
     @conditions = SupplyCondition.where(:restaurant_id => @restaurant.id).order('sequence ASC')
     @special_conditions = @conditions.select { |x| x.is_special == 't' }
     @normal_conditions = @conditions.select { |x| x.is_special != 't' }

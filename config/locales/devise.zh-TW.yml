@@ -24,11 +24,11 @@ zh-TW:
         unconfirmed: "您的帳戶尚未驗證喔，請去您的信箱查看。"
       mailer:
         confirmation_instructions:
-          subject: "驗證說明"
+          subject: "Dingba 註冊驗證"
         reset_password_instructions:
-          subject: "重設密碼的說明"
+          subject: "Dingba 帳戶重設密碼"
         unlock_instructions:
-          subject: "解鎖說明"
+          subject: "Dingba 帳戶解鎖"
       omniauth_callbacks:
         failure: "無法驗證您的帳戶"
         success: "成功驗證您的帳戶"

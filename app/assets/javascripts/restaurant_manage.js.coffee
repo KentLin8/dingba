@@ -76,9 +76,10 @@ $ ->
           if from > to
             alert '前需比後小'
             return
-          $.get('restaurant_manage/query_books_by_date', {from: from, to: to}, 'html')
-            .done( (response) -> refresh response.attachmentPartial )
-            .fail( -> alert 'fail' )
+          if this.id is 'report_date_from' or this.id is 'report_date_to'
+            $.get('restaurant_manage/query_books_by_date', {from: from, to: to}, 'html')
+              .done( (response) -> refresh response.attachmentPartial )
+              .fail( -> alert 'fail' )
     )
     # 填入select
     $('select').val -> $(this).data('value')
@@ -144,14 +145,40 @@ $ ->
       ids = []
       # 日曆文字顏色
       color = [
-        '#9f735e'
-        '#82d790'
-        '#5ea862'
+        '#9f735e'   # no set this
+        '#1E8F25'
+        '#004EA0'
+        '#FF4500'
+        '#800000'
+        '#0000ff'
+        '#4B0082'
+        '#000000'
+        '#895117'
+        '#888917'
         '#d93e22'
         '#6081e9'
         '#e091b2'
         '#e47836'
         '#9a73e3'
+        '#ff0000'
+        '#FF1493'
+        '#444444'
+        '#BDB76B'
+        '#895117'
+        '#A0004E'
+        '#181789'
+        '#888917'
+        '#2F4F4F'
+        '#C71585'
+        '#FF6347'
+        '#000080'
+        '#2F4F4F'
+        '#FF8C00'
+        '#9f735e'
+        '#EE82EE'
+        '#4B0082'
+        '#4682B4'
+        '#696969'
       ]
       $('#calendar .cell').each ->
         id = $(this).data('id')
@@ -162,7 +189,7 @@ $ ->
       $('#calendar .cell').each ->
         _this = $(this)
         _this.css('color', color_bind[_this.data('id')])
-      $('#show').html(("""<span style="color: #{color_bind[id]}">#{name}</span>""" for id, name of id_with_name).join(',&nbsp;'))
+      $('#show').html(("""<span style="color: #{color_bind[id]}">&nbsp;設定名稱：#{name}</span>""" for id, name of id_with_name).join('<br>'))
 
   refresh = (html) ->
     form_place.html $.parseHTML(html, document, true)
@@ -189,6 +216,7 @@ $ ->
             $('#sub_res_img').addClass('now')
             alert(response.message)
 
+
           refresh (response.attachmentPartial)
           if set_href
             if location.href.match '#'
@@ -199,6 +227,14 @@ $ ->
               location.href += '#' + response.url
           else
         else
+          if response.step == '3'
+            $('.now').removeClass('now')
+            $('#sub_choice').animate(height: 0, 'border-width': 0, 'margin-bottom': 0) #TODO 66 -> 44 mark 賬戶密碼
+            $('#sub_choice2').animate(height: 44, 'border-width': 1, 'margin-bottom': 10)
+            $('#step3_mark').addClass('now')
+            $('#step3').addClass('now')
+            $('#sub_res_day').addClass('now')
+
           refresh (response.attachmentPartial)
           if set_href
             if location.href.match '#'
@@ -230,6 +266,7 @@ $ ->
   form_place = $('#form_place')
 
   $(document).on 'submit', '#new_supply', (e) ->
+    $(":submit").attr('disabled', 'disabled');
     check = true
     periods = []
     # 檢查日期前後順序
@@ -265,7 +302,7 @@ $ ->
           ban = false
       _this.addClass('invalid') unless ban
       return
-
+    $(":submit").removeAttr('disabled');
     alert '請檢查已啟用的時段是否有欄位空白或非數字，或是開始時間比結束時間早' unless check
 
     # 時段不衝突
@@ -279,6 +316,7 @@ $ ->
     unless check
       e.preventDefault()
       e.stopImmediatePropagation()
+      $(":submit").removeAttr('disabled');
 
   $("#tabs").tabs()
 
@@ -304,11 +342,14 @@ $ ->
   if document.getElementById 'res_header'
     $(document).on 'submit', 'form', (e) ->
       e.preventDefault()
+      $(":submit").attr('disabled', 'disabled');
       unless validate(this)
         alert 'validate fail'
+        $(":submit").removeAttr('disabled');
         return false
       $.post(this.action, $(this).serialize())
-        .done( (response) =>
+        .done( (response) ->
+          $(":submit").removeAttr('disabled');
           if response.sign_out
             #window.location.reload();
             window.location.href = '/sessions/restaurant_new'
@@ -328,7 +369,7 @@ $ ->
             else if response.error
               alert response.message
         )
-        .fail( -> alert '資料傳遞失敗' )
+        .fail( -> alert '資料傳遞失敗')
       false
 
   # 將sidebar連結改用ajax處理

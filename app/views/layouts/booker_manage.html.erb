@@ -13,41 +13,38 @@
 
 <div id="front_header">
   <div class="container">
-    <div class="row-fluid" style="">
-      <div class = "span2">
-        <img src="/assets/booker/logo.png" alt="訂吧" id="logo">
+    <div class="row-fluid">
+      <div class = "span3">
+        <img src="/assets/common/rae_logo_guest.png" alt="dingba logo" style="width: 200px;margin-top: 10px">
       </div>
-      <div class="span9">
-        <div class="row-fluid">
-          <div class="span6">
-            <div style="font-size: 50px;top: 57px;width: 300px;font-style:italic;">
-              24
-              <span style="font-size: 20px;margin-left: -10px;font-style:italic;">hr</span>
-              <span style="font-size: 20px;font-style:normal;letter-spacing: 1px;">餐廳網路訂位平台</span>
-            </div>
 
-            <div id="logo_word">
-              訂位不打烊，你我都是VIP
+      <div class = "span3" style="margin-top: 60px;margin-left: -20px">
+        <img src="/assets/common/slogan.png" alt="dingba" style="width: 240px">
+      </div>
 
-              <span style="margin-left: 100px;font-size: 15px">
-                <% if @booker.id.blank? %>
-                    <%= link_to "登入", booker_session_new_path(@res_url) %> |
-                    <%= link_to "註冊", "/registrations/booker_new" %>
-                <% elsif !@booker.id.blank? %>
-                    <span style="color: #000000">Hi,</span> <%= @booker.name %>
-                    <span style="color: #000000">你好 </span>
-                    <a href="/booker_manage/index" id="my_dingba" style="color: rgb(233,147,88)">| 我的訂吧 |</a>
-                    <%= link_to "登出", destroy_u_session_path, method: :delete  %>
-                <% end %>
-              </span>
-            </div>
-            <% if !@booker.id.blank? %>
-                <a href="/restaurant#/calendar/restaurant_month" target="_blank"><img src="/assets/res/go_restaurant.png" alt="訂吧" style="margin-left: 600px"></a>
+      <div class="span6" style="margin-top: 17px;">
+        <div id="logo_word">
+          <span style="margin-left: 0px;font-size: 15px;width: 280px">
+            <% if @booker.id.blank? %>
+                <%= link_to "登入", booker_session_new_path(@res_url) %> <span style="color:rgb(0, 0, 0)">|</span>
+                <%= link_to "註冊", "/registrations/booker_new" %>
+            <% elsif !@booker.id.blank? %>
+                <div style="text-align: left;margin-top: 3px">
+                  <span style="color: #000000">Hi,</span> <%= @booker.name %>
+                </div>
+
+                <span style="margin-top: 0px;float: left">
+                <a href="/booker_manage/index" id="my_dingba" style="color: rgb(0,0,0)">我的訂吧 <span style="color:rgb(0, 0, 0)">|</span></a>
+                <%= link_to "登出", destroy_u_session_path, method: :delete  %>
+                </span>
             <% end %>
-          </div>
+          </span>
         </div>
       </div>
-      <img src="/assets/booker/line.png" id="line">
+      <% if !@booker.id.blank? %>
+          <a href="/restaurant#/calendar/restaurant_month" target="_blank"><img src="/assets/common/rae_my_restaurant.png" alt="dingba" id="go_pic"></a>
+      <% end %>
+      <img src="/assets/common/line.png" id="line">
     </div>
   </div>
 </div>
@@ -81,10 +78,10 @@
     <div class="span3"></div>
     <div class="span6">
       <div>2013 CoDream. All Rights Reserved.</div>
-      <a href="" id="fb" target="_blank"></a>
-      <a href="" id="blog" target="_blank"></a>
-      <a href="" id="gp" target="_blank"></a>
-      <a href="" id='yt' target="_blank"></a>
+      <a href="https://www.facebook.com/dingba8" id="fb" target="_blank"></a>
+      <a href="http://blog.codream.tw/tagged/dingba" id="blog" target="_blank"></a>
+      <a href="mailto:cs.dingba@codream.tw" id="gp" target="_blank"></a>
+      <!--<a href="" id='yt' target="_blank"></a>-->
     </div>
     <div class="span3"></div>
   </div>

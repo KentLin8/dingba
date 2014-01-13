@@ -5,6 +5,29 @@ class ConfirmationsController < Devise::ConfirmationsController
     render :layout => false
   end
 
+  def create
+    self.resource = resource_class.send_confirmation_instructions(resource_params)
+    yield resource if block_given?
+
+    if successfully_sent?(resource)
+      respond_with({}, :location => after_resending_confirmation_instructions_path_for(resource_name))
+    else
+      user = self.resource
+      if user.id.blank?
+        flash.now[:alert] = '沒有此 E-Mail'
+        render 'devise/sessions/booker_new'
+        return
+      else
+        if user.confirmation_token.length == 20
+          flash.now[:alert] = '您的帳戶已經可以使用，請直接登入'
+          render 'devise/sessions/booker_new'
+          return
+        end
+        redirect_to booker_manage_index_path
+      end
+    end
+  end
+
   def show
     self.resource = resource_class.confirm_by_token(params[:confirmation_token])
 

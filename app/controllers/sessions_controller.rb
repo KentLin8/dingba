@@ -3,19 +3,19 @@ class SessionsController < Devise::SessionsController
   layout 'registration'
 
   def restaurant_new
-    new(sign_in_params, '0')
+    new('0')
   end
 
   def booker_new
     #@res_url = params[:format]
     #@res_url = @res_url[0..5]
 
-    new(sign_in_params, '1')
+    new('1')
   end
 
-  def new(sign_in_params, role)
+  def new(role)
     begin
-      if !current_user.blank?
+      if !current_user.blank?    # when not confirm email will error
         if current_user.role == '0'
           restaurant_users = RestaurantUser.where(:user_id => current_user.id)
           restaurant = Restaurant.find(restaurant_users.first.restaurant_id)
@@ -33,7 +33,7 @@ class SessionsController < Devise::SessionsController
           redirect_to booker_manage_index_path
         end
       else
-        self.resource = resource_class.new(sign_in_params)
+        self.resource = resource_class.new
         clean_up_passwords(resource)
         respond_with(resource, serialize_options(resource))
       end
@@ -57,12 +57,10 @@ class SessionsController < Devise::SessionsController
       if target_user.blank?
         flash.now[:alert] = '沒有此E-Mail 資料!'
         if user[:role] == '0'
-          #redirect_to res_session_new_path
-          new(sign_in_params, '0')
+          self.resource = resource_class.new
           render 'devise/sessions/restaurant_new'
         elsif user[:role] == '1'
-          #redirect_to booker_session_new_path
-          new(sign_in_params, '1')
+          self.resource = resource_class.new
           render 'devise/sessions/booker_new'
         end
         return
@@ -73,28 +71,45 @@ class SessionsController < Devise::SessionsController
       return
     end
 
-    self.resource = warden.authenticate(auth_options)  #warden.authenticate!(auth_options)
 
-    if self.resource.blank?
-      flash.now[:alert] = '密碼錯誤!'
-      if user[:role] == '0'
-        new(sign_in_params, '0')
-        render 'devise/sessions/restaurant_new'
-      elsif user[:role] == '1'
-        new(sign_in_params, '1')
-        render 'devise/sessions/booker_new'
+    begin
+      if target_user.first.confirmation_token.length != 20
+        if user[:role] == '0'
+          flash.now[:alert] = '信箱尚未驗證!!'
+          self.resource = resource_class.new
+          render 'devise/sessions/restaurant_new'
+        elsif user[:role] == '1'
+          flash.now[:alert] = '信箱尚未驗證!!'
+          self.resource = resource_class.new
+          render 'devise/sessions/booker_new'
+        end
+        return
       end
+
+      self.resource = warden.authenticate(auth_options)  #warden.authenticate!(auth_options)
+
+      if self.resource.blank?
+        flash.now[:alert] = '密碼錯誤!'
+        if user[:role] == '0'
+          new('0')
+          render 'devise/sessions/restaurant_new'
+        elsif user[:role] == '1'
+          new('1')
+          render 'devise/sessions/booker_new'
+        end
+        return
+      end
+
+      sign_in(resource_name, resource)
+      yield resource if block_given?
+      redirect_to after_sign_in_path_for(resource)
+      #respond_with resource, :location => after_sign_in_path_for(resource)
+
+    rescue => e
+      Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/controllers/sessions_controller.rb  ,Action:create"
+      redirect_to home_path
       return
     end
-
-    if is_flashing_format?
-      set_flash_message(:notice, :signed_in)
-    end
-
-    sign_in(resource_name, resource)
-    yield resource if block_given?
-    redirect_to after_sign_in_path_for(resource)
-    #respond_with resource, :location => after_sign_in_path_for(resource)
   end
 
   def destroy
