@@ -20,7 +20,7 @@ module DingBa
 
     #config.time_zone = 'Taipei'
     #config.i18n.default_locale = "zh-TW"
-
+    config.exceptions_app = self.routes
     config.time_zone = 'Taipei'
     config.active_record.default_timezone = :local
     config.assets.enabled = true

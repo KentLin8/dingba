@@ -358,7 +358,9 @@ $ ->
             $.fancybox.close();
 
           if typeof response is 'string'
-            refresh response
+            #window.location.reload();
+            #alert('x')
+            refresh response    # make sure each action not render template or redirect to , only sign out auth token error use
           else if typeof response is 'object'
             if response.success
               if response.attachmentPartial

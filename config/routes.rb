@@ -95,6 +95,15 @@ DingBa::Application.routes.draw do
   post 'booker_manage/feedback'
 
 
+  #==========================================================================
+  if Rails.env.production?
+    get '404', :to => 'application#page_not_found'
+    get '422', :to => 'application#server_error'
+    get '500', :to => 'application#server_error'
+  end
+  #==========================================================================
+
+
   # 暫時用來展示畫面的routes
   get "test/1", :to => 'viewtest#first'
   get "test/2", :to => 'viewtest#second'
