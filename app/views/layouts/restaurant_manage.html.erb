@@ -14,11 +14,15 @@
   <div class="container">
     <div class="row-fluid">
       <div class="span3">
-        <img src="/assets/common/rae_logo_chef.png" alt="dingba" style="width: 200px;margin-top: 10px">
+        <a href="/home/index">
+          <img src="/assets/common/rae_logo_chef.png" alt="dingba" style="width: 200px;margin-top: 10px">
+        </a>
       </div>
 
       <div class = "span3" style="margin-top: 60px;margin-left: -20px">
-        <img src="/assets/common/slogan.png" alt="dingba" style="width: 240px">
+        <a href="/home/index">
+          <img src="/assets/common/slogan.png" alt="dingba" style="width: 240px">
+        </a>
       </div>
 
       <div class="span6" style="margin-top: 13px;">
@@ -39,7 +43,7 @@
 
                 <span style="margin-top: 0px;float: left">
                 <a id="my_account" href="#" class="fancybox" style="color: rgb(0, 0, 0)"><!--<span style="color:rgb(0, 0, 0)">|</span>--> 我的帳戶 <span style="color:rgb(0, 0, 0)">|</span></a>
-                <%= link_to "登出", destroy_u_session_path, method: :delete  %>
+                  <%= link_to "登出", destroy_u_session_path, method: :delete  %>
                  </span>
             <% end %>
           </span>
