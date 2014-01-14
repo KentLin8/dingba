@@ -29,7 +29,7 @@ class SessionsController < Devise::SessionsController
           else
             redirect_to confirmation_getting_started_path
           end
-        else
+        elsif current_user.role == '1'
           redirect_to booker_manage_index_path
         end
       else

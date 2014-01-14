@@ -216,7 +216,6 @@ $ ->
             $('#sub_res_img').addClass('now')
             alert(response.message)
 
-
           refresh (response.attachmentPartial)
           if set_href
             if location.href.match '#'
@@ -244,7 +243,7 @@ $ ->
             else
               location.href += '#' + url
       )
-      .fail( -> alert '連線失敗，請稍後再試' )
+      .fail( -> alert '連線失敗，請重新整理頁面' )
 
 
   #  load_page = (url, set_href = false) ->
@@ -325,6 +324,7 @@ $ ->
   $(document).on 'click', '#calendar .cell', ->
     da = $(this).find('.date').html()
     if da is undefined
+
     else
       $.get('restaurant_manage/special_time', {condition_id: $(this).data('id'), special_day: $('#year').val() + '/' + da})
       .done( (response) ->
@@ -335,7 +335,7 @@ $ ->
             $('select').each ->
               $(this).val $(this).data('value')
         )
-      .fail( -> alert '資料傳遞失敗' )
+      .fail( -> alert '資料傳遞失敗，請重新整理頁面' )
       false
       $('#lightbox_wrap').show()
 
@@ -369,7 +369,9 @@ $ ->
             else if response.error
               alert response.message
         )
-        .fail( -> alert '資料傳遞失敗')
+        .fail( ->
+          alert '資料傳遞失敗，請重新整理頁面'
+        )
       false
 
   # 將sidebar連結改用ajax處理
