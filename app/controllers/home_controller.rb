@@ -38,6 +38,8 @@ class HomeController < ApplicationController
         redirect_to booker_manage_index_path
       end
     end
+
+    @user_email = @user_email
   end
 
   # GET the booking url ,when restaurant 2000 ,build home page, and move booking page to this place

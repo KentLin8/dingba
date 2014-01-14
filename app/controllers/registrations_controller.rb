@@ -128,7 +128,10 @@ class RegistrationsController < Devise::RegistrationsController
         else
           set_flash_message :notice, :'signed_up_but_#{resource.inactive_message}' if is_navigational_format?
           expire_session_data_after_sign_in!
-          redirect_to '/home/wait_confirm_email'
+          @user_email = resource.email
+          #redirect_to '/home/wait_confirm_email'
+          render '/home/wait_confirm_email', layout: 'home_index'
+          return
           #respond_with resource, :location => after_inactive_sign_up_path_for(resource)
         end
       else

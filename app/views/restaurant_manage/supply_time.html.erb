@@ -13,9 +13,9 @@
     <tr>
       <td class="title"><i class="required">*</i>設立名稱</td>
       <% if @supply_time.id != '' %>
-          <td><input type="text" name="condition[name]" value="<%= @supply_time.name %>" required="required"></td>
+          <td><input type="text" name="condition[name]" value="<%= @supply_time.name %>" required="required" placeholder="ex:2014農曆春節"></td>
       <% else %>
-          <td><input type="text" name="condition[name]" value="" required="required"></td>
+          <td><input type="text" name="condition[name]" value="" required="required" placeholder="ex:2014農曆春節"></td>
       <% end %>
     </tr>
 
@@ -61,7 +61,11 @@
   </table>
 
   <%= render :partial => 'time_zones' %>
-
+  <div style="float: left;font-size: 18px;letter-spacing: 1px;" id="supply_explain">
+    <a href="" style="text-decoration: underline ; color: #cc0066">
+      <div style="color: #db301c;">*各供位數字的關係與解說範例</div>
+    </a>
+  </div>
   <div class="float-r">
     <input class="btn btn-primary" type="submit" value="確定新增">
     <input class="btn" type="reset" value="清除">
@@ -70,6 +74,16 @@
 
 
 <script>
+
+    $("#supply_explain div").click(function(e) {
+        $.fancybox([
+            '/assets/common/supply_explain.jpg'
+        ],{
+            'type': 'image'
+        });
+    });
+
+
     //===========================================================================
     // view: supply_time
     //===========================================================================

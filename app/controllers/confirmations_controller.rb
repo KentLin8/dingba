@@ -10,7 +10,12 @@ class ConfirmationsController < Devise::ConfirmationsController
     yield resource if block_given?
 
     if successfully_sent?(resource)
-      respond_with({}, :location => after_resending_confirmation_instructions_path_for(resource_name))
+      #respond_with({}, :location => after_resending_confirmation_instructions_path_for(resource_name))
+
+      @user_email = resource.email
+      flash.now[:alert] = '已成功發出註冊驗證信'
+      render 'home/wait_confirm_email', layout: 'home_index'
+      return
     else
       user = self.resource
       if user.id.blank?
