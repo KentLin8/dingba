@@ -14,7 +14,6 @@
     <a id="resend_confirm_email" href="#" class="base_brown" style="letter-spacing: 2px;">已經註冊，沒收到確認信?</a>
   </div>
 
-  <table width="100%">&nbsp;</table>
 
   <hr color="#D6D6D6" size="3" width="100%">
   <%= form_for(resource, :as => resource_name, :url => login_session_path(resource_name)) do |f| %>
@@ -39,6 +38,8 @@
         <div><%= f.submit "登入" , { :class => 'btn btn-primary',:disable_with => 'Processing...' } %></div>
       </div>
   <% end %>
+  <table width="100%">&nbsp;</table>
+
   <hr color="#D6D6D6" size="3" width="100%">
   <<div style="font-size: 16px;border:#CCCCCC 2px solid;padding: 3px 3px 3px 3px; width: 210px;margin-left: 150px">
     <img src="/assets/common/facebook.jpg">
@@ -49,6 +50,7 @@
     <img src="/assets/common/google.jpg">
     <%= link_to "用 Google 帳號登入", user_omniauth_authorize_path(:google_oauth2) %>
   </div>
+
 
   <hr color="#D6D6D6" size="3" width="100%">
   <div style="font-size: 14px;letter-spacing: 1px;line-height: 24px">
