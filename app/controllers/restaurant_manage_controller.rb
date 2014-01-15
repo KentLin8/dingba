@@ -24,6 +24,31 @@ class RestaurantManageController < ApplicationController
   def restaurant_info_save
     result = RestaurantManage.restaurant_info_save(params[:restaurant])
     get_restaurant()
+
+    if result[:success] && !@restaurant.front_cover.blank?
+      conditions = SupplyCondition.where(:restaurant_id => @restaurant.id).order('sequence ASC')
+
+      if conditions.blank?
+        @supply_time = SupplyCondition.new
+        @supply_time.available_week = '0,1,2,3,4,5,6'
+        @supply_time.is_special = 'f'
+        @time_zones = RestaurantManage.get_time_zones(nil)
+        result[:attachmentPartial] = render_to_string('restaurant_manage/supply_time', :layout => false, :locals => {:supply_time => @supply_time, :time_zones => @time_zones})
+        result[:step] = '2-1'
+        result[:url] = '/restaurant_manage/supply_time'
+      elsif conditions.count > 0
+        @special_conditions = conditions.select { |x| x.is_special == 't' }
+        @normal_conditions = conditions.select { |x| x.is_special != 't' }
+        result[:attachmentPartial] = render_to_string('restaurant_manage/supply_condition', :layout => false, :locals => { :special_conditions => @special_conditions, :normal_conditions => @normal_conditions})
+        result[:step] = '2-1'
+        result[:url] = '/restaurant_manage/supply_condition'
+      end
+    else
+      result[:attachmentPartial] = render_to_string('restaurant_manage/restaurant_image', :layout => false, :locals => { :restaurant => @restaurant})
+      result[:step] = '2'
+      result[:url] = '/restaurant_manage/restaurant_image'
+    end
+
     render json: result
   end
 
@@ -91,6 +116,8 @@ class RestaurantManageController < ApplicationController
     rescue => e
       # in this condition is that user change the condition_id
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/controllers/restaurant_manage_controller.rb  ,Action:supply_time"
+      @supply_time = SupplyCondition.new
+      @supply_time.available_week = '0,1,2,3,4,5,6'
       @time_zones = RestaurantManage.get_time_zones(nil)
     end
 

@@ -366,6 +366,42 @@ $ ->
               if response.attachmentPartial
                 refresh response.attachmentPartial
               alert response.data
+              if response.step == '1'
+                $('.now').removeClass('now')
+                $('#sub_choice').animate(height: 44, 'border-width': 1, 'margin-bottom': 10) #TODO 66 -> 44 mark 賬戶密碼
+                $('#sub_choice2').animate(height: 0, 'border-width': 0, 'margin-bottom': 0)
+                $('#step1_mark').addClass('now')
+                $('#step1').addClass('now')
+                $('#sub_res_info').addClass('now')
+              else if response.step == '2'
+                $('.now').removeClass('now')
+                $('#sub_choice').animate(height: 44, 'border-width': 1, 'margin-bottom': 10) #TODO 66 -> 44 mark 賬戶密碼
+                $('#sub_choice2').animate(height: 0, 'border-width': 0, 'margin-bottom': 0)
+                $('#step1_mark').addClass('now')
+                $('#step1').addClass('now')
+                $('#sub_res_img').addClass('now')
+              else if response.step == '3'
+                $('.now').removeClass('now')
+                $('#sub_choice').animate(height: 0, 'border-width': 0, 'margin-bottom': 0) #TODO 66 -> 44 mark 賬戶密碼
+                $('#sub_choice2').animate(height: 44, 'border-width': 1, 'margin-bottom': 10)
+                $('#step3_mark').addClass('now')
+                $('#step3').addClass('now')
+                $('#sub_res_day').addClass('now')
+              else if response.step == '2-1'
+                $('.now').removeClass('now')
+                $('#sub_choice').animate(height: 0, 'border-width': 0, 'margin-bottom': 0) #TODO 66 -> 44 mark 供位時間
+                $('#sub_choice2').animate(height: 0, 'border-width': 0, 'margin-bottom': 0)
+                $('#step2_mark').addClass('now')
+                $('#step2').addClass('now')
+                $('#step2').addClass('now')
+
+              if location.href.match '#'
+                tmp = location.href.split '#'
+                tmp[1] = response.url
+                location.href = tmp.join '#'
+              else
+                location.href += '#' + response.url
+
               if this.id is 'modify_booking' or this.id is 'cancel_booking'
                 $(this).parent().animate {height: 0}, -> $(this).parents('tr').remove()
             else if response.error

@@ -1,3 +1,26 @@
+<style>
+    .grid {width:100%;}
+    .grid thead {margin:100px;}
+    .grid thead th{line-height:28px;height:28px;border-top:1px #D7D7D4 solid;border-bottom:1px #D7D7D4 solid; color:#666;}
+    .grid tbody tr{line-height:28px;height:30px;}
+    .grid tbody td{word-break:break-all;border-bottom:1px #d7d7d7 dotted;}
+    .grid tfoot tr{ line-height:30px; height:30; background-color:#fff;}
+    .grid tfoot td{ text-align:right; padding-right:5px;}
+        /**grid view 换色**/
+    .even{background-color:#FEF8F4;}
+    .over{background-color: #ffc;}
+
+    .text-overflow {
+        display:block;
+        width:31em;
+        word-break:keep-all;
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
+    }
+</style>
+
+
 <div id="main" class="container">
   <div id="scroll">
     <div id="booking" class="container">
@@ -5,15 +28,15 @@
         <div style="width: 38%">
           <div id="pics">
             <% if @restaurant.pic_name1 != nil %>
-            <div><img src="/res/<%= @restaurant.id %>/images/<%= @restaurant.pic_name1 %>"></div><% end %>
+                <div><img src="/res/<%= @restaurant.id %>/images/<%= @restaurant.pic_name1 %>"></div><% end %>
             <% if @restaurant.pic_name2 != nil %>
-            <div><img src="/res/<%= @restaurant.id %>/images/<%= @restaurant.pic_name2 %>"></div><% end %>
+                <div><img src="/res/<%= @restaurant.id %>/images/<%= @restaurant.pic_name2 %>"></div><% end %>
             <% if @restaurant.pic_name3 != nil %>
-            <div><img src="/res/<%= @restaurant.id %>/images/<%= @restaurant.pic_name3 %>"></div><% end %>
+                <div><img src="/res/<%= @restaurant.id %>/images/<%= @restaurant.pic_name3 %>"></div><% end %>
             <% if @restaurant.pic_name4 != nil %>
-            <div><img src="/res/<%= @restaurant.id %>/images/<%= @restaurant.pic_name4 %>"></div><% end %>
+                <div><img src="/res/<%= @restaurant.id %>/images/<%= @restaurant.pic_name4 %>"></div><% end %>
             <% if @restaurant.pic_name5 != nil %>
-            <div><img src="/res/<%= @restaurant.id %>/images/<%= @restaurant.pic_name5 %>"></div><% end %>
+                <div><img src="/res/<%= @restaurant.id %>/images/<%= @restaurant.pic_name5 %>"></div><% end %>
           </div>
           <div id="main_pic">
             <% if @restaurant.front_cover == '1' %>
@@ -30,9 +53,15 @@
           </div>
         </div>
         <div style="width: 62%;float: right">
-          <table>
+          <!--<div style="width: 62%;margin-left: 400px">-->
+          <!--style="table-layout: fixed;width: 100%;"-->
+          <table class="grid">
+            <colgroup>
+              <col style="width: 90px">
+              <col style="width: 450px">
+            </colgroup>
             <tr>
-              <td style="font-size: 16px">餐廳名稱：</td>
+              <td style="font-size: 16px;">餐廳名稱：</td>
               <td><%= @restaurant.name %></td>
             </tr>
             <tr>
@@ -45,11 +74,12 @@
             </tr>
             <tr>
               <td style="font-size: 16px">餐廳特色：</td>
-              <td><%= @restaurant.feature %></td>
+              <td class="text-overflow"><%= @restaurant.feature %></td>
+              <!--<td class="more_td" style="text-overflow:ellipsis;overflow:hidden;display: block;white-space:nowrap;-o-text-overflow: ellipsis; "></td>-->
             </tr>
             <tr>
               <td style="font-size: 16px">營業時間：</td>
-              <td><%= @restaurant.business_hours %></td>
+              <td class="text-overflow"><%= @restaurant.business_hours %></td>
             </tr>
             <tr>
               <td style="font-size: 16px">付款方式：</td>
@@ -82,7 +112,7 @@
           <!--<hr color="#lelele" size="3" width="100%" style="margin-top:25px">-->
         </div>
       </div>
-
+      <table style="width: 100%"></table>
       <div class="row-fluid" id="booking_form_content" style="border-color: rgb(230,230,230); border-width: 3px;">
         <div class="span12" style="background-color: rgb(230,230,230); height: 50px;letter-spacing: 1px">
           <div style="margin-top: 15px;margin-left: 40px;font-size: 25px;float: left; color: rgb(231, 56, 32);width: 250px">步驟一
@@ -94,7 +124,7 @@
           </div>
         </div>
         <!--<div class="span12" style="font-size: 25px;float: left; color: #876139; margin-left: 345px">-->
-          <!--填寫訂位資料-->
+        <!--填寫訂位資料-->
         <!--</div>-->
         <div class="row-fluid">
 
@@ -105,28 +135,28 @@
             </div>
             <div style="float: left; width: 54%">
               <table>
-              <tr>
-                <td style="width:24%; padding-left: 10px; font-size: 16px">訂位者大名：</td>
-                <td><input type="text" id="b_name" name="booker_name" style="width:262px; text-align: left; font-size: 16px; padding-left: 5px" value="<%= @booker.name %>"></td>
-              </tr>
-              <tr>
-                <td style="padding-left: 10px;font-size: 16px">訂位者電話：</td>
-                <td><input type="text" id="b_phone" name="booker_phone" style="width:262px; text-align: left; font-size: 16px; padding-left: 5px" value="<%= @booker.phone %>"></td>
-              </tr>
-              <tr>
-                <td style="padding-left: 10px;font-size: 16px">訂位 E-Mail：</td>
-                <td><input type="text" id="b_email" name="booker_email" style="width:262px; text-align: left; font-size: 16px; padding-left: 5px" value="<%= @booker.email %>"></td>
-              </tr>
-              <tr>
-                <td colspan="2"><textarea style="width: 76%; height:60px" placeholder="  留言給餐廳" name="remark"></textarea></td>
-              </tr>
-              <tr>
-                <td colspan="2">
-                  <input type="button" value="訂位" class="btn btn-primary" id="booking_save_btn">
-                  <div id="wait_div" style="display: none;font-size: 20px;letter-spacing: 0.5px;color: red">訂位處理中... 請勿離開此畫面!!</div>
-                  <!--<input type="reset" value="取消" class="btn">-->
-                </td>
-              </tr>
+                <tr>
+                  <td style="width:24%; padding-left: 10px; font-size: 16px">訂位者大名：</td>
+                  <td><input type="text" id="b_name" name="booker_name" style="width:262px; text-align: left; font-size: 16px; padding-left: 5px" value="<%= @booker.name %>"></td>
+                </tr>
+                <tr>
+                  <td style="padding-left: 10px;font-size: 16px">訂位者電話：</td>
+                  <td><input type="text" id="b_phone" name="booker_phone" style="width:262px; text-align: left; font-size: 16px; padding-left: 5px" value="<%= @booker.phone %>"></td>
+                </tr>
+                <tr>
+                  <td style="padding-left: 10px;font-size: 16px">訂位 E-Mail：</td>
+                  <td><input type="text" id="b_email" name="booker_email" style="width:262px; text-align: left; font-size: 16px; padding-left: 5px" value="<%= @booker.email %>"></td>
+                </tr>
+                <tr>
+                  <td colspan="2"><textarea style="width: 76%; height:60px" placeholder="  留言給餐廳" name="remark"></textarea></td>
+                </tr>
+                <tr>
+                  <td colspan="2">
+                    <input type="button" value="訂位" class="btn btn-primary" id="booking_save_btn">
+                    <div id="wait_div" style="display: none;font-size: 20px;letter-spacing: 0.5px;color: red">訂位處理中... 請勿離開此畫面!!</div>
+                    <!--<input type="reset" value="取消" class="btn">-->
+                  </td>
+                </tr>
               </table>
             </div>
           </form>
@@ -193,21 +223,36 @@
 
 <script>
 
-  $('#pics div').mouseover(function(){
+    //  $('.more_td').click(function(){
+    //      alert('')
+    //     $(this).attr('overflow','visible');
+    //  });
 
-      $(this).find("img").each(function(){
-          //$('#lightbox').show().children().attr('src',$(this).attr('src'))
-          var scr = $(this).attr('src');
-          $('#main_pic').find("img").each(function(){
-              $(this).attr('src',scr)
-          });
-      });
-  });
+    $(".grid tr").mouseover(function(){
+        $(this).addClass("over");
+        $(this).find('td').eq(1).removeClass("text-overflow");
+    }).mouseout(function(){
+        $(this).removeClass("over");
+        $(this).find('td').eq(1).addClass("text-overflow");
+    });
+    $(".grid tr:even").addClass("even");
 
-  $('#main_pic').click(function(){
 
-      $('#lightbox').show().children().attr('src', $('#main_pic img').attr('src'))
-  });
+    $('#pics div').mouseover(function(){
+
+        $(this).find("img").each(function(){
+            //$('#lightbox').show().children().attr('src',$(this).attr('src'))
+            var scr = $(this).attr('src');
+            $('#main_pic').find("img").each(function(){
+                $(this).attr('src',scr)
+            });
+        });
+    });
+
+    $('#main_pic').click(function(){
+
+        $('#lightbox').show().children().attr('src', $('#main_pic img').attr('src'))
+    });
 
 </script>
 
@@ -419,22 +464,22 @@
         $('.t_select:visible').hide();
 
         if (zone_value == 0) {
-           $('#time_select1').show();
+            $('#time_select1').show();
         }
         else if (zone_value == 1) {
-           $('#time_select2').show();
+            $('#time_select2').show();
         }
         else if (zone_value == 2) {
-           $('#time_select3').show();
+            $('#time_select3').show();
         }
         else if (zone_value == 3) {
-           $('#time_select4').show();
+            $('#time_select4').show();
         }
         else if (zone_value == 4) {
-           $('#time_select5').show();
+            $('#time_select5').show();
         }
         else if (zone_value == 5) {
-           $('#time_select6').show();
+            $('#time_select6').show();
         }
     };
 

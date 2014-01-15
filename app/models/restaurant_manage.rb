@@ -66,20 +66,22 @@ class RestaurantManage
       restaurant.info_url3 = origin_restaurant[:info_url3]
 
       if restaurant.save
-        return {:success => true, :data => '儲存成功!'}
+        return {:success => true, :data => '餐廳資訊儲存成功，自動導頁到下個步驟'}
       else
         error_message = restaurant.errors.first[1]
         return {:error => true, :message => error_message}
       end
     rescue => e
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/models/restaurant_manage.rb  ,Method:res_info_save(restaurant_info)"
-      return {:error => true, :message => '阿! 發生錯誤了! 儲存失敗!'}
+      return {:error => true, :message => '阿! 發生錯誤了! 餐廳資訊 儲存失敗!'}
     end
   end
 
   def self.get_http_string(url)
     taget_url = url
-    if taget_url.length > 1 && taget_url[0..6] != 'http://'
+
+    if taget_url.length > 1 && (taget_url[0..6] == 'http://' || taget_url[0..7] == 'https://')
+    elsif taget_url.length > 1
       taget_url = "http://#{taget_url}"
     end
 

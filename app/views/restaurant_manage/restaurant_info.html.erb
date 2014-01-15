@@ -59,16 +59,11 @@
         <td class="title">餐廳類別</td>
         <td><%= f.select(:res_type,
                          options_for_select(
-                                 [['請選擇','0'],['台菜海鮮','1'],['美式料理','2'],
-                                  ['義式料理','3'],['法式料理','4'],['德式料理','5'],
-                                  ['西班牙料理','6'],['西式排餐','7'],['港式料理','8'],
-                                  ['泰式料理','9'],['日式料理','10'],['韓式料理','11'],
-                                  ['印度料理','12'],['其他異國料理','13'],['複合式簡餐','14'],
-                                  ['Lounge Bar','15'],['火鍋','16'],['素食','17'],
-                                  ['早午餐','18'],['下午茶','19'],['甜點','20']
+                                 [['請選擇','0'],['中式料理','1'],['日韓料理','2'],
+                                  ['歐美料理','3'],['東南亞料理','4'],['異國料理','5'],
+                                  ['甜點/下午茶','6'],['其他','7']
                                  ]), {}, {'data-value' => @restaurant.res_type, :class => 'input-medium' }) %>
         </td>
-
       </tr>
       <tr>
         <td class="title">餐廳特色</td>
@@ -95,28 +90,25 @@
         <td><%= f.text_field :supply_email, :required => true, :class => 'input-xlarge' %></td>
       </tr>
       <tr>
-        <td class="title">網址名稱1</td>
-        <td><%= f.text_field :info_url1, :class => 'input-xlarge' %></td>
+        <td class="title">連結網址</td>
+        <td>
+          <%= f.text_field :info_url1, :class => 'input-medium',value: 'Facebook', placeholder:'ex: 餐廳 Facebook' %>
+          &nbsp&nbsp網址&nbsp<%= f.text_field :url1, :style => 'width: 300px' %>
+        </td>
       </tr>
       <tr>
-        <td class="title">餐廳網址1</td>
-        <td><%= f.text_field :url1, :style => 'width: 445px' %></td>
+        <td class="title">連結網址</td>
+        <td>
+          <%= f.text_field :info_url2, :class => 'input-medium',value: '部落格', placeholder:'ex: 餐廳 部落格' %>
+          &nbsp&nbsp網址&nbsp<%= f.text_field :url2, :style => 'width: 300px' %>
+        </td>
       </tr>
       <tr>
-        <td class="title">網址名稱2</td>
-        <td><%= f.text_field :info_url2, :class => 'input-xlarge' %></td>
-      </tr>
-      <tr>
-        <td class="title">餐廳網址2</td>
-        <td><%= f.text_field :url2, :style => 'width: 445px' %></td>
-      </tr>
-      <tr>
-        <td class="title">網址名稱3</td>
-        <td><%= f.text_field :info_url3, :class => 'input-xlarge' %></td>
-      </tr>
-      <tr>
-        <td class="title">餐廳網址3</td>
-        <td><%= f.text_field :url3, :style => 'width: 445px' %></td>
+        <td class="title">連結網址</td>
+        <td>
+          <%= f.text_field :info_url3, :class => 'input-medium',value: '官網', placeholder:'ex: 餐廳 官網' %>
+          &nbsp&nbsp網址&nbsp<%= f.text_field :url3, :style => 'width: 300px' %>
+        </td>
       </tr>
       <tr>
         <td></td>
