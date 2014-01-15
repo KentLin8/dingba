@@ -3,6 +3,7 @@ class BookerManageController < ApplicationController
   before_action :get_booker, :only => [:index, :booking_record, :feedback]
 
   def index
+    @page_title ='DingBa 訂吧 訂位者訂位管理'
     @books = BookerManage.get_books(@booker.id)
   end
 

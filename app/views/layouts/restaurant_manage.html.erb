@@ -1,13 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>DingBa</title>
+  <title>DingBa訂吧餐廳管理</title>
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+              m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-47160661-1', 'codream.tw');
+      ga('send', 'pageview');
+
+  </script>
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <%= stylesheet_link_tag    'restaurant_manage', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'restaurant_manage', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
   <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css" media="screen" />
   <script type="text/javascript" src="/fancybox/jquery.fancybox.pack.js"></script>
+
 </head>
 <body>
 <div id="res_header">
@@ -38,7 +50,7 @@
                 <%= link_to "註冊", "/registrations/booker_new" %>
             <% elsif !@restaurant.id.blank? %>
                 <div style="text-align: left;margin-top: 3px">
-                  <span style="color: #000000">Hi,</span> <%= @restaurant.name %>
+                  <span style="color: #000000">Hi,</span> <a href="/r/<%= @restaurant.res_url %>" target="_blank"> <%= @restaurant.name %>  </a>
                 </div>
 
                 <span style="margin-top: 0px;float: left">
