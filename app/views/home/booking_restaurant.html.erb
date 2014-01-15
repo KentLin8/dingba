@@ -1,14 +1,14 @@
 <style>
     .grid {width:100%;}
-    .grid thead {margin:100px;}
-    .grid thead th{line-height:28px;height:28px;border-top:1px #D7D7D4 solid;border-bottom:1px #D7D7D4 solid; color:#666;}
-    .grid tbody tr{line-height:28px;height:30px;}
-    .grid tbody td{word-break:break-all;border-bottom:1px #d7d7d7 dotted;}
-    .grid tfoot tr{ line-height:30px; height:30; background-color:#fff;}
-    .grid tfoot td{ text-align:right; padding-right:5px;}
+    /*.grid thead {margin:100px;}*/
+    /*.grid thead th{line-height:28px;height:28px;border-top:1px #D7D7D4 solid;border-bottom:1px #D7D7D4 solid; color:#666;}*/
+    /*.grid tbody tr{line-height:28px;height:30px;}*/
+    /*.grid tbody td{word-break:break-all;border-bottom:1px #d7d7d7 dotted;}*/
+    /*.grid tfoot tr{ line-height:30px; height:30; background-color:#fff;}*/
+    /*.grid tfoot td{ text-align:right; padding-right:5px;}*/
         /**grid view 换色**/
-    .even{background-color:#FEF8F4;}
-    .over{background-color: #ffc;}
+    /*.even{background-color:#FEF8F4;}*/
+    /*.over{background-color: #ffc;}*/
 
     .text-overflow {
         display:block;
@@ -227,13 +227,13 @@
     //  });
 
     $(".grid tr").mouseover(function(){
-        $(this).addClass("over");
+        //$(this).addClass("over");
         $(this).find('td').eq(1).removeClass("text-overflow");
     }).mouseout(function(){
-        $(this).removeClass("over");
+        //$(this).removeClass("over");
         $(this).find('td').eq(1).addClass("text-overflow");
     });
-    $(".grid tr:even").addClass("even");
+    //$(".grid tr:even").addClass("even");
 
 
     $('#pics div').mouseover(function(){
