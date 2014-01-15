@@ -23,8 +23,8 @@
     <td style="width: 27%;">時段名稱</td>
     <td style="width: 27%;">時段區間</td>
     <td style="width: 11%;">總供位</td>
-    <td style="width: 12%;">單次供位 <a title="" class="ans" data-original-title="該時段餐廳能提供給單批客人桌椅的最大數量限制。">?</a></td>
     <td style="width: 17%;">15分鐘總供位 <a title="" class="ans" data-original-title="為避免餐廳無法在短時間接待太大量的客人，因此設定每15分鐘內的總訂位客人不超過一定的數量，以保持良好的服務品質。">?</a></td>
+    <td style="width: 12%;">單次供位 <a title="" class="ans" data-original-title="該時段餐廳能提供給單批客人桌椅的最大數量限制。">?</a></td>
   </tr>
   <input name="special_day" type="hidden" value="<%= @select_date %>">
 
@@ -143,8 +143,8 @@
           </select>
         </td>
         <td><input style="text-align: right; width: 30px" type="text" name="zone<%= index %>[total_allow]" value="<%= t.total_allow %>"></td>
-        <td><input style="text-align: right; width: 30px" type="text" name="zone<%= index %>[each_allow]" value="<%= t.each_allow %>"></td>
         <td><input style="text-align: right; width: 30px" type="text" name="zone<%= index %>[fifteen_allow]" value="<%= t.fifteen_allow %>"></td>
+        <td><input style="text-align: right; width: 30px" type="text" name="zone<%= index %>[each_allow]" value="<%= t.each_allow %>"></td>
       </tr>
   <% end %>
 </table>

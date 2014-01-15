@@ -63,7 +63,7 @@ $ ->
       showOn: 'both'
       buttonText: '<i class="icon-calendar"></i>'
     ).change( ->
-      if this.id is 'show_day'
+      if this.name is 'show_day'
         $.get('/calendar/restaurant_day', {select_date: this.value}, 'html')
           .done( (response) -> refresh response.attachmentPartial )
           .fail( -> alert 'fail' )
