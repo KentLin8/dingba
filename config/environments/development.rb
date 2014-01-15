@@ -30,7 +30,7 @@ DingBa::Application.configure do
   config.action_mailer.asset_host = "http://localhost:3000"
 
   config.action_mailer.delivery_method = :smtp
-
+  config.action_mailer.default_options = {from: 'dingba-admin@codream.tw'}
   config.action_mailer.default_url_options = { :host => 'localhost:3000' }
   #config.action_mailer.default_url_options = { :host => 'http://dingba.codream.tw' }
 

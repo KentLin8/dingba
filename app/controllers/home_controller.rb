@@ -76,6 +76,8 @@ class HomeController < ApplicationController
     else
       redirect_to home_path
     end
+
+    @page_title ="DingBa訂吧-" + @restaurant.name
   end
 
   def get_condition
