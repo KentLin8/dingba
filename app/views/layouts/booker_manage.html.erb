@@ -55,7 +55,7 @@
           </span>
         </div>
       </div>
-      <% if !@booker.id.blank? %>
+      <% if !@booker.id.blank? && @booker.role == '0' %>
           <a href="/restaurant#/calendar/restaurant_month" target="_blank"><img src="/assets/common/rae_my_restaurant.png" alt="dingba" id="go_pic"></a>
       <% end %>
       <img src="/assets/common/line.png" id="line">
