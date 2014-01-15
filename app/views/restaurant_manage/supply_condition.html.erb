@@ -101,10 +101,10 @@
 
 <div class="base_blue" style="margin-top: 5px; margin-left: -20px; font-size: 18px; color: #7F1700">最晚接受訂位時間：</div>
 
-<table id="reserve_table" style="margin-left: -20px; border: 2px solid rgb(190,190,190); width: 55%;padding-top: 10px">
+<table id="reserve_table" style="margin-left: -20px; border: 2px solid rgb(190,190,190); width: 44%;padding-top: 10px">
   <tr>
     <td>
-      <label class="radio inline" style="margin-left: 35px;">
+      <label class="radio inline" style="margin-left: 5px;">
         <input type="radio" name="reserve_type" value="0">開放預約到&nbsp;&nbsp;
       </label>
 
@@ -114,7 +114,7 @@
   </tr>
   <tr>
     <td>
-      <label class="radio inline" style="margin-left: 35px">
+      <label class="radio inline" style="margin-left: 5px">
         <input type="radio" name="reserve_type" value="1">開放預約到前一天&nbsp;&nbsp;
       </label>
       <select style="width: 60px" id="reserve_previous_hour" data-value="<%= @restaurant.available_date %>">

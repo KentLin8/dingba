@@ -6,9 +6,9 @@ class User < ActiveRecord::Base
                     :length => { :maximum => 255, :message => "E-Mail，" + OUT_OF_LENGTH }
   validates :name, :presence => { :message => "姓名，" + NOT_EMPTY } ,
                    :length => { :maximum => 20, :message => "姓名，" + OUT_OF_LENGTH }
-  validates :role, :presence => { :message => "角色標記，" + NOT_EMPTY } ,
+  validates :role, #:presence => { :message => "角色標記，" + NOT_EMPTY } ,
                    :length => { :maximum => 1, :message => "角色標記，" + OUT_OF_LENGTH }
-  validates :phone, :presence => { :message => "電話，" + NOT_EMPTY } ,
+  validates :phone, #:presence => { :message => "電話，" + NOT_EMPTY } ,
                     :length => { :maximum => 30, :message => "電話，" + OUT_OF_LENGTH }
 
   # Include default devise modules. Others available are:
