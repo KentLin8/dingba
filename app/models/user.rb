@@ -27,8 +27,8 @@ class User < ActiveRecord::Base
                       provider:auth.provider,
                       #uid:auth.uid,
                       email:auth.info.email,
-                      password:Devise.friendly_token[0,20]
-                      )
+                      password:Devise.friendly_token[0,20],
+                      role: '1')
 
       user.skip_confirmation!
       user.save!
@@ -45,7 +45,8 @@ class User < ActiveRecord::Base
       user = User.new(name: data["name"],
                       email: data["email"],
                       provider: "google",
-                      password: Devise.friendly_token[0,20])
+                      password: Devise.friendly_token[0,20],
+                      role: '1')
 
       user.skip_confirmation!
       user.save!
