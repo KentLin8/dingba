@@ -670,7 +670,8 @@ class RestaurantManage
               if z.range_begin <= b.booking_time.strftime("%H:%M") && z.range_end >= b.booking_time.strftime("%H:%M")
                 books.push(b)
                 has_books = true
-                #day_books.delete(b)  # TODO already push in books pop up the day_books
+                #day_books.delete(b)      # delete obj from array and database
+                day_books.to_a.delete(b)  # delete boj only from array
               end
             end
 
@@ -680,6 +681,13 @@ class RestaurantManage
               zone_booking.books = books
               zones_books.push(zone_booking)
             end
+          end
+
+          if !day_books.blank? && day_books.length > 0
+            zone_booking = ZoneBooking.new
+            zone_booking.name = '其他時段'
+            zone_booking.books = day_books
+            zones_books.push(zone_booking)
           end
         end
 
