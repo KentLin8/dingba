@@ -359,11 +359,11 @@ $ ->
 
           if typeof response is 'string'
             #window.location.reload();
-            #alert('x')
             refresh response    # make sure each action not render template or redirect to , only sign out auth token error use
           else if typeof response is 'object'
             if response.success
               if response.attachmentPartial
+                $('#lightbox_wrap').hide()
                 refresh response.attachmentPartial
               alert response.data
               if response.step == '1'
