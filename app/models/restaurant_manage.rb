@@ -264,6 +264,24 @@ class RestaurantManage
 
   def self.supply_condition_create(restaurant_id, origin_condition, origin_zones)
     begin
+      origin_zones.length.times do |i|
+        origin_zones.length.times do |j|
+          temp_max_zone = origin_zones[i]
+
+          if j != i
+            if temp_max_zone[:time_begin] == temp_max_zone[:time_end]
+              if origin_zones[j][:time_begin] <= temp_max_zone[:time_begin] && origin_zones[j][:time_end] >= temp_max_zone[:time_end]
+                return {:error => true, :message => '時段不能重疊喔!'}
+              end
+            else
+              if origin_zones[j][:time_begin] < temp_max_zone[:time_end] && origin_zones[j][:time_end] >= temp_max_zone[:time_end]
+                return {:error => true, :message => '時段不能重疊喔!'}
+              end
+            end
+          end
+        end
+      end
+
       SupplyCondition.transaction do
         target_condition = SupplyCondition.new
 
@@ -298,6 +316,24 @@ class RestaurantManage
 
   def self.supply_condition_update(restaurant_id, origin_condition, origin_zones)
     begin
+      origin_zones.length.times do |i|
+        origin_zones.length.times do |j|
+          temp_max_zone = origin_zones[i]
+
+          if j != i
+            if temp_max_zone[:time_begin] == temp_max_zone[:time_end]
+              if origin_zones[j][:time_begin] <= temp_max_zone[:time_begin] && origin_zones[j][:time_end] >= temp_max_zone[:time_end]
+                return {:error => true, :message => '時段不能重疊喔!'}
+              end
+            else
+              if origin_zones[j][:time_begin] < temp_max_zone[:time_end] && origin_zones[j][:time_end] >= temp_max_zone[:time_end]
+                return {:error => true, :message => '時段不能重疊喔!'}
+              end
+            end
+          end
+        end
+      end
+
       SupplyCondition.transaction do
         condition_id = supply_condition_save(origin_condition, restaurant_id, SupplyCondition.find(origin_condition[:id].to_i))
 
@@ -876,7 +912,7 @@ class RestaurantManage
     end
 
     bookings = Booking.where(:restaurant_id => restaurant_id).where('booking_time >= ?', origin_condition.range_begin).where('booking_time <= ?', origin_condition.range_end).group('booking_time').sum(:num_of_people)#.order('booking_time ASC')
-    # ====
+                                                                                                                                                                                                                       # ====
     day_booking_mix = []
     day_bookings.each do |db|
       day_booking_group = []

@@ -105,17 +105,20 @@ class RestaurantManageController < ApplicationController
     begin
       @time_zones = RestaurantManage.get_time_zones(condition_id)
       if !condition_id.blank?
+        @is_edit = '確定修改'
         @supply_time = SupplyCondition.find(condition_id.to_i)
 
         @supply_time.range_begin = @supply_time.range_begin.strftime("%Y-%m-%d")
         @supply_time.range_end = @supply_time.range_end.strftime("%Y-%m-%d")
       else
+        @is_edit = '確定新增'
         @supply_time = SupplyCondition.new
         @supply_time.available_week = '0,1,2,3,4,5,6'
       end
     rescue => e
       # in this condition is that user change the condition_id
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/controllers/restaurant_manage_controller.rb  ,Action:supply_time"
+      @is_edit = '確定新增'
       @supply_time = SupplyCondition.new
       @supply_time.available_week = '0,1,2,3,4,5,6'
       @time_zones = RestaurantManage.get_time_zones(nil)

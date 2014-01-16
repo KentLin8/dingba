@@ -62,12 +62,12 @@
 
   <%= render :partial => 'time_zones' %>
   <div style="float: left;font-size: 18px;letter-spacing: 1px;" id="supply_explain">
-    <a href="" style="text-decoration: underline ; color: #cc0066">
+    <a href="/restaurant#/restaurant_manage/supply_condition" style="text-decoration: underline ; color: #cc0066">
       <div style="color: #db301c;">*各供位數字的關係與解說範例</div>
     </a>
   </div>
   <div class="float-r">
-    <input class="btn btn-primary" type="submit" value="確定新增">
+    <input class="btn btn-primary" type="submit" value="<%= @is_edit %>">
     <!--<input class="btn" type="reset" value="清除">-->
   </div>
 </form>
