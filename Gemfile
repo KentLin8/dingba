@@ -5,7 +5,9 @@ source 'https://rubygems.org'
 #end
 
 # for solve send email is slow problem, sending asynchronous
-gem 'delayed_job'
+#gem 'delayed_job'
+
+gem 'delayed_job_active_record'
 
 # jquery-ui-rails
 gem 'jquery-ui-rails'
@@ -82,3 +84,5 @@ gem 'capistrano', group: :development
 
 gem 'i18n'
 #===================================== end by thunder
+
+gem 'rails-i18n'   # add by panda
