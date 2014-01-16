@@ -1,0 +1,8 @@
+<ul>
+  <% @restaurant_list.each do |rest| %>
+      <li>
+        <a href='<%=  APP_CONFIG['domain'] + rest.res_url.to_s  %>'><%= rest.name %></a>
+        -  <%= rest.created_at.to_date %> - <%= rest.updated_at.to_date %>
+      </li>
+  <% end %>
+</ul>

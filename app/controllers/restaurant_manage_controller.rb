@@ -4,7 +4,7 @@ class RestaurantManageController < ApplicationController
   before_action :get_restaurant, :only => [:restaurant, :restaurant_info, :restaurant_info_save, :restaurant_image, :upload_img, :image_cover_save, :image_destroy,
                                            :supply_condition, :supply_time, :supply_condition_save, :condition_state_save,
                                            :destroy_condition, :special_create, :day_booking, :query_books_by_date,
-                                           :modify_booking, :modify_booking_save, :cancel_booking]
+                                           :modify_booking, :modify_booking_save, :cancel_booking, :adm_list_all ]
 
 
   # =========================================================================
@@ -387,4 +387,8 @@ class RestaurantManageController < ApplicationController
     db.save
   end
 
+  def  adm_list_all
+    @restaurant_list = Restaurant.all.order("id DESC")
+    render :layout => false
+  end
 end
