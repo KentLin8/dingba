@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140111104012) do
+ActiveRecord::Schema.define(version: 20140116141956) do
 
   create_table "bookings", force: true do |t|
     t.integer  "user_id"
@@ -172,6 +172,9 @@ ActiveRecord::Schema.define(version: 20140111104012) do
     t.string   "provider"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "sex"
+    t.datetime "birthday"
+    t.string   "allow_promot",           limit: 1
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree

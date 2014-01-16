@@ -211,6 +211,7 @@ class RegistrationsController < Devise::RegistrationsController
     taget_user[:name] = taget_user[:name].strip
     taget_user[:phone] = taget_user[:phone].strip
     taget_user[:current_password] = taget_user[:current_password].strip
+    taget_user[:birthday] = "#{params['birthday(1i)']}#{params['birthday(2i)']}#{params['birthday(3i)']}"
 
     if taget_user[:password] != taget_user[:password_confirmation]
       result = '新密碼與確認新密碼不符'
@@ -240,6 +241,8 @@ class RegistrationsController < Devise::RegistrationsController
 
     from = params[:from]
     if from.blank?
+
+      #render json:{:edit_account => true, :message => result, :attachmentPartial => render_to_string('devise/registrations/edit', :layout => false, :locals => { :resource => resource,:resource_name => 'user'}) }
       redirect_to '/booker_manage/index#tabs-2', :alert => result
     else
       render json:{:success => true, :data => result, :registration => true }
@@ -247,6 +250,6 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def registration_params
-    params.require(:user).permit(:name, :phone, :email, :password, :password_confirmation, :current_password)
+    params.require(:user).permit(:name, :phone, :email, :password, :password_confirmation, :current_password, :birthday, :sex, :allow_promot)
   end
 end

@@ -406,6 +406,9 @@ $ ->
                 $(this).parent().animate {height: 0}, -> $(this).parents('tr').remove()
             else if response.error
               alert response.message
+#            else if response.edit_account
+#              $("#tabs-2").html $.parseHTML(response.attachmentPartial, document, true)
+#              alert response.message
         )
         .fail( ->
           alert '資料傳遞失敗，請重新整理頁面'

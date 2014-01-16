@@ -61,10 +61,10 @@ class ApplicationController < ActionController::Base
 
       if !current_user.blank?
         if current_user.role == '0'
-          flash.now[:alert] = '重新登入警告！為保安全，我們將您登入狀態清除，請再次登入，謝謝'
+          flash.now[:alert] = '發生未知的錯誤！為保安全，我們將您登入狀態清除，請再次登入，謝謝'
           render 'devise/sessions/restaurant_new'
         elsif current_user.role == '1'
-          flash.now[:alert] = '重新登入警告！為保安全，我們將您登入狀態清除，請再次登入，謝謝'
+          flash.now[:alert] = '發生未知的錯誤！為保安全，我們將您登入狀態清除，請再次登入，謝謝'
           render 'devise/sessions/booker_new'
         end
         return

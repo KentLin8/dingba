@@ -11,11 +11,12 @@
     <%= render :template => 'devise/registrations/edit',
                :locals => {
                        :resource => @booker,
-                       :resource_name => 'user' } %>
+                       :resource_name => 'user',
+                       :is_booker => @is_booker } %>
 
-    <% if alert %>
-        <script type="text/javascript">alert("<%= alert %>");</script>
-    <% end %>
+    <%# if alert %>
+        <!--<script type="text/javascript">alert("<%# alert %>");</script>-->
+    <%# end %>
   </div>
 </div>
 

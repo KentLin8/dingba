@@ -24,6 +24,7 @@ class BookerManageController < ApplicationController
       else
         #@booker = User.where(:id => current_user.id, :role => '1').first
         @booker = User.where(:id => current_user.id).first
+        @is_booker = true
         if @booker.blank?
           Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/controllers/booker_manage_controller.rb  ,Filter:get_booker"
           redirect_to booker_session_new_path
