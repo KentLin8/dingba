@@ -26,7 +26,8 @@ class User < ActiveRecord::Base
       user = User.new(name:auth.extra.raw_info.name,
                       provider:auth.provider,
                       #uid:auth.uid,
-                      email:auth.info.email,
+                      #email:auth.info.email,
+                      email:auth.extra.raw_info.email,
                       password:Devise.friendly_token[0,20],
                       role: '1')
 
