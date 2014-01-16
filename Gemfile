@@ -7,7 +7,7 @@ source 'https://rubygems.org'
 # for solve send email is slow problem, sending asynchronous
 #gem 'delayed_job'
 
-gem 'delayed_job_active_record'
+#gem 'delayed_job_active_record'
 
 # jquery-ui-rails
 gem 'jquery-ui-rails'
