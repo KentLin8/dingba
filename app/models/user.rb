@@ -21,13 +21,12 @@ class User < ActiveRecord::Base
     if auth.blank?
       return nil
     end
-    user = User.where(:provider => auth.info.email).first
+    user = User.where(:email => auth.info.email).first
     unless user
       user = User.new(name:auth.extra.raw_info.name,
                       provider:auth.provider,
                       #uid:auth.uid,
                       email:auth.info.email,
-                      #email:auth.extra.user_hash.email,
                       password:Devise.friendly_token[0,20],
                       role: '1')
 
@@ -39,6 +38,9 @@ class User < ActiveRecord::Base
   end
 
   def self.find_for_google_oauth2(access_token, signed_in_resource=nil)
+    if access_token.blank?
+      return nil
+    end
     data = access_token.info
     user = User.where(:email => data["email"]).first
 
