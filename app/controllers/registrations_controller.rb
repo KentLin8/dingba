@@ -203,7 +203,7 @@ class RegistrationsController < Devise::RegistrationsController
   # =========================================================================
   def update
     self.resource = resource_class.to_adapter.get!(send(:"current_#{resource_name}").to_key)
-    prev_unconfirmed_email = resource.unconfirmed_email if resource.respond_to?(:unconfirmed_email)
+    #prev_unconfirmed_email = resource.unconfirmed_email if resource.respond_to?(:unconfirmed_email)
 
     taget_user = registration_params
     taget_user[:password] = taget_user[:password].strip
@@ -224,7 +224,8 @@ class RegistrationsController < Devise::RegistrationsController
     elsif taget_user[:current_password].blank?
       result = '驗證碼為必填欄位喔!'
     else
-      if update_resource(resource, taget_user)
+      #if update_resource(resource, taget_user)
+      if update_without_password(resource, taget_user)
         #if is_navigational_format?
         #  flash_key = update_needs_confirmation?(resource, prev_unconfirmed_email) ?
         #      :update_needs_confirmation : :updated
