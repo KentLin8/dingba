@@ -20,7 +20,7 @@
 </select>
 月
 
-<table id="calendar" class="table table-bordered" style="margin-left: -30px;width: 870px">
+<table id="calendar" class="table table-bordered" style="margin-left: -30px;width: 950px">
   <tr>
     <th>日</th>
     <th>一</th>
@@ -45,9 +45,26 @@
         <div>
           <% if x.con_id == 0 %>
               不提供訂位
+              <table class="clean-table" style="font-size: 14px">
+              <% if !@books[i].other.blank? && @books[i].other > 0 %>
+                  <tr>
+                    <td style="vertical-align:baseline">其他時段</td>
+                    <td style="text-align: right;vertical-align:baseline"><%= @books[i].other%></td>
+                  </tr>
+              <% end %>
+              </table>
           <% else %>
               <% if x.is_vacation %>
+
                   休假
+                  <table class="clean-table" style="font-size: 14px">
+                  <% if !@books[i].other.blank? && @books[i].other > 0 %>
+                      <tr>
+                        <td style="vertical-align:baseline">其他時段</td>
+                        <td style="text-align: right;vertical-align:baseline"><%= @books[i].other%></td>
+                      </tr>
+                  <% end %>
+                  </table>
               <% else %>
                   <table class="clean-table" style="font-size: 14px">
                     <% (1..6).each do |j| %>

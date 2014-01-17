@@ -98,11 +98,11 @@
             <tr>
               <td style="font-size: 16px">餐廳網址：</td>
               <td>
-                <a href="<%= @restaurant.url1 %>" target="_blank"><%= @restaurant.info_url1 %></a>
-                <% if !@restaurant.info_url1.blank? && !@restaurant.info_url2.blank? %>、<% end %>
-                <a href="<%= @restaurant.url2 %>" target="_blank"><%= @restaurant.info_url2 %></a>
-                <% if !@restaurant.info_url2.blank? && !@restaurant.info_url3.blank? %>、<% end %>
-                <a href="<%= @restaurant.url3 %>" target="_blank"><%= @restaurant.info_url3 %></a>
+                <% if !@restaurant.url1.blank? %><a href="<%= @restaurant.url1 %>" target="_blank"><%= @restaurant.info_url1 %></a><% end %>
+                <% if !@restaurant.url1.blank? && !@restaurant.url2.blank? %>、<% end %>
+                <% if !@restaurant.url2.blank? %><a href="<%= @restaurant.url2 %>" target="_blank"><%= @restaurant.info_url2 %></a><% end %>
+                <% if !@restaurant.url2.blank? && !@restaurant.url3.blank? %>、<% end %>
+                <% if !@restaurant.url3.blank? %><a href="<%= @restaurant.url3 %>" target="_blank"><%= @restaurant.info_url3 %></a><% end %>
               </td>
             </tr>
           </table>
