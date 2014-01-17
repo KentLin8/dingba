@@ -6,11 +6,39 @@ class ApplicationController < ActionController::Base
   #helper_method :current_user
 
   ## override devise
-  def after_sign_in_path_for_custom(resource_or_scope, res_url)
-    stored_location_for(resource_or_scope) || sign_in_with_cus(resource_or_scope, res_url)
+  def after_sign_in_path_for(resource_or_scope)
+    stored_location_for(resource_or_scope) || sign_in_with_cus(resource_or_scope)
   end
 
-  def sign_in_with_cus(user, res_url)
+  def after_sign_in_path_for_custom(resource_or_scope, res_url)
+    stored_location_for(resource_or_scope) || sign_in_with_custom(resource_or_scope, res_url)
+  end
+
+  def sign_in_with_cus(user)
+    begin
+      if user.role == '0'
+        restaurant_users = RestaurantUser.where(:user_id => user.id) # TODO select restaurant
+        restaurant = Restaurant.find(restaurant_users.first.restaurant_id)
+
+        if RestaurantManage.check_restaurant_info(restaurant)
+          if RestaurantManage.check_supply_condition(restaurant.id)
+            '/restaurant#/calendar/restaurant_month'
+          else
+            '/restaurant#/restaurant_manage/supply_condition'
+          end
+        else
+          confirmation_getting_started_path
+        end
+      else
+        booker_manage_index_path
+      end
+    rescue => e
+      Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/controllers/application_controller.rb  ,Method:sign_in_with_cus(user)"
+      home_path
+    end
+  end
+
+  def sign_in_with_custom(user, res_url)
     begin
       if !res_url.blank?
         @res_url = res_url
@@ -35,23 +63,10 @@ class ApplicationController < ActionController::Base
           booker_manage_index_path
         end
       end
-
     rescue => e
-      Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/controllers/application_controller.rb  ,Method:sign_in_with_cus(user)"
+      Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/controllers/application_controller.rb  ,Method:sign_in_with_custom(user, res_url)"
       home_path
     end
-
-    ## origin code
-    #scope = Devise::Mapping.find_scope!(resource_or_scope)
-    #home_path = "#{scope}_root_path"
-    #if respond_to?(home_path, true)
-    #  send(home_path)
-    #elsif respond_to?(:root_path)
-    #  root_path
-    #else
-    #  "/"
-    #end
-    ## origin code end
   end
 
   #protected
