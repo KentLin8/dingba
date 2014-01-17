@@ -30,9 +30,10 @@ class User < ActiveRecord::Base
                       password:Devise.friendly_token[0,20],
                       role: '1')
 
-      #user.skip_confirmation!
-      user.skip_confirmation_notification!
-      user.save!
+      #user.skip_confirmation_notification!
+      user.skip_confirmation!
+      user.send_confirmation_instructions
+      user.save
 
     end
     user
@@ -52,9 +53,10 @@ class User < ActiveRecord::Base
                       password: Devise.friendly_token[0,20],
                       role: '1')
 
-      #user.skip_confirmation!
-      user.skip_confirmation_notification!
-      user.save!
+      #user.skip_confirmation_notification!
+      user.skip_confirmation!
+      user.send_confirmation_instructions
+      user.save
     end
     user
   end
