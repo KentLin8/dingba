@@ -18,7 +18,7 @@ test:
 production:
   <<: *defaults
   app_title: DingBa
-  domain: "http://dingba.codream.tw/r/"
+  domain: "http://dingba.tw/r/"
   domain_clear: "http://dingba.codream.tw/"
   error: "=============Catch Error:"
   enable_invite_code: "true"

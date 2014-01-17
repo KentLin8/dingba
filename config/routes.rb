@@ -80,6 +80,7 @@ DingBa::Application.routes.draw do
   get  'restaurant_manage/query_books_by_date'
 
   get  'restaurant_manage/book_create'           #test, it must to delete after prototype
+  get  'restaurant_manage/adm_list_all'
 
   #==========================================================================
   # calendar controller
