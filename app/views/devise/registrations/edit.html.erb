@@ -10,8 +10,10 @@
       性別：</br>
       生日：</br>
       是否願意收到促銷訊息：</br>
-      新密碼：</br>
-      確認新密碼：</br>
+      <% if resource.provider.blank? %>
+        新密碼：</br>
+        確認新密碼：</br>
+      <% end %>
       <!--驗證碼 ( 目前密碼 )：-->
     </div>
 
@@ -34,8 +36,10 @@
         <label class="font_size_16" style="margin-left: 5px"><%= f.radio_button :allow_promot, 'f' %>否</label>
       </span>
 
-      <%= f.password_field :password, :autocomplete => "off", :placeholder => '沒有要修改密碼請留空', :style => 'padding-left:10px' %>
-      <%= f.password_field :password_confirmation, :placeholder => '沒有要修改密碼請留空', :style => 'padding-left:10px' %>
+      <% if resource.provider.blank? %>
+        <%= f.password_field :password, :autocomplete => "off", :placeholder => '沒有要修改密碼請留空', :style => 'padding-left:10px' %>
+        <%= f.password_field :password_confirmation, :placeholder => '沒有要修改密碼請留空', :style => 'padding-left:10px' %>
+      <% end %>
       <%# f.password_field :current_password, :placeholder => '修改資料必填欄位', :style => 'padding-left:10px' %>
       <%= f.submit "確認修改" , :class => 'btn btn-primary' %>
       <input class="btn" type="reset" value="清除">
