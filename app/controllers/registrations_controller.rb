@@ -88,6 +88,13 @@ class RegistrationsController < Devise::RegistrationsController
       return
     end
 
+    user = User.where(:email => email)
+    if !user.blank?
+      flash.now[:alert] = '此帳號 ( E-Mail ) 已被註冊'
+      render from_url
+      return
+    end
+
     person =  { 'name' => name,
                 'email' => email,
                 'phone' => phone,

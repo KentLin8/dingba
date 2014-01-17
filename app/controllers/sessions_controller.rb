@@ -85,6 +85,19 @@ class SessionsController < Devise::SessionsController
           render 'devise/sessions/booker_new'
         end
         return
+      else
+        if !target_user.first.provider.blank?
+          if user[:role] == '0'
+            flash.now[:alert] = "此帳號是用 #{target_user.first.provider} 登入!"
+            self.resource = resource_class.new
+            render 'devise/sessions/restaurant_new'
+          elsif user[:role] == '1'
+            flash.now[:alert] = "此帳號是用 #{target_user.first.provider} 登入!"
+            self.resource = resource_class.new
+            render 'devise/sessions/booker_new'
+          end
+          return
+        end
       end
     rescue => e
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/controllers/sessions_controller.rb  ,Action:create"
