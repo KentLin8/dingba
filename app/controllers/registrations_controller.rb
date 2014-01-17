@@ -221,8 +221,8 @@ class RegistrationsController < Devise::RegistrationsController
       result = '姓名為必填欄位喔!'
     elsif taget_user[:phone].blank?
       result = '電話為必填欄位喔!'
-    elsif taget_user[:current_password].blank?
-      result = '驗證碼為必填欄位喔!'
+    #elsif taget_user[:current_password].blank?
+    #  result = '驗證碼為必填欄位喔!'
     else
       #if update_resource(resource, taget_user)
       if update_without_password(resource, taget_user)
