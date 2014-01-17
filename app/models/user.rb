@@ -23,7 +23,7 @@ class User < ActiveRecord::Base
     end
     user = User.where(:email => auth.info.email).first
     unless user
-      user = User.new(name:auth.extra.raw_info.name,
+      user = User.create!(name:auth.extra.raw_info.name,
                       provider:auth.provider,
                       #uid:auth.uid,
                       email:auth.info.email,
@@ -32,8 +32,7 @@ class User < ActiveRecord::Base
 
       #user.skip_confirmation_notification!
       user.skip_confirmation!
-      user.save
-      user.send_confirmation_instructions
+      user.save!
     end
     user
   end
@@ -46,7 +45,7 @@ class User < ActiveRecord::Base
     user = User.where(:email => data["email"]).first
 
     unless user
-      user = User.new(name: data["name"],
+      user = User.create!(name: data["name"],
                       email: data["email"],
                       provider: "google",
                       password: Devise.friendly_token[0,20],
@@ -54,8 +53,7 @@ class User < ActiveRecord::Base
 
       #user.skip_confirmation_notification!
       user.skip_confirmation!
-      user.save
-      user.send_confirmation_instructions
+      user.save!
     end
     user
   end
