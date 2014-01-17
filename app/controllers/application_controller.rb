@@ -11,6 +11,7 @@ class ApplicationController < ActionController::Base
   end
 
   def after_sign_in_path_for_custom(resource_or_scope, res_url)
+    session.delete :res_url
     stored_location_for(resource_or_scope) || sign_in_with_custom(resource_or_scope, res_url)
   end
 

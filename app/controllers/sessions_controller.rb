@@ -44,6 +44,7 @@ class SessionsController < Devise::SessionsController
         end
       else
         if !booker_url.blank?
+          session[:res_url] = booker_url
           @id = booker_url
           @is_to_booking = true
           @is_check_login = true

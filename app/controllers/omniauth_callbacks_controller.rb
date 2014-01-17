@@ -14,7 +14,14 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
       end
 
       if @user.persisted?
-        sign_in_and_redirect @user, :event => :authentication
+        res_url = session[:res_url]
+
+        if res_url.blank?
+          sign_in_and_redirect @user, :event => :authentication
+        else
+          sign_in('user', @user)
+          redirect_to after_sign_in_path_for_custom(@user, res_url)
+        end
       else
         redirect_to home_path
       end
@@ -33,7 +40,14 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
       end
 
       if @user.persisted?
-        sign_in_and_redirect @user, :event => :authentication
+        res_url = session[:res_url]
+
+        if res_url.blank?
+          sign_in_and_redirect @user, :event => :authentication
+        else
+          sign_in('user', @user)
+          redirect_to after_sign_in_path_for_custom(@user, res_url)
+        end
       else
         redirect_to home_path
       end

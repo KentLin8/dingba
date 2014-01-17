@@ -225,11 +225,11 @@ class RegistrationsController < Devise::RegistrationsController
       result = '驗證碼為必填欄位喔!'
     else
       if update_resource(resource, taget_user)
-        if is_navigational_format?
-          flash_key = update_needs_confirmation?(resource, prev_unconfirmed_email) ?
-              :update_needs_confirmation : :updated
-          #set_flash_message :notice, flash_key
-        end
+        #if is_navigational_format?
+        #  flash_key = update_needs_confirmation?(resource, prev_unconfirmed_email) ?
+        #      :update_needs_confirmation : :updated
+        #  #set_flash_message :notice, flash_key
+        #end
         sign_in resource_name, resource, :bypass => true
         #respond_with resource, :location => '/booker_manage/index' #after_update_path_for(resource)
         result = '修改成功'
