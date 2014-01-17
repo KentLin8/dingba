@@ -862,31 +862,43 @@ class RestaurantManage
         end
         day_booking = day_booking.first
         day_begin = Time.parse(booking.booking_time.strftime("%Y-%m-%d") + " 00:00")
-        conditions = SupplyCondition.where(:restaurant_id => booking.restaurant_id, :status => 't').where('range_begin <= ?', day_begin).where('range_end >= ?',day_begin).order('sequence ASC')
+        conditions = SupplyCondition.where(:restaurant_id => booking.restaurant_id, :status => 't').where('range_begin <= ?', day_begin).where('range_end >= ?',day_begin).order('is_vacation IS NULL, is_special IS NULL, sequence ASC')
 
         if conditions.blank?
           day_booking.other = day_booking.zone1 + day_booking.zone2 + day_booking.zone3 + day_booking.zone4 + day_booking.zone5 + day_booking.zone6
           day_booking.save
         else
           condition = conditions.first
-          zones = TimeZone.where(:supply_condition_id => condition.id, :status => 't')
-          zones.each do |z|
-            if z.range_begin <= booking.booking_time.strftime("%H:%M") && z.range_end > booking.booking_time.strftime("%H:%M")
-              if z.sequence == 0
-                day_booking.zone1 = day_booking.zone1 - booking.num_of_people
-              elsif z.sequence == 1
-                day_booking.zone2 = day_booking.zone2 - booking.num_of_people
-              elsif z.sequence == 2
-                day_booking.zone3 = day_booking.zone3 - booking.num_of_people
-              elsif z.sequence == 3
-                day_booking.zone4 = day_booking.zone4 - booking.num_of_people
-              elsif z.sequence == 4
-                day_booking.zone5 = day_booking.zone5 - booking.num_of_people
-              elsif z.sequence == 5
-                day_booking.zone6 = day_booking.zone6 - booking.num_of_people
+          if condition.is_vacation.blank?
+            zones = TimeZone.where(:supply_condition_id => condition.id, :status => 't')
+            zones.each do |z|
+              if z.range_begin <= booking.booking_time.strftime("%H:%M") && z.range_end > booking.booking_time.strftime("%H:%M")
+                if z.sequence == 0
+                  day_booking.zone1 = day_booking.zone1 - booking.num_of_people
+                  booking.num_of_people = 0
+                elsif z.sequence == 1
+                  day_booking.zone2 = day_booking.zone2 - booking.num_of_people
+                  booking.num_of_people = 0
+                elsif z.sequence == 2
+                  day_booking.zone3 = day_booking.zone3 - booking.num_of_people
+                  booking.num_of_people = 0
+                elsif z.sequence == 3
+                  day_booking.zone4 = day_booking.zone4 - booking.num_of_people
+                  booking.num_of_people = 0
+                elsif z.sequence == 4
+                  day_booking.zone5 = day_booking.zone5 - booking.num_of_people
+                  booking.num_of_people = 0
+                elsif z.sequence == 5
+                  day_booking.zone6 = day_booking.zone6 - booking.num_of_people
+                  booking.num_of_people = 0
+                end
+                break;
               end
-              break;
             end
+          end
+
+          if booking.num_of_people != 0 && day_booking.other > 0
+            day_booking.other = day_booking.other - booking.num_of_people;
           end
           day_booking.save
         end
