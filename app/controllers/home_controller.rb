@@ -78,6 +78,13 @@ class HomeController < ApplicationController
     end
 
     @page_title ="DingBa訂吧-" + @restaurant.name
+
+    if params[:is_check_login] != "true"
+      @is_to_booking = true
+      redirect_to booker_session_new_path(:res_url => @res_url)
+    else
+      @is_check_login = true
+    end
   end
 
   def get_condition

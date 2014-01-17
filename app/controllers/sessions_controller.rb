@@ -3,20 +3,24 @@ class SessionsController < Devise::SessionsController
   layout 'registration'
 
   def restaurant_new
-    new('0')
+    new('0', nil)
   end
 
   def booker_new
     #@res_url = params[:format]
     #@res_url = @res_url[0..5]
-
-    new('1')
+    booker_url = params[:res_url]
+    new('1', booker_url)
   end
 
-  def new(role)
+  def new(role, booker_url)
     begin
       if !current_user.blank?    # when not confirm email will error
-        if current_user.role == '0'
+        if !booker_url.blank?
+          @id = booker_url
+          @is_check_login = true
+          redirect_to booking_restaurant_path(:id => @id, :is_check_login => @is_check_login)
+        elsif role == '0' && current_user.role == '0'
           restaurant_users = RestaurantUser.where(:user_id => current_user.id)
           restaurant = Restaurant.find(restaurant_users.first.restaurant_id)
 
@@ -29,13 +33,23 @@ class SessionsController < Devise::SessionsController
           else
             redirect_to confirmation_getting_started_path
           end
-        elsif current_user.role == '1'
+        elsif role == '1'
           redirect_to booker_manage_index_path
         end
       else
-        self.resource = resource_class.new
-        clean_up_passwords(resource)
-        respond_with(resource, serialize_options(resource))
+        if !booker_url.blank?
+          @id = booker_url
+          @is_to_booking = true
+          @is_check_login = true
+          #redirect_to booking_restaurant_path(:id => @id, :is_check_login => @is_check_login)
+          self.resource = resource_class.new
+          clean_up_passwords(resource)
+          respond_with(resource, serialize_options(resource), :id => @id, :is_check_login => @is_check_login, :is_to_booking => @is_to_booking)
+        else
+          self.resource = resource_class.new
+          clean_up_passwords(resource)
+          respond_with(resource, serialize_options(resource))
+        end
       end
     rescue => e
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/controllers/sessions_controller.rb  ,Method:new(sign_in_params)"

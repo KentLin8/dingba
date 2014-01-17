@@ -33,7 +33,7 @@ DingBa::Application.routes.draw do
   get  'home/q_and_a'
 
   get  'home/index'
-  get  'r/:id' => 'home#booking_restaurant'
+  get  'r/:id' => 'home#booking_restaurant',     :as => 'booking_restaurant'
   get  'home/get_condition'
   get  'home/notice_friend'
   get  'home/cancel_booking'

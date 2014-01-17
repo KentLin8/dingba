@@ -35,7 +35,10 @@
               保持登入
             </label>
         <% end %>
-        <div><%= f.submit "登入" , { :class => 'btn btn-primary',:disable_with => 'Processing...' } %></div>
+        <div>
+          <%= f.submit "登入" , { :class => 'btn btn-primary',:disable_with => 'Processing...' } %>
+          <% if @is_to_booking %><%= link_to "Guest登入", booking_restaurant_path(:id => @id, :is_check_login => @is_check_login) ,:class => 'btn btn-primary' %><% end %>
+        </div>
       </div>
   <% end %>
   <table width="100%">&nbsp;</table>
