@@ -210,7 +210,7 @@ class RegistrationsController < Devise::RegistrationsController
     taget_user[:password_confirmation] = taget_user[:password_confirmation].strip
     taget_user[:name] = taget_user[:name].strip
     taget_user[:phone] = taget_user[:phone].strip
-    taget_user[:current_password] = taget_user[:current_password].strip
+    #taget_user[:current_password] = taget_user[:current_password].strip
     taget_user[:birthday] = "#{params['birthday(1i)']}#{params['birthday(2i)']}#{params['birthday(3i)']}"
 
     if taget_user[:password] != taget_user[:password_confirmation]
