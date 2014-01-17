@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
   #helper_method :current_user
 
   ## override devise
-  def after_sign_in_path_for(resource_or_scope, res_url)
+  def after_sign_in_path_for_custom(resource_or_scope, res_url)
     stored_location_for(resource_or_scope) || sign_in_with_cus(resource_or_scope, res_url)
   end
 

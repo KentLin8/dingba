@@ -3,14 +3,14 @@ class SessionsController < Devise::SessionsController
   layout 'registration'
 
   def restaurant_new
-    new('0', nil)
+    new_user('0', nil)
   end
 
   def booker_new
     #@res_url = params[:format]
     #@res_url = @res_url[0..5]
     booker_url = params[:res_url]
-    new('1', booker_url)
+    new_user('1', booker_url)
   end
 
   def guest_login_check
@@ -19,7 +19,7 @@ class SessionsController < Devise::SessionsController
     render :layout => false
   end
 
-  def new(role, booker_url)
+  def new_user(role, booker_url)
     begin
       if !current_user.blank?    # when not confirm email will error
         if !booker_url.blank?
@@ -91,7 +91,6 @@ class SessionsController < Devise::SessionsController
       return
     end
 
-
     begin
       if target_user.first.confirmation_token.length != 20
         if user[:role] == '0'
@@ -111,10 +110,10 @@ class SessionsController < Devise::SessionsController
       if self.resource.blank?
         flash.now[:alert] = '密碼錯誤!'
         if user[:role] == '0'
-          new('0', nil)
+          new_user('0', nil)
           render 'devise/sessions/restaurant_new'
         elsif user[:role] == '1'
-          new('1', nil)
+          new_user('1', nil)
           render 'devise/sessions/booker_new'
         end
         return
@@ -122,7 +121,7 @@ class SessionsController < Devise::SessionsController
 
       sign_in(resource_name, resource)
       yield resource if block_given?
-      redirect_to after_sign_in_path_for(resource, params[:id])
+      redirect_to after_sign_in_path_for_custom(resource, params[:id])
       #respond_with resource, :location => after_sign_in_path_for(resource)
 
     rescue => e

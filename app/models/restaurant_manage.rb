@@ -1010,26 +1010,26 @@ class RestaurantManage
               if z.range_begin <= books[2] && z.range_end > books[2]
                 if z.status == 'f'
                   mix[0].other = mix[0].other + books[1]
-                  mix[1].delete(books)
+                  mix[1].to_a.delete(books)
                 else
                   if z.sequence == 0
                     mix[0].zone1 = mix[0].zone1 + books[1]
-                    mix[1].delete(books)
+                    mix[1].to_a.delete(books)
                   elsif z.sequence == 1
                     mix[0].zone2 = mix[0].zone2 + books[1]
-                    mix[1].delete(books)
+                    mix[1].to_a.delete(books)
                   elsif z.sequence == 2
                     mix[0].zone3 = mix[0].zone3 + books[1]
-                    mix[1].delete(books)
+                    mix[1].to_a.delete(books)
                   elsif z.sequence == 3
                     mix[0].zone4 = mix[0].zone4 + books[1]
-                    mix[1].delete(books)
+                    mix[1].to_a.delete(books)
                   elsif z.sequence == 4
                     mix[0].zone5 = mix[0].zone5 + books[1]
-                    mix[1].delete(books)
+                    mix[1].to_a.delete(books)
                   elsif z.sequence == 5
                     mix[0].zone6 = mix[0].zone6 + books[1]
-                    mix[1].delete(books)
+                    mix[1].to_a.delete(books)
                   end
                 end
               end
@@ -1107,26 +1107,26 @@ class RestaurantManage
               if z.range_begin <= books[2] && z.range_end > books[2]
                 if z.status == 'f'
                   mix[0].other = mix[0].other + books[1]
-                  mix[1].delete(books)
+                  mix[1].to_a.delete(books)
                 else
                   if z.sequence == 0
                     mix[0].zone1 = mix[0].zone1 + books[1]
-                    mix[1].delete(books)
+                    mix[1].to_a.delete(books)
                   elsif z.sequence == 1
                     mix[0].zone2 = mix[0].zone2 + books[1]
-                    mix[1].delete(books)
+                    mix[1].to_a.delete(books)
                   elsif z.sequence == 2
                     mix[0].zone3 = mix[0].zone3 + books[1]
-                    mix[1].delete(books)
+                    mix[1].to_a.delete(books)
                   elsif z.sequence == 3
                     mix[0].zone4 = mix[0].zone4 + books[1]
-                    mix[1].delete(books)
+                    mix[1].to_a.delete(books)
                   elsif z.sequence == 4
                     mix[0].zone5 = mix[0].zone5 + books[1]
-                    mix[1].delete(books)
+                    mix[1].to_a.delete(books)
                   elsif z.sequence == 5
                     mix[0].zone6 = mix[0].zone6 + books[1]
-                    mix[1].delete(books)
+                    mix[1].to_a.delete(books)
                   end
                 end
               end
