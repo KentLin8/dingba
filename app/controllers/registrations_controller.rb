@@ -213,8 +213,11 @@ class RegistrationsController < Devise::RegistrationsController
     #prev_unconfirmed_email = resource.unconfirmed_email if resource.respond_to?(:unconfirmed_email)
 
     taget_user = registration_params
+
+    if resource.provider.blank?
     taget_user[:password] = taget_user[:password].strip
     taget_user[:password_confirmation] = taget_user[:password_confirmation].strip
+    end
     taget_user[:name] = taget_user[:name].strip
     taget_user[:phone] = taget_user[:phone].strip
     #taget_user[:current_password] = taget_user[:current_password].strip

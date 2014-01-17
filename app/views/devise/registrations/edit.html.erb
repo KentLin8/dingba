@@ -39,6 +39,8 @@
       <% if resource.provider.blank? %>
         <%= f.password_field :password, :autocomplete => "off", :placeholder => '沒有要修改密碼請留空', :style => 'padding-left:10px' %>
         <%= f.password_field :password_confirmation, :placeholder => '沒有要修改密碼請留空', :style => 'padding-left:10px' %>
+      <% else %>
+         <br>
       <% end %>
       <%# f.password_field :current_password, :placeholder => '修改資料必填欄位', :style => 'padding-left:10px' %>
       <%= f.submit "確認修改" , :class => 'btn btn-primary' %>
