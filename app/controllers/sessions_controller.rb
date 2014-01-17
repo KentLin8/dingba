@@ -13,6 +13,12 @@ class SessionsController < Devise::SessionsController
     new('1', booker_url)
   end
 
+  def guest_login_check
+    @id = params[:id]
+    @is_check_login = params[:is_check_login]
+    render :layout => false
+  end
+
   def new(role, booker_url)
     begin
       if !current_user.blank?    # when not confirm email will error
@@ -105,10 +111,10 @@ class SessionsController < Devise::SessionsController
       if self.resource.blank?
         flash.now[:alert] = '密碼錯誤!'
         if user[:role] == '0'
-          new('0')
+          new('0', nil)
           render 'devise/sessions/restaurant_new'
         elsif user[:role] == '1'
-          new('1')
+          new('1', nil)
           render 'devise/sessions/booker_new'
         end
         return
@@ -116,7 +122,7 @@ class SessionsController < Devise::SessionsController
 
       sign_in(resource_name, resource)
       yield resource if block_given?
-      redirect_to after_sign_in_path_for(resource)
+      redirect_to after_sign_in_path_for(resource, params[:id])
       #respond_with resource, :location => after_sign_in_path_for(resource)
 
     rescue => e

@@ -39,7 +39,7 @@
         <div id="logo_word">
           <span style="margin-left: 0px;font-size: 15px;width: 280px">
             <% if @booker.id.blank? %>
-                <%= link_to "登入", booker_session_new_path(@res_url) %> <span style="color:rgb(0, 0, 0)">|</span>
+                <%= link_to "登入", booker_session_new_path(:res_url => @res_url) %> <span style="color:rgb(0, 0, 0)">|</span>
                 <%= link_to "註冊", "/registrations/booker_new" %>
             <% elsif !@booker.id.blank? %>
                 <div style="text-align: left;margin-top: 3px">

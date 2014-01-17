@@ -6,28 +6,36 @@ class ApplicationController < ActionController::Base
   #helper_method :current_user
 
   ## override devise
-  def after_sign_in_path_for(resource_or_scope)
-    stored_location_for(resource_or_scope) || sign_in_with_cus(resource_or_scope)
+  def after_sign_in_path_for(resource_or_scope, res_url)
+    stored_location_for(resource_or_scope) || sign_in_with_cus(resource_or_scope, res_url)
   end
 
-  def sign_in_with_cus(user)
+  def sign_in_with_cus(user, res_url)
     begin
-      if user.role == '0'
-        restaurant_users = RestaurantUser.where(:user_id => user.id) # TODO select restaurant
-        restaurant = Restaurant.find(restaurant_users.first.restaurant_id)
+      if !res_url.blank?
+        @res_url = res_url
+        @is_check_login = true
 
-        if RestaurantManage.check_restaurant_info(restaurant)
-          if RestaurantManage.check_supply_condition(restaurant.id)
-            '/restaurant#/calendar/restaurant_month'
+        booking_restaurant_path(:id => @res_url, :is_check_login => @is_check_login)
+      else
+        if user.role == '0'
+          restaurant_users = RestaurantUser.where(:user_id => user.id) # TODO select restaurant
+          restaurant = Restaurant.find(restaurant_users.first.restaurant_id)
+
+          if RestaurantManage.check_restaurant_info(restaurant)
+            if RestaurantManage.check_supply_condition(restaurant.id)
+              '/restaurant#/calendar/restaurant_month'
+            else
+              '/restaurant#/restaurant_manage/supply_condition'
+            end
           else
-            '/restaurant#/restaurant_manage/supply_condition'
+            confirmation_getting_started_path
           end
         else
-          confirmation_getting_started_path
+          booker_manage_index_path
         end
-      else
-        booker_manage_index_path
       end
+
     rescue => e
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/controllers/application_controller.rb  ,Method:sign_in_with_cus(user)"
       home_path
