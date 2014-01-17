@@ -31,9 +31,9 @@ class User < ActiveRecord::Base
                       role: '1')
 
       #user.skip_confirmation_notification!
+      user.generate_confirmation_token!
       user.skip_confirmation!
-      user.generate_confirmation_token
-      user.save
+      user.save!
       #user.confirm!
       #user.save
     end
@@ -55,9 +55,9 @@ class User < ActiveRecord::Base
                       role: '1')
 
       #user.skip_confirmation_notification!
+      user.generate_confirmation_token!
       user.skip_confirmation!
-      user.generate_confirmation_token
-      user.save
+      user.save!
       #user.confirm!
       #user.save
     end
