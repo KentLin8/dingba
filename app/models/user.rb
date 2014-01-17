@@ -33,7 +33,7 @@ class User < ActiveRecord::Base
       #user.skip_confirmation_notification!
       user.skip_confirmation!
       user.generate_confirmation_token
-      save(:validate => true)
+      user.save
       #user.confirm!
       #user.save
     end
@@ -57,7 +57,7 @@ class User < ActiveRecord::Base
       #user.skip_confirmation_notification!
       user.skip_confirmation!
       user.generate_confirmation_token
-      save(:validate => true)
+      user.save
       #user.confirm!
       #user.save
     end
