@@ -32,9 +32,8 @@ class User < ActiveRecord::Base
 
       #user.skip_confirmation_notification!
       user.skip_confirmation!
-      user.send_confirmation_instructions
       user.save
-
+      user.send_confirmation_instructions
     end
     user
   end
@@ -55,8 +54,8 @@ class User < ActiveRecord::Base
 
       #user.skip_confirmation_notification!
       user.skip_confirmation!
-      user.send_confirmation_instructions
       user.save
+      user.send_confirmation_instructions
     end
     user
   end
