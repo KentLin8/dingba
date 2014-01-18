@@ -34,6 +34,14 @@ class Home
         booking_condition.error = true
         booking_condition.message = '目前這個時段，餐廳沒有開放的訂位，請選擇較後面的日期查看喲!'
         return booking_condition
+      else
+        if conditions.first.is_vacation == 't'
+          booking_condition = BookingCondition.new
+          booking_condition.option_of_time = []
+          booking_condition.error = true
+          booking_condition.message = '餐廳今日休假'
+          return booking_condition
+        end
       end
       #=========================================================================
 
