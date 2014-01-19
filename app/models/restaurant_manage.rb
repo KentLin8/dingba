@@ -796,7 +796,14 @@ class RestaurantManage
         da = Time.parse(origin_booking[:booking_time].to_s).strftime("%Y-%m-%d")
         da = "#{da} #{ti}"
         booking.booking_time = Time.parse(da)
-        booking.num_of_people = origin_booking[:num_of_people].to_i
+
+        booking_num = origin_booking[:num_of_people].to_i
+
+        if booking_num <= 0
+          return {:error => true, :message => '訂位人數不能小於0!'}
+        end
+
+        booking.num_of_people = booking_num
         booking.remark = origin_booking[:remark]
         booking.save
 
@@ -852,7 +859,7 @@ class RestaurantManage
         if day_bookings.blank?
           day_booking = DayBooking.new
           day_booking.restaurant_id = booking.restaurant_id
-          day_booking.day = booking.booking_time
+          day_booking.day = Date.parse(booking.booking_time.to_s)
           day_booking.zone1 = 0
           day_booking.zone2 = 0
           day_booking.zone3 = 0
