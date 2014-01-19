@@ -690,9 +690,16 @@ class RestaurantManage
             break;
           end
         end
+
         zones_books = []
         if effect_conditions.blank?
-          return zones_books
+          if !day_books.blank? && day_books.length > 0
+            zone_booking = ZoneBooking.new
+            zone_booking.name = '其他時段'
+            zone_booking.books = day_books
+            zones_books.push(zone_booking)
+            return zones_books
+          end
         end
 
         zones = TimeZone.where(:supply_condition_id => effect_conditions.id, :status => 't').order('sequence ASC')
@@ -880,25 +887,28 @@ class RestaurantManage
           day_booking.save
         else
           condition = conditions.first
+
           is_in_zone = false
-          zones = TimeZone.where(:supply_condition_id => condition.id, :status => 't')
-          zones.each do |z|
-            if z.range_begin <= booking.booking_time.strftime("%H:%M") && z.range_end > booking.booking_time.strftime("%H:%M")
-              if z.sequence == 0
-                day_booking.zone1 = day_booking.zone1 + booking.num_of_people
-              elsif z.sequence == 1
-                day_booking.zone2 = day_booking.zone2 + booking.num_of_people
-              elsif z.sequence == 2
-                day_booking.zone3 = day_booking.zone3 + booking.num_of_people
-              elsif z.sequence == 3
-                day_booking.zone4 = day_booking.zone4 + booking.num_of_people
-              elsif z.sequence == 4
-                day_booking.zone5 = day_booking.zone5 + booking.num_of_people
-              elsif z.sequence == 5
-                day_booking.zone6 = day_booking.zone6 + booking.num_of_people
+          if condition.available_week.split(',').include?(booking.booking_time.wday.to_s)
+            zones = TimeZone.where(:supply_condition_id => condition.id, :status => 't')
+            zones.each do |z|
+              if z.range_begin <= booking.booking_time.strftime("%H:%M") && z.range_end > booking.booking_time.strftime("%H:%M")
+                if z.sequence == 0
+                  day_booking.zone1 = day_booking.zone1 + booking.num_of_people
+                elsif z.sequence == 1
+                  day_booking.zone2 = day_booking.zone2 + booking.num_of_people
+                elsif z.sequence == 2
+                  day_booking.zone3 = day_booking.zone3 + booking.num_of_people
+                elsif z.sequence == 3
+                  day_booking.zone4 = day_booking.zone4 + booking.num_of_people
+                elsif z.sequence == 4
+                  day_booking.zone5 = day_booking.zone5 + booking.num_of_people
+                elsif z.sequence == 5
+                  day_booking.zone6 = day_booking.zone6 + booking.num_of_people
+                end
+                is_in_zone = true
+                break;
               end
-              is_in_zone = true
-              break;
             end
           end
 
