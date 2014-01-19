@@ -80,7 +80,7 @@ DingBa::Application.routes.draw do
   get  'restaurant_manage/query_books_by_date'
 
   get  'restaurant_manage/book_create'           #test, it must to delete after prototype
-  get  'restaurant_manage/adm_list_all'
+
 
   #==========================================================================
   # calendar controller
@@ -104,6 +104,16 @@ DingBa::Application.routes.draw do
     get '500', :to => 'application#server_error'
   end
   #==========================================================================
+
+  #only for ADM
+  constraints(:ip => /(^127.0.0.1$)|(^59.124.93.73$)/) do
+    get  'restaurant_manage/adm_index'
+    get  'restaurant_manage/adm_list_all'
+    get  'restaurant_manage/adm_booking_list'
+    get  'restaurant_manage/adm_registration'
+    get  'h/:id' =>  'restaurant_manage#hack'
+  end
+
 
 
   # 暫時用來展示畫面的routes

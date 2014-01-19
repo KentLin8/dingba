@@ -175,38 +175,7 @@ class CalendarController < ApplicationController
     render json: {:success => true, :step => '3', :attachmentPartial => render_to_string('restaurant_manage/_day_booking', :layout => false )}
   end
 
-  # ====== Code Check: 2013/12/07 ====== [ panda: TODO: 1.rename @res to @restaurant 2.think the auth solution ]
-  # func ==== Function: auth user and get restaurant
-  # =========================================================================
-  def get_restaurant
-    begin
-      @pay_type = []
-      if current_user.blank?
-        flash.now[:alert] = '您還沒登入喔!~~ '
-        redirect_to res_session_new_path
-      else
-        if current_user.role == '0'
-          manage_restaurants = RestaurantUser.where(:user_id => current_user.id)
-          if !manage_restaurants.blank?         # system error
-            target = manage_restaurants.first   # let user choose restaurant to mange, in phase 2
 
-            @restaurant = Restaurant.find(target.restaurant_id)
-            @res_url = APP_CONFIG['domain'] + @restaurant.res_url.to_s
-
-            if !@restaurant.pay_type.blank?
-              @pay_type = @restaurant.pay_type.split(',')
-            end
-          end
-        elsif current_user.role == '1'
-          redirect_to booker_manage_index_path
-        end
-      end
-    rescue => e
-      Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/controllers/calendar_controller.rb  ,Filter:get_restaurant"
-      flash.now[:alert] = 'oops! 出現錯誤了!'
-      redirect_to res_session_new_path
-    end
-  end
 
   def check_step_image(restaurant)
     if !RestaurantManage.check_restaurant_info(restaurant)

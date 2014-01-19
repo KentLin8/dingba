@@ -7,6 +7,7 @@ development:
   <<: *defaults
   app_title: DingBa (DEV ENV)
   domain: "http://localhost:3000/r/"
+  domain_hack: "http://localhost:3000/h/"
   domain_clear: "http://localhost:3000/"
   error: "=============Catch Error:"
   enable_invite_code: "true"
@@ -19,6 +20,7 @@ production:
   <<: *defaults
   app_title: DingBa
   domain: "http://dingba.tw/r/"
+  domain_hack: "http://dingba.tw/h/"
   domain_clear: "http://dingba.codream.tw/"
   error: "=============Catch Error:"
   enable_invite_code: "true"

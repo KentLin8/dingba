@@ -281,36 +281,6 @@ class RestaurantManageController < ApplicationController
     render json: result
   end
 
-  # func ==== Function: auth user and get restaurant
-  def get_restaurant
-    begin
-      @pay_type = []
-      if current_user.blank?
-        flash.now[:alert] = '您還沒登入喔!~~ '
-        redirect_to res_session_new_path
-      else
-        if current_user.role == '0'
-          manage_restaurants = RestaurantUser.where(:user_id => current_user.id)
-          if !manage_restaurants.blank?         # system error
-            target = manage_restaurants.first   # let user choose restaurant to mange, in phase 2
-
-            @restaurant = Restaurant.find(target.restaurant_id)
-            @res_url = APP_CONFIG['domain'] + @restaurant.res_url.to_s
-
-            if !@restaurant.pay_type.blank?
-              @pay_type = @restaurant.pay_type.split(',')
-            end
-          end
-        elsif current_user.role == '1'
-          redirect_to booker_manage_index_path
-        end
-      end
-    rescue => e
-      Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/controllers/restaurant_manage_controller.rb  ,Filter:get_restaurant"
-      flash.now[:alert] = 'oops! 出現錯誤了!'
-      redirect_to res_session_new_path
-    end
-  end
 
   def check_step_info(restaurant)
     if !RestaurantManage.check_restaurant_info(restaurant)
@@ -387,8 +357,31 @@ class RestaurantManageController < ApplicationController
     db.save
   end
 
+  def  adm_index
+    render :layout => false
+
+  end
+
+
   def  adm_list_all
-    @restaurant_list = Restaurant.all.order("id DESC")
+    @restaurant_list = Restaurant.order("id DESC").where("name is NOT NULL")
     render :layout => false
   end
+
+  def hack
+    session[:hack_restaurant_id] =  params[:id]
+    redirect_to '/restaurant#/calendar/restaurant_month'
+  end
+
+  def  adm_booking_list
+    @booking_list = Booking.order("id DESC").where("name is NOT NULL").limit(100)
+    render :layout => false
+  end
+
+  def  adm_registration
+    @registration_list = User.all.order("id DESC").limit(100)
+    render :layout => false
+  end
+
+
 end

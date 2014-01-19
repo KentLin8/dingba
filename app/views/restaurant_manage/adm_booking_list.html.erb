@@ -34,30 +34,32 @@
 </head>
 
 <body>
-<%= link_to 'home', action: 'adm_index', method: :get  %> List all restaurants ..
-    <table id="customers">
 
-      <tr >
-        <th>ID</th>
-        <th>Name</th>
-        <th>Supplier_email</th>
-        <th>Created at</th>
-        <th>Updated_at</th>
-      </tr>
+<%= link_to 'home', action: 'adm_index', method: :get  %>   Top 100 reserve records.
+<table id="customers">
 
-      <% @restaurant_list.each do |rest| %>
+  <tr >
+    <th>ID</th>
+    <th>User Name</th>
+    <th>Restaurant </th>
+    <th>Status</th>
+    <th>Reserve time</th>
+    <th>Updated at</th>
+  </tr>
+
+  <% @booking_list.each do |booker| %>
       <tr >
-        <td><%= rest.id %></td>
+        <td><%= booker.id %></td>
+        <td> <%= booker.name %>  </td>
         <td>
-          <a href='<%=  APP_CONFIG['domain'] + rest.res_url.to_s  %>'><%= rest.name %></a>
-          (<a href='<%=  APP_CONFIG['domain_hack'] + rest.res_url.to_s  %>'> IN </a> )
+          <a href='<%=  APP_CONFIG['domain'] + booker.res_url.to_s  %>'><%= booker.restaurant_name %></a>
         </td>
-        <td><%= rest.supply_email %></td>
-        <td><%= rest.created_at.to_date %> </td>
-        <td> <%= rest.updated_at.to_date %></td>
+        <td> <%= booker.status %>  </td>
+        <td><%= booker.booking_time %> </td>
+        <td> <%= booker.updated_at.to_date %></td>
       </tr>
-      <% end %>
-    </table>
+  <% end %>
+</table>
 
 </body>
 </html>
