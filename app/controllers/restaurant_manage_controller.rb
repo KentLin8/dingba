@@ -250,11 +250,15 @@ class RestaurantManageController < ApplicationController
   def modify_booking
     begin
       @booking = Booking.find(params[:booking_id].to_i)
+      @time = @booking.booking_time.strftime("%H:%M")
+      @booking.booking_time = @booking.booking_time.strftime("%Y-%m-%d")
+
     rescue => e
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/controllers/restaurant_manage_controller.rb  ,Action:modify_booking"
     end
 
-    render 'restaurant_manage/_modify_booking', :layout => false
+    render json: {:btime => @time ,:attachmentPartial => render_to_string('restaurant_manage/_modify_booking', :layout => false) }
+    #render 'restaurant_manage/_modify_booking', :layout => false
   end
 
   # POST === Function: save modify booking

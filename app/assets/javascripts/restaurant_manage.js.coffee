@@ -539,9 +539,10 @@ $ ->
     id = tr.data('id')
     $.get('/restaurant_manage/modify_booking', {booking_id: id}, 'html')
       .done( (response) ->
-        new_tr = $($.parseHTML(response, document, true))
+        new_tr = $($.parseHTML(response.attachmentPartial, document, true))
         tr.after(new_tr)
         new_tr.find('#wrapper').animate(height: 210)
+        $('select').val -> response.btime
       )
       .fail( -> alert '讀取失敗' )
 
