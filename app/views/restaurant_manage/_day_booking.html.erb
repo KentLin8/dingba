@@ -55,11 +55,15 @@
           <td class="table_content"><a href="mailto:<%= b.email %>"><%= b.email %></a></td>
           <td class="table_content"><%= b.remark %></td>
           <td>
-            <% if b.status == '0' %>
+            <% if b.status == '0' && b.booking_time > Time.now %>
                 <i class="icon-pencil modify" title="修改"></i>
             <% end %>
           </td>
-          <td><i class="icon-remove-circle delete" title="取消訂位"></i></td>
+          <td>
+            <% if b.status == '0' && b.booking_time > Time.now %>
+                <i class="icon-remove-circle delete" title="取消訂位"></i>
+            <% end %>
+          </td>
           </tr>
       <% end %>
     </table>

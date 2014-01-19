@@ -15,6 +15,10 @@ class HomeController < ApplicationController
   # booking status 5 = 餐廳臨時公休
   # booking status 6 = 聚餐延期
   # booking status 7 = 其他
+  # role = 0 餐廳
+  # role = 1 使用者
+  # is_special = 't', 'f'
+  # is_vacation = 't', 'f'
   # =========================================================================
 
   def about_codream
