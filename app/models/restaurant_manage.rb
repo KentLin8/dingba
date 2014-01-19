@@ -430,7 +430,7 @@ class RestaurantManage
       end
     end
 
-    zone_array = []
+    #zone_array = []
     zones.each_with_index do |zone, index|
       zone.sequence = index
       zone.save
@@ -1176,7 +1176,7 @@ class RestaurantManage
           not_sum_count = not_sum_count + books[1]
         end
 
-        if not_sum_count > 0 && mix[0].zone1 == 0 && mix[0].zone2 == 0 && mix[0].zone3 == 0 && mix[0].zone4 == 0&& mix[0].zone5 == 0 && mix[0].zone6 == 0
+        if not_sum_count > 0
           mix[0].other = not_sum_count
           mix[0].save
         end
@@ -1299,7 +1299,7 @@ class RestaurantManage
         not_sum_count = not_sum_count + books[1]
       end
 
-      if not_sum_count > 0 && mix[0].zone1 == 0 && mix[0].zone2 == 0 && mix[0].zone3 == 0 && mix[0].zone4 == 0&& mix[0].zone5 == 0 && mix[0].zone6 == 0
+      if not_sum_count > 0
         mix[0].other = not_sum_count
         mix[0].save
       end
