@@ -73,7 +73,7 @@
             </tr>
             <tr>
               <td style="font-size: 16px">餐廳特色：</td>
-              <td ><%= @restaurant.feature %></td>
+              <td ><%= truncate(@restaurant.feature , :length => 17) %></td>
             </tr>
             <tr>
               <td style="font-size: 16px">營業時間：</td>

@@ -4,7 +4,7 @@
       #customers
       {
           font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
-          width:800 px;
+          width:800px;
           border-collapse:collapse;
       }
 
@@ -41,8 +41,9 @@
         <th>ID</th>
         <th>Name</th>
         <th>ADM Email</th>
+        <th>Invited Code</th>
         <th>Created at</th>
-        <th>Updated_at</th>
+        <th>Updated at</th>
       </tr>
 
       <% @restaurant_list.each do |rest| %>
@@ -53,6 +54,7 @@
           (<a href='<%=  APP_CONFIG['domain_hack'] + rest.res_url.to_s  %>'> IN </a> )
         </td>
         <td><%= rest.supply_email %></td>
+        <td><%#= rest.code %></td>
         <td><%= rest.created_at.to_date %> </td>
         <td> <%= rest.updated_at.to_date %></td>
       </tr>
