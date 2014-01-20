@@ -262,37 +262,48 @@ class RestaurantManage
     end
   end
 
-  def self.supply_condition_create(restaurant_id, origin_condition, origin_zones)
-    begin
-      have_one_enable = false
-      origin_zones.length.times do |i|
-        temp_max_zone = origin_zones[i]
+  def self.supply_condition_save_check(origin_zones)
+    have_one_enable = false
+    origin_zones.length.times do |i|
+      temp_max_zone = origin_zones[i]
 
-        if !temp_max_zone[:enable].blank?
-          have_one_enable = true
-        end
+      if !temp_max_zone[:enable].blank?
+        have_one_enable = true
+      end
 
-        if !temp_max_zone[:enable].blank? && (temp_max_zone[:total_allow].to_i < temp_max_zone[:fifteen_allow].to_i) || (temp_max_zone[:total_allow].to_i < temp_max_zone[:each_allow].to_i) || (temp_max_zone[:fifteen_allow].to_i < temp_max_zone[:each_allow].to_i)
-          return {:error => true, :message => '總供位必須大於15分鐘供位和單次供位人數!'}
-        end
+      if !temp_max_zone[:enable].blank? && (temp_max_zone[:total_allow].to_i < temp_max_zone[:fifteen_allow].to_i) || (temp_max_zone[:total_allow].to_i < temp_max_zone[:each_allow].to_i) || (temp_max_zone[:fifteen_allow].to_i < temp_max_zone[:each_allow].to_i)
+        return {:error => true, :message => '總供位必須大於15分鐘供位和單次供位人數!'}
+      end
 
-        origin_zones.length.times do |j|
-          if j != i
-            if !temp_max_zone[:enable].blank? && temp_max_zone[:time_begin] == temp_max_zone[:time_end]
-              if !origin_zones[j][:enable].blank? && (origin_zones[j][:time_begin] <= temp_max_zone[:time_begin] && origin_zones[j][:time_end] >= temp_max_zone[:time_end])
-                return {:error => true, :message => '時段不能重疊喔!'}
-              end
-            elsif !temp_max_zone[:enable].blank?
-              if !origin_zones[j][:enable].blank? && (origin_zones[j][:time_begin] < temp_max_zone[:time_end] && origin_zones[j][:time_end] >= temp_max_zone[:time_end])
-                return {:error => true, :message => '時段不能重疊喔!'}
-              end
+      origin_zones.length.times do |j|
+        if j != i
+          if !temp_max_zone[:enable].blank? && temp_max_zone[:time_begin] == temp_max_zone[:time_end]
+            if !origin_zones[j][:enable].blank? && (origin_zones[j][:time_begin] <= temp_max_zone[:time_begin] && origin_zones[j][:time_end] >= temp_max_zone[:time_end])
+              return {:error => true, :message => '時段不能重疊喔!'}
+            end
+          elsif !temp_max_zone[:enable].blank?
+            if !origin_zones[j][:enable].blank? && (origin_zones[j][:time_begin] < temp_max_zone[:time_end] && origin_zones[j][:time_end] >= temp_max_zone[:time_end])
+              return {:error => true, :message => '時段不能重疊喔!'}
             end
           end
         end
       end
+    end
 
-      if !have_one_enable
-        return {:error => true, :message => '至少要啟用一個時段喔!'}
+    return {:error => false, :have_one_enable => have_one_enable }
+  end
+
+  def self.supply_condition_create(restaurant_id, origin_condition, origin_zones)
+    begin
+
+      result = supply_condition_save_check(origin_zones)
+
+      if result[:error] == true
+        return result
+      else
+        if !result[:have_one_enable]
+          return {:error => true, :message => '至少要啟用一個時段喔!'}
+        end
       end
 
       SupplyCondition.transaction do
@@ -328,37 +339,48 @@ class RestaurantManage
 
   def self.supply_condition_update(restaurant_id, origin_condition, origin_zones)
     begin
-      have_one_enable = false
-      origin_zones.length.times do |i|
-        temp_max_zone = origin_zones[i]
-
-        if !temp_max_zone[:enable].blank?
-          have_one_enable = true
-        end
-
-        if !temp_max_zone[:enable].blank? && (temp_max_zone[:total_allow].to_i < temp_max_zone[:fifteen_allow].to_i) || (temp_max_zone[:total_allow].to_i < temp_max_zone[:each_allow].to_i) || (temp_max_zone[:fifteen_allow].to_i < temp_max_zone[:each_allow].to_i)
-          return {:error => true, :message => '總供位必須大於15分鐘供位和單次供位人數!'}
-        end
-
-        origin_zones.length.times do |j|
-          if j != i
-            if !temp_max_zone[:enable].blank? && temp_max_zone[:time_begin] == temp_max_zone[:time_end]
-              if !origin_zones[j][:enable].blank? && (origin_zones[j][:time_begin] <= temp_max_zone[:time_begin] && origin_zones[j][:time_end] >= temp_max_zone[:time_end])
-                return {:error => true, :message => '時段不能重疊喔!'}
-              end
-            elsif !temp_max_zone[:enable].blank?
-              if !origin_zones[j][:enable].blank? && (origin_zones[j][:time_begin] < temp_max_zone[:time_end] && origin_zones[j][:time_end] >= temp_max_zone[:time_end])
-                return {:error => true, :message => '時段不能重疊喔!'}
-              end
-            end
-          end
-        end
-      end
+      result = supply_condition_save_check(origin_zones)
 
       target_condition = SupplyCondition.find(origin_condition[:id].to_i)
-      if !have_one_enable && target_condtion.is_special != 't'
-        return {:error => true, :message => '至少要啟用一個時段喔!'}
+      if result[:error] == true
+        return result
+      else
+        if !result[:have_one_enable] && !target_condition.is_special.blank? && target_condition.is_special != 't'
+          return {:error => true, :message => '至少要啟用一個時段喔!'}
+        end
       end
+
+      #have_one_enable = false
+      #origin_zones.length.times do |i|
+      #  temp_max_zone = origin_zones[i]
+      #
+      #  if !temp_max_zone[:enable].blank?
+      #    have_one_enable = true
+      #  end
+      #
+      #  if !temp_max_zone[:enable].blank? && (temp_max_zone[:total_allow].to_i < temp_max_zone[:fifteen_allow].to_i) || (temp_max_zone[:total_allow].to_i < temp_max_zone[:each_allow].to_i) || (temp_max_zone[:fifteen_allow].to_i < temp_max_zone[:each_allow].to_i)
+      #    return {:error => true, :message => '總供位必須大於15分鐘供位和單次供位人數!'}
+      #  end
+      #
+      #  origin_zones.length.times do |j|
+      #    if j != i
+      #      if !temp_max_zone[:enable].blank? && temp_max_zone[:time_begin] == temp_max_zone[:time_end]
+      #        if !origin_zones[j][:enable].blank? && (origin_zones[j][:time_begin] <= temp_max_zone[:time_begin] && origin_zones[j][:time_end] >= temp_max_zone[:time_end])
+      #          return {:error => true, :message => '時段不能重疊喔!'}
+      #        end
+      #      elsif !temp_max_zone[:enable].blank?
+      #        if !origin_zones[j][:enable].blank? && (origin_zones[j][:time_begin] < temp_max_zone[:time_end] && origin_zones[j][:time_end] >= temp_max_zone[:time_end])
+      #          return {:error => true, :message => '時段不能重疊喔!'}
+      #        end
+      #      end
+      #    end
+      #  end
+      #end
+      #
+      #target_condition = SupplyCondition.find(origin_condition[:id].to_i)
+      #if !have_one_enable && target_condition.is_special != 't'
+      #  return {:error => true, :message => '至少要啟用一個時段喔!'}
+      #end
 
       SupplyCondition.transaction do
         condition_id = supply_condition_save(origin_condition, restaurant_id, target_condition)
@@ -466,35 +488,14 @@ class RestaurantManage
   def self.special_create(origin_zones, special_day, restaurant_id, is_vacation)
     begin
       if is_vacation.blank?
-        have_one_enable = false
-        origin_zones.length.times do |i|
-          temp_max_zone = origin_zones[i]
+        result = supply_condition_save_check(origin_zones)
 
-          if !temp_max_zone[:enable].blank?
-            have_one_enable = true
+        if result[:error] == true
+          return result
+        else
+          if !result[:have_one_enable]
+            return {:error => true, :message => '至少要啟用一個時段喔!'}
           end
-
-          if !temp_max_zone[:enable].blank? && (temp_max_zone[:total_allow].to_i < temp_max_zone[:fifteen_allow].to_i) || (temp_max_zone[:total_allow].to_i < temp_max_zone[:each_allow].to_i) || (temp_max_zone[:fifteen_allow].to_i < temp_max_zone[:each_allow].to_i)
-            return {:error => true, :message => '總供位必須大於15分鐘供位和單次供位人數!'}
-          end
-
-          origin_zones.length.times do |j|
-            if j != i
-              if !temp_max_zone[:enable].blank? && temp_max_zone[:time_begin] == temp_max_zone[:time_end]
-                if !origin_zones[j][:enable].blank? && (origin_zones[j][:time_begin] <= temp_max_zone[:time_begin] && origin_zones[j][:time_end] >= temp_max_zone[:time_end])
-                  return {:error => true, :message => '時段不能重疊喔!'}
-                end
-              elsif !temp_max_zone[:enable].blank?
-                if !origin_zones[j][:enable].blank? && (origin_zones[j][:time_begin] < temp_max_zone[:time_end] && origin_zones[j][:time_end] >= temp_max_zone[:time_end])
-                  return {:error => true, :message => '時段不能重疊喔!'}
-                end
-              end
-            end
-          end
-        end
-
-        if !have_one_enable
-          return {:error => true, :message => '至少要啟用一個時段喔!'}
         end
       end
 
@@ -831,24 +832,26 @@ class RestaurantManage
         else
           origin_condition = origin_conditions.first
 
-          origin_zones = TimeZone.where(:supply_condition_id => origin_condition.id, :status => 't')
-          origin_zones.each do |z|
-            if z.range_begin <= origin_booking_time.strftime("%H:%M") && z.range_end > origin_booking_time.strftime("%H:%M")
-              if z.sequence == 0
-                origin_day_booking.zone1 = origin_day_booking.zone1 - origin_num_of_people
-              elsif z.sequence == 1
-                origin_day_booking.zone2 = origin_day_booking.zone2 - origin_num_of_people
-              elsif z.sequence == 2
-                origin_day_booking.zone3 = origin_day_booking.zone3 - origin_num_of_people
-              elsif z.sequence == 3
-                origin_day_booking.zone4 = origin_day_booking.zone4 - origin_num_of_people
-              elsif z.sequence == 4
-                origin_day_booking.zone5 = origin_day_booking.zone5 - origin_num_of_people
-              elsif z.sequence == 5
-                origin_day_booking.zone6 = origin_day_booking.zone6 - origin_num_of_people
+          if origin_condition.available_week.split(',').include?(origin_booking_time.wday.to_s)
+            origin_zones = TimeZone.where(:supply_condition_id => origin_condition.id, :status => 't')
+            origin_zones.each do |z|
+              if z.range_begin <= origin_booking_time.strftime("%H:%M") && z.range_end > origin_booking_time.strftime("%H:%M")
+                if z.sequence == 0
+                  origin_day_booking.zone1 = origin_day_booking.zone1 - origin_num_of_people
+                elsif z.sequence == 1
+                  origin_day_booking.zone2 = origin_day_booking.zone2 - origin_num_of_people
+                elsif z.sequence == 2
+                  origin_day_booking.zone3 = origin_day_booking.zone3 - origin_num_of_people
+                elsif z.sequence == 3
+                  origin_day_booking.zone4 = origin_day_booking.zone4 - origin_num_of_people
+                elsif z.sequence == 4
+                  origin_day_booking.zone5 = origin_day_booking.zone5 - origin_num_of_people
+                elsif z.sequence == 5
+                  origin_day_booking.zone6 = origin_day_booking.zone6 - origin_num_of_people
+                end
+                origin_num_of_people = 0
+                break;
               end
-              origin_num_of_people = 0
-              break;
             end
           end
 

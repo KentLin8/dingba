@@ -13,8 +13,8 @@
       <% if resource.provider.blank? %>
         新密碼：</br>
         確認新密碼：</br>
+        驗證碼 ( 目前密碼 )：
       <% end %>
-      <!--驗證碼 ( 目前密碼 )：-->
     </div>
 
     <div style="float: left;width: 250px;font-size: 16px; line-height:40px">
@@ -28,7 +28,7 @@
       </span>
       <br>
       <span class="datetime">
-        <%= f.date_select :birthday, :default_year => Date.today.year,:start_year => 1900, :end_year => Date.today.year - 10 ,:style => 'padding-left:10px;'%>
+        <%= f.date_select :birthday,:start_year => 1911, :end_year => Date.today.year ,:style => 'padding-left:10px;'%>
       </span>
       <br>
       <span class="from_for_radio">
@@ -39,10 +39,11 @@
       <% if resource.provider.blank? %>
         <%= f.password_field :password, :autocomplete => "off", :placeholder => '沒有要修改密碼請留空', :style => 'padding-left:10px' %>
         <%= f.password_field :password_confirmation, :placeholder => '沒有要修改密碼請留空', :style => 'padding-left:10px' %>
+        <%= f.password_field :current_password, :placeholder => '修改資料必填欄位', :style => 'padding-left:10px' %>
       <% else %>
          <br>
       <% end %>
-      <%# f.password_field :current_password, :placeholder => '修改資料必填欄位', :style => 'padding-left:10px' %>
+
       <%= f.submit "確認修改" , :class => 'btn btn-primary' %>
       <input class="btn" type="reset" value="清除">
     </div>

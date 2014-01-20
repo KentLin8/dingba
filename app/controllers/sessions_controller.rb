@@ -59,7 +59,7 @@ class SessionsController < Devise::SessionsController
         end
       end
     rescue => e
-      Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/controllers/sessions_controller.rb  ,Method:new(sign_in_params)"
+      #Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/controllers/sessions_controller.rb  ,Method:new(sign_in_params)"
       #if role == '0'
       #  redirect_to res_session_new_path
       #else

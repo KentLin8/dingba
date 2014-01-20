@@ -28,6 +28,9 @@ class User < ActiveRecord::Base
                       #uid:auth.uid,
                       email:auth.info.email,
                       password:Devise.friendly_token[0,20],
+                      phone: auth.info.phone,
+                      sex: auth.extra.raw_info.gender,
+                      birthday: auth.info.birthday,
                       role: '1')
 
       user.skip_confirmation!
@@ -46,6 +49,9 @@ class User < ActiveRecord::Base
     unless user
       user = User.new(name: data["name"],
                       email: data["email"],
+                      phone: data["phone"],
+                      sex: data["email"],
+                      birthday: data["birthday"],
                       provider: "google",
                       password: Devise.friendly_token[0,20],
                       role: '1')

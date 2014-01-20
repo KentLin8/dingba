@@ -14,17 +14,36 @@
 
   <%= form_tag booker_create_path do %>
 
-      <div style="float: left; font-size: 16px; width: 30%;line-height: 35px;text-align: right;">
+      <div style="float: left; font-size: 16px; width: 40%;line-height: 35px;text-align: right;">
         您的姓名：<br>
         帳號 ( E-Mail )：<br>
         手機號碼：<br>
+        性別：<br>
+        生日：<br>
+        願意收到促銷訊息：<br>
         設定密碼：<br>
       </div>
 
-      <div style="float: right; font-size: 16px; width: 67%; margin-bottom: 15px;line-height: 35px">
+      <div style="float: right; font-size: 16px; width: 60%; margin-bottom: 15px;line-height: 35px">
         <%= text_field_tag :tag_name, params[:tag_name], :required => true %>
         <%= text_field_tag :tag_email, params[:tag_email], :required => true %>
         <%= text_field_tag :tag_phone, params[:tag_phone], :required => true %>
+
+        <br>
+        <span class="from_for_radio">
+            <label class="font_size_16"><%= radio_button_tag :tag_sex, '男', :checked => true %>男</label>
+            <label class="font_size_16" style="margin-left: 5px"><%= radio_button_tag :tag_sex, '女' %>女</label>
+        </span>
+        <br>
+        <span class="datetime">
+            <%= date_select :tag_birthday, params[:tag_birthday],:start_year => 1911, :end_year => Date.today.year ,:style => 'padding-left:10px;'%>
+        </span>
+        <br>
+        <span class="from_for_radio">
+            <label class="font_size_16"><%= radio_button_tag :tag_allow_promot , 't', :checked => true %>是</label>
+            <label class="font_size_16" style="margin-left: 5px"><%= radio_button_tag :tag_allow_promot, 'f' %>否</label>
+        </span>
+        <br>
         <%= password_field_tag :tag_password, nil, :required => true %>
 
         <label class="checkbox inline" style="font-size: 16px"><%= check_box_tag :tag_i_agree, 1, false, {required: 'required'} %>
