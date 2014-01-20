@@ -4,7 +4,7 @@
       #customers
       {
           font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
-          width:100%;
+          width:800 px;
           border-collapse:collapse;
       }
 
@@ -34,13 +34,13 @@
 </head>
 
 <body>
-<%= link_to 'home', action: 'adm_index', method: :get  %> List all restaurants ..
+<%= link_to '<<Go Home>>', action: 'adm_index', method: :get  %>    List all restaurants ..
     <table id="customers">
 
       <tr >
         <th>ID</th>
         <th>Name</th>
-        <th>Supplier_email</th>
+        <th>ADM Email</th>
         <th>Created at</th>
         <th>Updated_at</th>
       </tr>
