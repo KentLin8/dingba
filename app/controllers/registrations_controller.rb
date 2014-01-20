@@ -48,6 +48,10 @@ class RegistrationsController < Devise::RegistrationsController
     name = params[:tag_name].strip
     email = params[:tag_email].strip
     phone = params[:tag_phone].strip
+    sex = params[:tag_sex]
+    birthday_param = params[:tag_birthday]
+    birthday = Time.parse(birthday_param['(1i)'].to_s + "-" + birthday_param['(2i)'].to_s + "-" + birthday_param['(3i)'].to_s)
+    allow_promot = params[:tag_allow_promot]
     password = params[:tag_password].strip
     i_agree = params[:tag_i_agree]    # nil mean not agree clause
 
@@ -100,7 +104,10 @@ class RegistrationsController < Devise::RegistrationsController
                 'phone' => phone,
                 'role' => role,              # 0 = restaurant, 1 = booker
                 'password' => password,
-                'password_confirmation' => password }
+                'password_confirmation' => password,
+                'sex' => sex,
+                'birthday' => birthday,
+                'allow_promot' => allow_promot}
     devise_save(person, invite_code)
   end
 
@@ -215,12 +222,12 @@ class RegistrationsController < Devise::RegistrationsController
     taget_user = registration_params
 
     if resource.provider.blank?
-    taget_user[:password] = taget_user[:password].strip
-    taget_user[:password_confirmation] = taget_user[:password_confirmation].strip
+      taget_user[:password] = taget_user[:password]
+      taget_user[:password_confirmation] = taget_user[:password_confirmation]
+      taget_user[:current_password] = taget_user[:current_password]
     end
     taget_user[:name] = taget_user[:name].strip
     taget_user[:phone] = taget_user[:phone].strip
-    #taget_user[:current_password] = taget_user[:current_password].strip
     taget_user[:birthday] = "#{params['birthday(1i)']}#{params['birthday(2i)']}#{params['birthday(3i)']}"
 
     if taget_user[:password] != taget_user[:password_confirmation]
@@ -231,28 +238,40 @@ class RegistrationsController < Devise::RegistrationsController
       result = '姓名為必填欄位喔!'
     elsif taget_user[:phone].blank?
       result = '電話為必填欄位喔!'
-    #elsif taget_user[:current_password].blank?
-    #  result = '驗證碼為必填欄位喔!'
     else
-      #if update_resource(resource, taget_user)
-      if resource.update_without_password(taget_user)
-        #if is_navigational_format?
-        #  flash_key = update_needs_confirmation?(resource, prev_unconfirmed_email) ?
-        #      :update_needs_confirmation : :updated
-        #  #set_flash_message :notice, flash_key
-        #end
-        sign_in resource_name, resource, :bypass => true
-        #respond_with resource, :location => '/booker_manage/index' #after_update_path_for(resource)
-        result = '修改成功'
+
+      if resource.provider.blank?
+        if taget_user[:current_password].blank?
+          result = '驗證碼為必填欄位喔!'
+        else
+          if update_resource(resource, taget_user)
+            sign_in resource_name, resource, :bypass => true
+            result = '修改成功'
+          else
+            clean_up_passwords resource
+            result = '修改失敗! 請確認輸入資料是否正確!,或資料長度超過限制'
+          end
+        end
       else
-        clean_up_passwords resource
-        result = '修改失敗! 請確認輸入資料是否正確!,或資料長度超過限制'
+        #if update_resource(resource, taget_user)
+        if resource.update_without_password(taget_user)
+          #if is_navigational_format?
+          #  flash_key = update_needs_confirmation?(resource, prev_unconfirmed_email) ?
+          #      :update_needs_confirmation : :updated
+          #  #set_flash_message :notice, flash_key
+          #end
+          sign_in resource_name, resource, :bypass => true
+          #respond_with resource, :location => '/booker_manage/index' #after_update_path_for(resource)
+          result = '修改成功'
+        else
+          clean_up_passwords resource
+          result = '修改失敗! 請確認輸入資料是否正確!,或資料長度超過限制'
+        end
       end
     end
 
     from = params[:from]
     if from.blank?
-
       #render json:{:edit_account => true, :message => result, :attachmentPartial => render_to_string('devise/registrations/edit', :layout => false, :locals => { :resource => resource,:resource_name => 'user'}) }
       redirect_to '/booker_manage/index#tabs-2', :alert => result
     else
@@ -261,6 +280,6 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   def registration_params
-    params.require(:user).permit(:name, :phone, :email, :password, :password_confirmation, :birthday, :sex, :allow_promot)
+    params.require(:user).permit(:name, :phone, :email, :password, :password_confirmation, :current_password, :birthday, :sex, :allow_promot)
   end
 end

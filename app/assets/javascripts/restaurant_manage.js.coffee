@@ -305,12 +305,12 @@ $ ->
     alert '請檢查已啟用的時段是否有欄位空白或非數字，或是開始時間比結束時間早' unless check
 
     # 時段不衝突
-    for period in periods
-      for period2 in periods
-        for p in period2
-          unless (p >= period[0] && p >= period[1]) || (p <= period[0] && p <= period[1])
-            check = false
-            alert '時段衝突'
+#    for period in periods
+#      for period2 in periods
+#        for p in period2
+#          unless (p >= period[0] && p >= period[1]) || (p <= period[0] && p <= period[1])
+#            check = false
+#            alert '時段衝突'
 
     unless check
       e.preventDefault()
