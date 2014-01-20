@@ -138,11 +138,6 @@ class RestaurantManageController < ApplicationController
     zones.push(params[:zone4])
     zones.push(params[:zone5])
 
-    if condition[:week1].blank? && condition[:week2].blank? && condition[:week3].blank? && condition[:week4].blank? && condition[:week5].blank? && condition[:week6].blank? && condition[:week7].blank?
-      render json: {:error => true, :message => '星期幾至少要選一個!'}
-      return
-    end
-
     if condition[:id].blank?
       result = RestaurantManage.supply_condition_create(@restaurant.id, condition, zones)
     else

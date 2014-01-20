@@ -295,6 +295,9 @@ class RestaurantManage
 
   def self.supply_condition_create(restaurant_id, origin_condition, origin_zones)
     begin
+      if origin_condition[:week1].blank? && origin_condition[:week2].blank? && origin_condition[:week3].blank? && origin_condition[:week4].blank? && origin_condition[:week5].blank? && origin_condition[:week6].blank? && origin_condition[:week7].blank?
+        return {:error => true, :message => '星期幾至少要選一個!'}
+      end
 
       result = supply_condition_save_check(origin_zones)
 
@@ -342,6 +345,11 @@ class RestaurantManage
       result = supply_condition_save_check(origin_zones)
 
       target_condition = SupplyCondition.find(origin_condition[:id].to_i)
+
+      if target_condition.is_special.blank? && origin_condition[:week1].blank? && origin_condition[:week2].blank? && origin_condition[:week3].blank? && origin_condition[:week4].blank? && origin_condition[:week5].blank? && origin_condition[:week6].blank? && origin_condition[:week7].blank?
+        return {:error => true, :message => '星期幾至少要選一個!'}
+      end
+
       if result[:error] == true
         return result
       else
