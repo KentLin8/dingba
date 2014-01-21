@@ -53,10 +53,10 @@
           <a href='<%=  APP_CONFIG['domain'] + rest.res_url.to_s  %>'><%= rest.name %></a>
           (<a href='<%=  APP_CONFIG['domain_hack'] + rest.res_url.to_s  %>'> IN </a> )
         </td>
-        <td><%= rest.supply_email %></td>
-        <td><%#= rest.code %></td>
-        <td><%= rest.created_at.to_date %> </td>
-        <td> <%= rest.updated_at.to_date %></td>
+        <td> <%= rest.supply_email %> </td>
+        <td> <%= rest.code %> </td>
+        <td> <%= rest.created_at.to_date %> </td>
+        <td> <%= rest.updated_at.to_date %> </td>
       </tr>
       <% end %>
     </table>
