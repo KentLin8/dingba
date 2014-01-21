@@ -56,7 +56,12 @@
           (<a href='<%=  APP_CONFIG['domain_hack'] + rest.res_url.to_s  %>'> IN </a> )
         </td>
         <td> <%= rest.supply_email %> </td>
-        <td> <%= rest.code %> </td>
+        <td> <%=
+            if !rest.code.blank?
+              rest.code
+            end
+        %> </td>
+
         <td> <%= rest.created_at.to_date %> </td>
         <td> <%= rest.updated_at.to_date %> </td>
       </tr>
