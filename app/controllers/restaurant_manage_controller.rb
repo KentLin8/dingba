@@ -204,10 +204,20 @@ class RestaurantManageController < ApplicationController
 
 
     result =  RestaurantManage.special_create(zones, params[:special_day], @restaurant.id, params[:is_vacation])
-    @conditions = SupplyCondition.where(:restaurant_id => @restaurant.id).order('sequence ASC')
-    @special_conditions = @conditions.select { |x| x.is_special == 't' }
-    @normal_conditions = @conditions.select { |x| x.is_special != 't' }
-    result[:attachmentPartial] = render_to_string('restaurant_manage/supply_condition', :layout => false, :locals => { :normal_conditions => @normal_conditions, :special_conditions => @special_conditions })
+
+    restaurant_month_result = Calendar.get_restaurant_month(nil,nil,@restaurant.id)
+    @year = restaurant_month_result[:year]
+    @month = restaurant_month_result[:month]
+    @books = restaurant_month_result[:books]
+    @calendar_data = restaurant_month_result[:calendar_data]
+    @id_with_name = restaurant_month_result[:id_with_name]
+    #@conditions = SupplyCondition.where(:restaurant_id => @restaurant.id).order('sequence ASC')
+    #@special_conditions = @conditions.select { |x| x.is_special == 't' }
+    #@normal_conditions = @conditions.select { |x| x.is_special != 't' }
+    #result[:attachmentPartial] = render_to_string('restaurant_manage/supply_condition', :layout => false, :locals => { :normal_conditions => @normal_conditions, :special_conditions => @special_conditions })
+
+    result[:attachmentPartial] = render_to_string('calendar/restaurant_month', :layout => false, :locals => { :year => @year, :month => @month, :books => @books, :calendar_data => @calendar_data, :id_with_name => @id_with_name })
+
     render json: result
   end
 
