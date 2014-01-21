@@ -373,11 +373,11 @@ class RestaurantManageController < ApplicationController
 
 
   def  adm_list_all
-    @restaurant_list = Restaurant.joins('LEFT JOIN(restaurant_users, invite_codes) ON (restaurants.id = restaurant_users.restaurant_id AND restaurant_users.user_id = invite_codes.user_id)').order("id DESC")
+    #@restaurant_list = Restaurant.joins('LEFT JOIN(restaurant_users, invite_codes) ON (restaurants.id = restaurant_users.restaurant_id AND restaurant_users.user_id = invite_codes.user_id)').order("id DESC")
     #@restaurant_list = Restaurant.joins('LEFT JOIN(restaurant_users, invite_codes) ON (restaurants.id = restaurant_users.restaurant_id AND restaurant_users.user_id = invite_codes.user_id)')
     #                   .order("id DESC")
 
-    #@restaurant_list = Restaurant.find_by_sql('SELECT * FROM restaurant LEFT JOIN(restaurant_users, invite_codes) ON (restaurants.id = restaurant_users.restaurant_id AND restaurant_users.user_id = invite_codes.user_id)')
+    @restaurant_list = Restaurant.find_by_sql('SELECT * FROM restaurants LEFT JOIN(restaurant_users, invite_codes) ON (restaurants.id = restaurant_users.restaurant_id AND restaurant_users.user_id = invite_codes.user_id)')
     render :layout => false
   end
 
