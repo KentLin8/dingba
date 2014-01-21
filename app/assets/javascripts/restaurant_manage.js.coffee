@@ -542,7 +542,7 @@ $ ->
         new_tr = $($.parseHTML(response.attachmentPartial, document, true))
         tr.after(new_tr)
         new_tr.find('#wrapper').animate(height: 210)
-        $('select').val -> response.btime
+        $('.modify_select').val -> response.btime
       )
       .fail( -> alert '讀取失敗' )
 
@@ -555,7 +555,8 @@ $ ->
     if next.hasClass('form')
       next.find('#wrapper').animate(height: 0, -> next.remove())
       if next.hasClass('delete')
-        show_modify_form(tr)
+       show_modify_form(tr)
+
     else
       show_modify_form(tr)
 
@@ -566,8 +567,8 @@ $ ->
     next = tr.next()
     if next.hasClass('form')
       next.find('#wrapper').animate(height: 0, -> next.remove())
-      if next.hasClass('delete')
-        show_delete_form(tr)
+      if next.hasClass('modify')
+       show_delete_form(tr)
     else
       show_delete_form(tr)
 
