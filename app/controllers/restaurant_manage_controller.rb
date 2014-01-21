@@ -4,7 +4,7 @@ class RestaurantManageController < ApplicationController
   before_action :get_restaurant, :only => [:restaurant, :restaurant_info, :restaurant_info_save, :restaurant_image, :upload_img, :image_cover_save, :image_destroy,
                                            :supply_condition, :supply_time, :supply_condition_save, :condition_state_save,
                                            :destroy_condition, :special_create, :day_booking, :query_books_by_date,
-                                           :modify_booking, :modify_booking_save, :cancel_booking, :adm_list_all ]
+                                           :modify_booking, :modify_booking_save, :cancel_booking,:cancel_booking_save, :adm_list_all ]
 
 
   # =========================================================================
@@ -269,7 +269,16 @@ class RestaurantManageController < ApplicationController
   # POST === Function: save modify booking
   def modify_booking_save
     result = RestaurantManage.modify_booking_save(params[:booking], params[:ti])
-    render json: result
+
+    restaurant_month_result = Calendar.get_restaurant_month(nil,nil,@restaurant.id)
+    @year = restaurant_month_result[:year]
+    @month = restaurant_month_result[:month]
+    @books = restaurant_month_result[:books]
+    @calendar_data = restaurant_month_result[:calendar_data]
+    @id_with_name = restaurant_month_result[:id_with_name]
+    result[:attachmentPartial] = render_to_string('calendar/restaurant_month', :layout => false, :locals => { :year => @year, :month => @month, :books => @books, :calendar_data => @calendar_data, :id_with_name => @id_with_name })
+
+     render json: result
   end
 
   # GET === Function: show cancel booking view
@@ -287,6 +296,15 @@ class RestaurantManageController < ApplicationController
   def cancel_booking_save
     booking = params[:booking]
     result = RestaurantManage.cancel_booking(booking[:id], booking[:status], booking[:cancel_note])
+
+    restaurant_month_result = Calendar.get_restaurant_month(nil,nil,@restaurant.id)
+    @year = restaurant_month_result[:year]
+    @month = restaurant_month_result[:month]
+    @books = restaurant_month_result[:books]
+    @calendar_data = restaurant_month_result[:calendar_data]
+    @id_with_name = restaurant_month_result[:id_with_name]
+    result[:attachmentPartial] = render_to_string('calendar/restaurant_month', :layout => false, :locals => { :year => @year, :month => @month, :books => @books, :calendar_data => @calendar_data, :id_with_name => @id_with_name })
+
     render json: result
   end
 
