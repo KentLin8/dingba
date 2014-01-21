@@ -542,7 +542,7 @@ $ ->
         new_tr = $($.parseHTML(response.attachmentPartial, document, true))
         tr.after(new_tr)
         new_tr.find('#wrapper').animate(height: 210)
-        $('select').val -> response.btime
+        $('.modify_select').val -> response.btime
       )
       .fail( -> alert '讀取失敗' )
 
