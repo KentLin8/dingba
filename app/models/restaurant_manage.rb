@@ -45,25 +45,42 @@ class RestaurantManage
   def self.restaurant_info_save(origin_restaurant)
     begin
       restaurant = Restaurant.find(origin_restaurant[:id].to_i)
-      restaurant.name = origin_restaurant[:name]
-      restaurant.phone = origin_restaurant[:phone]
+      restaurant.name = origin_restaurant[:name].strip
+      restaurant.phone = origin_restaurant[:phone].strip
       restaurant.city = origin_restaurant[:city]
       restaurant.area = origin_restaurant[:area]
-      restaurant.address = origin_restaurant[:address]
+      restaurant.address = origin_restaurant[:address].strip
       restaurant.res_type = origin_restaurant[:res_type]
-      restaurant.feature = origin_restaurant[:feature]
+      restaurant.feature = origin_restaurant[:feature].strip
       pay_type = [origin_restaurant[:pay_type_cash], origin_restaurant[:pay_type_CreditCard], origin_restaurant[:pay_type_EasyCard]].join(',')
       restaurant.pay_type = pay_type
-      restaurant.business_hours = origin_restaurant[:business_hours]
-      restaurant.supply_person = origin_restaurant[:supply_person]
-      restaurant.supply_email = origin_restaurant[:supply_email]
+      restaurant.business_hours = origin_restaurant[:business_hours].strip
+      restaurant.supply_person = origin_restaurant[:supply_person].strip
 
-      restaurant.url1 = get_http_string(origin_restaurant[:url1])
-      restaurant.url2 = get_http_string(origin_restaurant[:url2])
-      restaurant.url3 = get_http_string(origin_restaurant[:url3])
-      restaurant.info_url1 = origin_restaurant[:info_url1]
-      restaurant.info_url2 = origin_restaurant[:info_url2]
-      restaurant.info_url3 = origin_restaurant[:info_url3]
+      temp_email = origin_restaurant[:supply_email].strip
+      email = nil
+      if !temp_email.blank?
+        email = temp_email.split(',')
+        if email.count == 1
+          email = email[0].split(';')
+        end
+      end
+
+      email.each do |e|
+        if !e.blank? && !(e =~ /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/).blank?
+        else
+          return {:error => true, :message => '供位 E-Mail 格式錯誤!'}
+        end
+      end
+
+      restaurant.supply_email = temp_email
+
+      restaurant.url1 = get_http_string(origin_restaurant[:url1]).strip
+      restaurant.url2 = get_http_string(origin_restaurant[:url2]).strip
+      restaurant.url3 = get_http_string(origin_restaurant[:url3]).strip
+      restaurant.info_url1 = origin_restaurant[:info_url1].strip
+      restaurant.info_url2 = origin_restaurant[:info_url2].strip
+      restaurant.info_url3 = origin_restaurant[:info_url3].strip
 
       if restaurant.save
         return {:success => true, :data => '餐廳資訊儲存成功，自動導頁到下個步驟'}
@@ -612,6 +629,8 @@ class RestaurantManage
         restaurant.available_hour = data_parsed['reserve_hour'].to_i
         restaurant.available_date = data_parsed['reserve_previous_hour']
         restaurant.available_type = data_parsed['reserve_type']
+        restaurant.sent_date = data_parsed['sent_hour']
+        restaurant.sent_type = data_parsed['sent_type']
         restaurant.save
 
         calculate_day_booking_all(restaurant.id.to_i)

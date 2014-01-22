@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140116141956) do
+ActiveRecord::Schema.define(version: 20140122100639) do
 
   create_table "bookings", force: true do |t|
     t.integer  "user_id"
@@ -87,7 +87,7 @@ ActiveRecord::Schema.define(version: 20140116141956) do
     t.string   "business_hours"
     t.string   "pay_type",       limit: 10
     t.string   "supply_person",  limit: 20
-    t.string   "supply_email",   limit: 60
+    t.string   "supply_email",   limit: 1000
     t.string   "url1",           limit: 60
     t.string   "url2",           limit: 60
     t.string   "url3",           limit: 60
@@ -105,6 +105,8 @@ ActiveRecord::Schema.define(version: 20140116141956) do
     t.string   "available_type", limit: 1
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "sent_type",      limit: 1
+    t.string   "sent_date",      limit: 5
   end
 
   add_index "restaurants", ["area"], name: "index_restaurants_on_area", using: :btree
