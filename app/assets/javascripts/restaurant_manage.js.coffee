@@ -547,7 +547,8 @@ $ ->
       .fail( -> alert '讀取失敗' )
 
 
-  $(document).on 'click', '.daily_info .modify', (e) ->
+  #$(document).on 'click', '.daily_info .modify', (e) ->
+  $(document).on 'click', '.icon-pencil', (e) ->
     e.preventDefault()
     _this = $(this)
     tr = _this.parents('tr')
@@ -560,7 +561,8 @@ $ ->
     else
       show_modify_form(tr)
 
-  $(document).on 'click', '.daily_info .delete', (e) ->
+  #$(document).on 'click', '.daily_info .delete', (e) ->
+  $(document).on 'click', '.icon-remove-circle', (e) ->
     e.preventDefault()
     _this = $(this)
     tr = _this.parents('tr')

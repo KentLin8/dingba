@@ -89,7 +89,7 @@
   </div>
 </div>-->
 
-<div style="float: right;width: 410px; font-size: 16px;letter-spacing: 2px; padding: 5px 15px 5px 15px;line-height: 28px;margin-top: -28px">
+<div style="float: right;width: 410px; font-size: 16px;letter-spacing: 2px; padding: 5px 15px 5px 15px;line-height: 28px;margin-top: -40px">
   <div style="font-size: 18px; color:#7F1700">平常日設定說明</div>
   1.以<span style="color: #7F1700;">滑鼠拖曳</span>方式設定優先順序<br>
   <span style="margin-left: 1em">(由上而下方式依序分配優先權)</span><br>
@@ -105,18 +105,16 @@
   <tr>
     <td>
       <label class="radio inline" style="margin-left: 5px;">
-        <input type="radio" name="reserve_type" value="0">開放預約到&nbsp;&nbsp;
-      </label>
+        <input type="radio" name="reserve_type" value="0" style="margin-top: 8px">開放預約到&nbsp;&nbsp;
 
-      <input style="width: 30px; text-align: right" type="text" id="reserve_hour" value="<%= @restaurant.available_hour %>">&nbsp;&nbsp;小時之前的時間&nbsp;
+      <input style="width: 30px; text-align: right" type="text" id="reserve_hour" value="<%= @restaurant.available_hour %>">&nbsp;&nbsp;小時之前的時間&nbsp;</label>
       <a class="ans" title="為確保訂位人數，建議餐廳設定最晚的訂位時間，爲該用餐時段前的幾個小時。">?</a>
     </td>
   </tr>
   <tr>
     <td>
       <label class="radio inline" style="margin-left: 5px">
-        <input type="radio" name="reserve_type" value="1">開放預約到前一天&nbsp;&nbsp;
-      </label>
+        <input type="radio" name="reserve_type" value="1" style="margin-top: 8px">開放預約到前一天&nbsp;&nbsp;
       <select style="width: 60px" id="reserve_previous_hour" data-value="<%= @restaurant.available_date %>">
         <option value="1:00">1</option>
         <option value="2:00">2</option>
@@ -142,11 +140,57 @@
         <option value="22:00">22</option>
         <option value="23:00">23</option>
         <option value="24:00">24</option>
-      </select>&nbsp;&nbsp;點
+      </select>&nbsp;&nbsp;點</label>
       &nbsp;<a class="ans" title="為確保訂位人數，建議餐廳接受最晚的訂位時間，爲前一日的幾點。">?</a>
     </td>
   </tr>
 </table>
+
+<div class="base_blue" style="margin-left: -20px;margin-bottom: 10px; margin-top: 20px;font-size: 18px; color: #7F1700">訂位資訊通知方式：</div>
+
+<table id="sent_table" style="margin-left: -20px; border: 2px solid rgb(190,190,190); width: 60%;padding-top: 10px;margin-bottom: 10px">
+  <tr>
+    <td>
+      <label class="radio inline" style="margin-left: 7px;">
+        <input type="radio" name="sent_type" value="0">每個資料都 E-Mail給供位聯絡人
+      </label>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <label class="radio inline" style="margin-left: 7px">
+        <input type="radio" name="sent_type" value="1" style="margin-top: 8px">每日&nbsp;&nbsp;
+
+      <select style="width: 60px" id="sent_hour" data-value="<%= @restaurant.sent_date %>">
+        <option value="1:00">1</option>
+        <option value="2:00">2</option>
+        <option value="3:00">3</option>
+        <option value="4:00">4</option>
+        <option value="5:00">5</option>
+        <option value="6:00">6</option>
+        <option value="7:00">7</option>
+        <option value="8:00">8</option>
+        <option value="9:00">9</option>
+        <option value="10:00">10</option>
+        <option value="11:00">11</option>
+        <option value="12:00">12</option>
+        <option value="13:00">13</option>
+        <option value="14:00">14</option>
+        <option value="15:00">15</option>
+        <option value="16:00">16</option>
+        <option value="17:00">17</option>
+        <option value="18:00">18</option>
+        <option value="19:00">19</option>
+        <option value="20:00">20</option>
+        <option value="21:00">21</option>
+        <option value="22:00">22</option>
+        <option value="23:00">23</option>
+        <option value="24:00">24</option>
+      </select>&nbsp;&nbsp;點，彙整明日訂位資料 E-Mail 給供位聯絡人</label>
+    </td>
+  </tr>
+</table>
+
 
 <input type="button" id="period_save" class="btn btn-primary" style="margin-top: 5px; margin-left: -20px;" value="確定修改">
 <input type="button" id="period_reset" class="btn" style="margin-top: 5px; margin-left: -5px;" value="取消">
@@ -157,6 +201,7 @@
     //===========================================================================
 
     $(":radio[name='reserve_type'][value='<%= @restaurant.available_type %>']").attr("checked",'checked');
+    $(":radio[name='sent_type'][value='<%= @restaurant.sent_type %>']").attr("checked",'checked');
 
     $("#period_save").click(function(e){
         e.preventDefault()
@@ -177,6 +222,8 @@
         var reserve_hour = $("#reserve_hour").val()
         var reserve_previous_hour = $("#reserve_previous_hour").val()
         var reserve_previous_type = $("#reserve_previous_type").val()
+        var sent_type = $("#sent_table [name='sent_type']:checked").val()
+        var sent_hour = $("#sent_hour").val()
 
         var con_state = {
             id_list: ids,
@@ -184,7 +231,9 @@
             reserve_type: reserve_type,
             reserve_hour: reserve_hour,
             reserve_previous_hour: reserve_previous_hour,
-            reserve_previous_type: reserve_previous_type
+            reserve_previous_type: reserve_previous_type,
+            sent_type: sent_type,
+            sent_hour: sent_hour
         }
 
         $.ajax({

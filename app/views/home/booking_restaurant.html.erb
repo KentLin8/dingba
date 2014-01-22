@@ -10,14 +10,14 @@
     /*.even{background-color:#FEF8F4;}*/
     /*.over{background-color: #ffc;}*/
 
-    .text-overflow {
-        display:block;
-        width:31em;
-        word-break:keep-all;
-        white-space:nowrap;
-        overflow:hidden;
-        text-overflow:ellipsis;
-    }
+    /*.text-overflow {*/
+        /*display:block;*/
+        /*width:31em;*/
+        /*word-break:keep-all;*/
+        /*white-space:nowrap;*/
+        /*overflow:hidden;*/
+        /*text-overflow:ellipsis;*/
+    /*}*/
 </style>
 
 <div id="main" class="container">
@@ -73,7 +73,7 @@
             </tr>
             <tr>
               <td style="font-size: 16px">餐廳特色：</td>
-              <td ><%= truncate(@restaurant.feature , :length => 17) %></td>
+              <td ><%= @restaurant.feature %></td>
             </tr>
             <tr>
               <td style="font-size: 16px">營業時間：</td>
