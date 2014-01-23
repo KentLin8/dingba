@@ -45,6 +45,7 @@
     <th>Login Count</th>
     <th>Allow Promot</th>
     <th>Gender</th>
+    <th>Chanel</th>
     <th>Birthday</th>
     <th>Create at</th>
   </tr>
@@ -59,6 +60,7 @@
         <td> <%= booker.sign_in_count %>  </td>
         <td> <%= booker.allow_promot %>  </td>
         <td> <%= booker.sex %> </td>
+        <td> <%= booker.provider %> </td>
         <td> <%=
             if !booker.birthday.blank?
               booker.birthday.to_date
