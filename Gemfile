@@ -9,6 +9,9 @@ source 'https://rubygems.org'
 
 #gem 'delayed_job_active_record'
 
+# schedule
+gem 'whenever', :require => false
+
 # jquery-ui-rails
 gem 'jquery-ui-rails'
 

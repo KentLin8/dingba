@@ -24,7 +24,7 @@
 #  runner "RestaurantSchedule.restaurant_daily_report"
 #end
 
-#env :PATH, '/usr/lib/lightdm/lightdm:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games'
+env :PATH, '/usr/lib/lightdm/lightdm:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games'
 #set :environment, :development
 #set :environment, :production
 
