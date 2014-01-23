@@ -62,4 +62,20 @@ class MyMailer < ActionMailer::Base
     end
   end
 
+  def restaurant_daily_report(report_day ,restaurant_name, email, restaurant_books)
+    begin
+      @restaurant_name = restaurant_name
+      @restaurant_books = restaurant_books
+      @report_day = report_day
+
+      mail(to: email,
+           subject: '訂吧報表：餐廳日訂位報表！') do |format|
+        format.html { render 'my_mailer/restaurant_daily_report' }
+      end
+    rescue => e
+      Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/Mailers/my_mailer.rb ,Method:restaurant_daily_report(report_day ,restaurant_name, email, restaurant_books)"
+      return false
+    end
+  end
+
 end

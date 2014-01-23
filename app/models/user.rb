@@ -50,7 +50,7 @@ class User < ActiveRecord::Base
       user = User.new(name: data["name"],
                       email: data["email"],
                       phone: data["phone"],
-                      sex: data["email"],
+                      sex: data["sex"],
                       birthday: data["birthday"],
                       provider: "google",
                       password: Devise.friendly_token[0,20],
