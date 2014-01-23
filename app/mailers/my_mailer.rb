@@ -78,4 +78,20 @@ class MyMailer < ActionMailer::Base
     end
   end
 
+  def sent_booking_notice_to_restaurant(restaurant_name, email, booking)
+    begin
+      @restaurant_name = restaurant_name
+      @booking = booking
+
+      mail(to: email,
+           subject: '訂吧通知：即時訂位通知！') do |format|
+        format.html { render 'my_mailer/restaurant_booking_notice' }
+      end
+    rescue => e
+      Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/Mailers/my_mailer.rb ,Method:sent_booking_notice_to_restaurant(restaurant_name, email, booking)"
+      return false
+    end
+  end
+
+
 end

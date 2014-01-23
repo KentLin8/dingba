@@ -816,6 +816,28 @@ class Home
           #send_mail_result = MyMailer.delay(run_at: 1.minutes.from_now).booking_success(booking.email, booking)
         end
 
+        if restaurant.sent_type == '0'
+          if restaurant.supply_email.present?
+            email = restaurant.supply_email.split(',')
+            if email.count == 1
+              email = email[0].split(';')
+            end
+          end
+
+          if email.present?
+            effect_email = []
+            email.each do |e|
+              if !e.blank? && !(e =~ /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/).blank?
+                effect_email.push(e)
+              end
+            end
+
+            effect_email.each do |eff|
+              MyMailer.sent_booking_notice_to_restaurant(restaurant.name, eff, booking).deliver
+            end
+          end
+        end
+
         has_mail = false
         if !send_mail_result.blank?
           has_mail = true
