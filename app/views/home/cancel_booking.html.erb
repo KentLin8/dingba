@@ -1,3 +1,25 @@
+<style>
+    .grid {width:100%;}
+        /*.grid thead {margin:100px;}*/
+        /*.grid thead th{line-height:28px;height:28px;border-top:1px #D7D7D4 solid;border-bottom:1px #D7D7D4 solid; color:#666;}*/
+        /*.grid tbody tr{line-height:28px;height:30px;}*/
+        /*.grid tbody td{word-break:break-all;border-bottom:1px #d7d7d7 dotted;}*/
+        /*.grid tfoot tr{ line-height:30px; height:30; background-color:#fff;}*/
+        /*.grid tfoot td{ text-align:right; padding-right:5px;}*/
+        /**grid view 换色**/
+        /*.even{background-color:#FEF8F4;}*/
+        /*.over{background-color: #ffc;}*/
+
+        /*.text-overflow {*/
+        /*display:block;*/
+        /*width:31em;*/
+        /*word-break:keep-all;*/
+        /*white-space:nowrap;*/
+        /*overflow:hidden;*/
+        /*text-overflow:ellipsis;*/
+        /*}*/
+</style>
+
 <div id="main" class="container">
   <div id="scroll">
     <div id="booking" class="container">
@@ -30,7 +52,11 @@
           </div>
         </div>
         <div style="width: 62%;float: right;font-size: 16px;letter-spacing: 0.5px">
-          <table>
+          <table class="grid">
+            <colgroup>
+              <col style="width: 90px">
+              <col style="width: 450px">
+            </colgroup>
             <tr>
               <td style="font-size: 16px">餐廳名稱：</td>
               <td><%= @restaurant.name %></td>
@@ -80,7 +106,7 @@
           </table>
         </div>
       </div>
-
+      <table style="width: 100%"></table>
       <div class="row-fluid" id="booking_form_content" style="border-color: rgb(230,230,230); border-width: 3px;">
         <div class="row-fluid">
           <div style="float: left; width: 12%;font-size: 16px;text-align: right;letter-spacing: 0.5px;line-height: 24px;margin-left: 10px;">

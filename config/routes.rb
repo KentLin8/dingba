@@ -24,16 +24,18 @@ DingBa::Application.routes.draw do
 
   end
 
-  root :to => 'home#index',                      :as => 'home'  #主要首頁,p1 不開放
+
+  root :to => 'home#index',                           :as => 'home'
 
   #==========================================================================
   # home controller
   #==========================================================================
+  get  'home/index_old'
   get  'home/about_codream'
   get  'home/clause'
   get  'home/q_and_a'
 
-  get  'home/index'
+  get  'home/index_old'
   get  'r/:id' => 'home#booking_restaurant',     :as => 'booking_restaurant'
   get  'home/get_condition'
   get  'home/notice_friend'

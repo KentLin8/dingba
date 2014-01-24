@@ -808,6 +808,7 @@ class Home
         end
         day_booking.save
 
+        temp_phone = booking.phone
         if !booking.email.blank? && !(booking.email =~ /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/).blank?
           booking.phone = nil
           booking.res_url = APP_CONFIG['domain'] + "#{booking.res_url}"
@@ -832,6 +833,7 @@ class Home
               end
             end
 
+            booking.phone = temp_phone
             effect_email.each do |eff|
               MyMailer.sent_booking_notice_to_restaurant(restaurant.name, eff, booking).deliver
             end

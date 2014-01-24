@@ -1,7 +1,7 @@
 class HomeController < ApplicationController
   #layout 'home'
   layout :resolve_layout
-  before_action :get_user, :only => [:wait_confirm_email, :index, :booking_restaurant, :get_condition, :save_booking, :notice_friend, :cancel_booking, :save_cancel_booking]
+  before_action :get_user, :only => [:wait_confirm_email, :index_old, :booking_restaurant, :get_condition, :save_booking, :notice_friend, :cancel_booking, :save_cancel_booking]
 
   # =========================================================================
   # panda: 我比較偏向不使用path,因為命名這件事讓trace code變得麻煩一點(must see routes),雖然path可以讓rename 好管理,但基本上!! rename畢竟是很少發生的情況
@@ -31,7 +31,9 @@ class HomeController < ApplicationController
   end
 
   def index
-    #主要首頁,p1 不開放
+  end
+
+  def index_old
   end
 
   def wait_confirm_email
@@ -268,10 +270,10 @@ class HomeController < ApplicationController
 
   def resolve_layout
     case action_name
-      when 'index', 'clause', 'about_codream', 'q_and_a', 'wait_confirm_email', 'cancel_booking_by_email', 'save_cancel_booking_by_email'
+      when 'index_old', 'clause', 'about_codream', 'q_and_a', 'wait_confirm_email', 'cancel_booking_by_email', 'save_cancel_booking_by_email'
+        'home_index_old'
+      when 'index'
         'home_index'
-      #when
-      #  'registration'
       else
         'home'
     end

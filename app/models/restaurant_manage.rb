@@ -858,6 +858,7 @@ class RestaurantManage
           origin_day_booking.save
         else
           origin_condition = origin_conditions.first
+          is_in_zone = false
 
           if origin_condition.available_week.split(',').include?(origin_booking_time.wday.to_s)
             origin_zones = TimeZone.where(:supply_condition_id => origin_condition.id, :status => 't')
@@ -876,13 +877,13 @@ class RestaurantManage
                 elsif z.sequence == 5
                   origin_day_booking.zone6 = origin_day_booking.zone6 - origin_num_of_people
                 end
-                origin_num_of_people = 0
+                is_in_zone = true
                 break;
               end
             end
           end
 
-          if origin_num_of_people != 0
+          if is_in_zone == false
             origin_day_booking.other = origin_day_booking.other - origin_num_of_people
           end
 
@@ -1026,23 +1027,18 @@ class RestaurantManage
               if z.range_begin <= booking.booking_time.strftime("%H:%M") && z.range_end > booking.booking_time.strftime("%H:%M")
                 if z.sequence == 0
                   day_booking.zone1 = day_booking.zone1 - booking.num_of_people
-                  booking.num_of_people = 0
                 elsif z.sequence == 1
                   day_booking.zone2 = day_booking.zone2 - booking.num_of_people
-                  booking.num_of_people = 0
                 elsif z.sequence == 2
                   day_booking.zone3 = day_booking.zone3 - booking.num_of_people
-                  booking.num_of_people = 0
                 elsif z.sequence == 3
                   day_booking.zone4 = day_booking.zone4 - booking.num_of_people
-                  booking.num_of_people = 0
                 elsif z.sequence == 4
                   day_booking.zone5 = day_booking.zone5 - booking.num_of_people
-                  booking.num_of_people = 0
                 elsif z.sequence == 5
                   day_booking.zone6 = day_booking.zone6 - booking.num_of_people
-                  booking.num_of_people = 0
                 end
+                booking.num_of_people = 0
                 break;
               end
             end
