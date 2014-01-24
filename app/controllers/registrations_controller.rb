@@ -50,7 +50,11 @@ class RegistrationsController < Devise::RegistrationsController
     phone = params[:tag_phone].strip
     sex = params[:tag_sex]
     birthday_param = params[:tag_birthday]
-    birthday = Time.parse(birthday_param['(1i)'].to_s + "-" + birthday_param['(2i)'].to_s + "-" + birthday_param['(3i)'].to_s)
+
+    if birthday_param['(1i)'].present?
+
+      birthday = Time.parse(birthday_param['(1i)'].to_s + "-" + birthday_param['(2i)'].to_s + "-" + birthday_param['(3i)'].to_s)
+    end
     allow_promot = params[:tag_allow_promot]
     password = params[:tag_password].strip
     i_agree = params[:tag_i_agree]    # nil mean not agree clause
