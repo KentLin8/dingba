@@ -51,7 +51,7 @@ class RegistrationsController < Devise::RegistrationsController
     sex = params[:tag_sex]
     birthday_param = params[:tag_birthday]
 
-    if role == '1'
+    if role == '1' && birthday_param.present?
       birthday = Time.parse(birthday_param['(1i)'].to_s + "-" + birthday_param['(2i)'].to_s + "-" + birthday_param['(3i)'].to_s)
     end
     allow_promot = params[:tag_allow_promot]
