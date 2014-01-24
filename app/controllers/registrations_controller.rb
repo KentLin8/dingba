@@ -52,7 +52,6 @@ class RegistrationsController < Devise::RegistrationsController
     birthday_param = params[:tag_birthday]
 
     if role == '1'
-
       birthday = Time.parse(birthday_param['(1i)'].to_s + "-" + birthday_param['(2i)'].to_s + "-" + birthday_param['(3i)'].to_s)
     end
     allow_promot = params[:tag_allow_promot]
@@ -148,7 +147,7 @@ class RegistrationsController < Devise::RegistrationsController
           expire_session_data_after_sign_in!
           @user_email = resource.email
           #redirect_to '/home/wait_confirm_email'
-          render '/home/wait_confirm_email', layout: 'home_index'
+          render '/home/wait_confirm_email', layout: 'registration'
           return
           #respond_with resource, :location => after_inactive_sign_up_path_for(resource)
         end
