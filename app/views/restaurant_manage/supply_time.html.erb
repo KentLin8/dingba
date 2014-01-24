@@ -109,7 +109,7 @@
         onClose: function( selectedDate ) {
             $(".from").datepicker( "option", "maxDate", selectedDate );
         }
-    })//.val(getTodaysDate(1));
+    }).val(getTodaysDate(1));
 
     // $.datepicker.setDefaults($.datepicker.regional['zh-TW']);
     // });
@@ -126,6 +126,7 @@
             return str.substring(0, 10)
         }
 
+        if (val == 0){
         var t = new Date;
         var year = t.getFullYear();
 
@@ -140,5 +141,6 @@
         }
 
         return (year + '-' + month + '-' + day);
+        }
     }
 </script>

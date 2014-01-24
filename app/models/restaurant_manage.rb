@@ -359,20 +359,25 @@ class RestaurantManage
 
   def self.supply_condition_update(restaurant_id, origin_condition, origin_zones)
     begin
-      result = supply_condition_save_check(origin_zones)
 
-      target_condition = SupplyCondition.find(origin_condition[:id].to_i)
+      if origin_condition[:is_vacation].blank?
+        result = supply_condition_save_check(origin_zones)
 
-      if target_condition.is_special.blank? && origin_condition[:week1].blank? && origin_condition[:week2].blank? && origin_condition[:week3].blank? && origin_condition[:week4].blank? && origin_condition[:week5].blank? && origin_condition[:week6].blank? && origin_condition[:week7].blank?
-        return {:error => true, :message => '星期幾至少要選一個!'}
-      end
+        target_condition = SupplyCondition.find(origin_condition[:id].to_i)
 
-      if result[:error] == true
-        return result
-      else
-        if !result[:have_one_enable] && !target_condition.is_special.blank? && target_condition.is_special != 't'
-          return {:error => true, :message => '至少要啟用一個時段喔!'}
+        if target_condition.is_special.blank? && origin_condition[:week1].blank? && origin_condition[:week2].blank? && origin_condition[:week3].blank? && origin_condition[:week4].blank? && origin_condition[:week5].blank? && origin_condition[:week6].blank? && origin_condition[:week7].blank?
+          return {:error => true, :message => '星期幾至少要選一個!'}
         end
+
+        if result[:error] == true
+          return result
+        else
+          if !result[:have_one_enable] #&& !target_condition.is_special.blank? && target_condition.is_special != 't'
+            return {:error => true, :message => '至少要啟用一個時段喔!'}
+          end
+        end
+      else
+        target_condition = SupplyCondition.find(origin_condition[:id].to_i)
       end
 
       #have_one_enable = false
@@ -430,6 +435,7 @@ class RestaurantManage
     # don't catch this method error , transaction issue
     target_condition.restaurant_id = restaurant_id
     target_condition.name = origin_condition[:name]
+    target_condition.is_vacation = origin_condition[:is_vacation]
     if target_condition.is_special == 't'
       target_condition.range_begin = origin_condition[:range_begin]
       target_condition.range_end = origin_condition[:range_begin] + " 23:59"
@@ -1269,67 +1275,42 @@ class RestaurantManage
     end
 
     conditions.each do |c|
-      #zones = TimeZone.where(:supply_condition_id => c.id, :status => 't').order('sequence ASC')
-      #zones = TimeZone.where(:supply_condition_id => c.id).order('sequence ASC')
       zones = TimeZone.where(:supply_condition_id => c.id, :status => 't').order('sequence ASC')
 
       day_booking_mix.each do |mix|
         if c.range_begin <= mix[0].day && c.range_end >= mix[0].day
-          zones.each do |z|
 
-            i = 0
-            while i < mix[1].length
-              books = mix[1][i]
-              if z.range_begin <= books[2] && z.range_end > books[2]
-                if z.sequence == 0
-                  mix[0].zone1 = mix[0].zone1 + books[1]
-                elsif z.sequence == 1
-                  mix[0].zone2 = mix[0].zone2 + books[1]
-                elsif z.sequence == 2
-                  mix[0].zone3 = mix[0].zone3 + books[1]
-                elsif z.sequence == 3
-                  mix[0].zone4 = mix[0].zone4 + books[1]
-                elsif z.sequence == 4
-                  mix[0].zone5 = mix[0].zone5 + books[1]
-                elsif z.sequence == 5
-                  mix[0].zone6 = mix[0].zone6 + books[1]
-                end
-                mix[1].to_a.delete(books)
-                i = i - 1
-              end
-              i = i + 1
+          if c.is_vacation == 't'
+            mix[1].each do |books|
+              mix[0].other = mix[0].other + books[1]
             end
+          else
+            zones.each do |z|
 
-            #mix[1].each do |books|
-            #  if z.range_begin <= books[2] && z.range_end > books[2]
-            #    if z.status == 'f'
-            #      mix[0].other = mix[0].other + books[1]
-            #      mix[1].to_a.delete(books)
-            #    else
-            #      if z.sequence == 0
-            #        mix[0].zone1 = mix[0].zone1 + books[1]
-            #        mix[1].to_a.delete(books)
-            #      elsif z.sequence == 1
-            #        mix[0].zone2 = mix[0].zone2 + books[1]
-            #        mix[1].to_a.delete(books)
-            #      elsif z.sequence == 2
-            #        mix[0].zone3 = mix[0].zone3 + books[1]
-            #        mix[1].to_a.delete(books)
-            #      elsif z.sequence == 3
-            #        mix[0].zone4 = mix[0].zone4 + books[1]
-            #        mix[1].to_a.delete(books)
-            #      elsif z.sequence == 4
-            #        mix[0].zone5 = mix[0].zone5 + books[1]
-            #        mix[1].to_a.delete(books)
-            #      elsif z.sequence == 5
-            #        mix[0].zone6 = mix[0].zone6 + books[1]
-            #        mix[1].to_a.delete(books)
-            #      end
-            #    end
-            #  end
-            #end
+              i = 0
+              while i < mix[1].length
+                books = mix[1][i]
+                if z.range_begin <= books[2] && z.range_end > books[2]
+                  if z.sequence == 0
+                    mix[0].zone1 = mix[0].zone1 + books[1]
+                  elsif z.sequence == 1
+                    mix[0].zone2 = mix[0].zone2 + books[1]
+                  elsif z.sequence == 2
+                    mix[0].zone3 = mix[0].zone3 + books[1]
+                  elsif z.sequence == 3
+                    mix[0].zone4 = mix[0].zone4 + books[1]
+                  elsif z.sequence == 4
+                    mix[0].zone5 = mix[0].zone5 + books[1]
+                  elsif z.sequence == 5
+                    mix[0].zone6 = mix[0].zone6 + books[1]
+                  end
+                  mix[1].to_a.delete(books)
+                  i = i - 1
+                end
+                i = i + 1
+              end
+            end
           end
-
         end
         mix[0].save
       end
