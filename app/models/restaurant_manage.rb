@@ -1056,9 +1056,11 @@ class RestaurantManage
           day_booking.save
         end
 
-        booking.phone = nil
-        booking.res_url = APP_CONFIG['domain'] + "#{booking.res_url}"
-        MyMailer.cancel_booking(booking.email ,booking).deliver
+        if booking.email.present?
+          booking.phone = nil
+          booking.res_url = APP_CONFIG['domain'] + "#{booking.res_url}"
+          MyMailer.cancel_booking(booking.email ,booking).deliver
+        end
 
         if booking.status == '2'
           status_string = '取消訂位(同伴無法配合)'

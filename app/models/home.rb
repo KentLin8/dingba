@@ -605,7 +605,7 @@ class Home
                   end
                 end
 
-                if h == temp_begin_hour && temp_begin_minute >= 30
+                if h == temp_begin_hour && temp_begin_minute > 30
                   zone_option_of_time.push([1, h.to_s + ":30", 0])
                 else
                   if h30 == true
@@ -633,7 +633,7 @@ class Home
               end
             end
 
-            if temp_begin_minute == '30'
+            if temp_begin_minute == 30
               2.times do
                 zone_option_of_time.delete_at(0)
               end
