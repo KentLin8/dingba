@@ -202,7 +202,6 @@ class RestaurantManageController < ApplicationController
     zones.push(params[:zone4])
     zones.push(params[:zone5])
 
-
     result =  RestaurantManage.special_create(zones, params[:special_day], @restaurant.id, params[:is_vacation])
 
     restaurant_month_result = Calendar.get_restaurant_month(nil,nil,@restaurant.id)
@@ -217,7 +216,7 @@ class RestaurantManageController < ApplicationController
     #result[:attachmentPartial] = render_to_string('restaurant_manage/supply_condition', :layout => false, :locals => { :normal_conditions => @normal_conditions, :special_conditions => @special_conditions })
 
     result[:attachmentPartial] = render_to_string('calendar/restaurant_month', :layout => false, :locals => { :year => @year, :month => @month, :books => @books, :calendar_data => @calendar_data, :id_with_name => @id_with_name })
-
+    result[:url] = '/calendar/restaurant_month'
     render json: result
   end
 
@@ -277,8 +276,8 @@ class RestaurantManageController < ApplicationController
     @calendar_data = restaurant_month_result[:calendar_data]
     @id_with_name = restaurant_month_result[:id_with_name]
     result[:attachmentPartial] = render_to_string('calendar/restaurant_month', :layout => false, :locals => { :year => @year, :month => @month, :books => @books, :calendar_data => @calendar_data, :id_with_name => @id_with_name })
-
-     render json: result
+    result[:url] = '/calendar/restaurant_month'
+    render json: result
   end
 
   # GET === Function: show cancel booking view
@@ -304,10 +303,9 @@ class RestaurantManageController < ApplicationController
     @calendar_data = restaurant_month_result[:calendar_data]
     @id_with_name = restaurant_month_result[:id_with_name]
     result[:attachmentPartial] = render_to_string('calendar/restaurant_month', :layout => false, :locals => { :year => @year, :month => @month, :books => @books, :calendar_data => @calendar_data, :id_with_name => @id_with_name })
-
+    result[:url] = '/calendar/restaurant_month'
     render json: result
   end
-
 
   def check_step_info(restaurant)
     if !RestaurantManage.check_restaurant_info(restaurant)
