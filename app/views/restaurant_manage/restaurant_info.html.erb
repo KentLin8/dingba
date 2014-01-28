@@ -74,6 +74,14 @@
         <td><%= f.text_area :business_hours, :required => true, :style => 'width: 445px' %></td>
       </tr>
       <tr>
+        <td class="title"><i class="required">*</i>價位範圍</td>
+        <td>
+          <%= f.text_field :price_from, {:required => true, :style => 'width: 50px;text-align:right'} %> 元
+          ~
+          <%= f.text_field :price_to, {:required => true, :style => 'width: 50px;text-align:right'} %> 元
+        </td>
+      </tr>
+      <tr>
         <td class="title">付款方式</td>
         <td>
           <label class="checkbox inline"><input type="checkbox" value="1" name="restaurant[pay_type_cash]" <%= @pay_type.include?('1') ? 'checked' : '' %>>現金</label>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140122100639) do
+ActiveRecord::Schema.define(version: 20140127065859) do
 
   create_table "bookings", force: true do |t|
     t.integer  "user_id"
@@ -107,6 +107,9 @@ ActiveRecord::Schema.define(version: 20140122100639) do
     t.datetime "updated_at"
     t.string   "sent_type",      limit: 1
     t.string   "sent_date",      limit: 5
+    t.string   "tag"
+    t.string   "price_from",     limit: 7
+    t.string   "price_to",       limit: 7
   end
 
   add_index "restaurants", ["area"], name: "index_restaurants_on_area", using: :btree
@@ -116,6 +119,7 @@ ActiveRecord::Schema.define(version: 20140122100639) do
   add_index "restaurants", ["pay_type"], name: "index_restaurants_on_pay_type", using: :btree
   add_index "restaurants", ["res_type"], name: "index_restaurants_on_res_type", using: :btree
   add_index "restaurants", ["res_url"], name: "index_restaurants_on_res_url", unique: true, using: :btree
+  add_index "restaurants", ["tag"], name: "index_restaurants_on_tag", using: :btree
 
   create_table "supply_conditions", force: true do |t|
     t.integer  "restaurant_id"

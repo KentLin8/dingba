@@ -8,6 +8,8 @@ class RestaurantManage
     if restaurant.name.blank? ||
         restaurant.address.blank? ||
         restaurant.business_hours.blank? ||
+        restaurant.price_from.blank? ||
+        restaurant.price_to.blank? ||
         restaurant.supply_person.blank? ||
         restaurant.supply_email.blank?
       return false
@@ -42,6 +44,10 @@ class RestaurantManage
     end
   end
 
+  def self.is_numeric?(obj)
+    obj.to_s.match(/\A[+-]?\d+?(\.\d+)?\Z/) == nil ? false : true
+  end
+
   def self.restaurant_info_save(origin_restaurant)
     begin
       restaurant = Restaurant.find(origin_restaurant[:id].to_i)
@@ -54,6 +60,23 @@ class RestaurantManage
       restaurant.feature = origin_restaurant[:feature].strip
       pay_type = [origin_restaurant[:pay_type_cash], origin_restaurant[:pay_type_CreditCard], origin_restaurant[:pay_type_EasyCard]].join(',')
       restaurant.pay_type = pay_type
+
+      price_from = origin_restaurant[:price_from].strip
+      price_to = origin_restaurant[:price_to].strip
+
+      if is_numeric?(price_from) && is_numeric?(price_to)
+        price_from = price_from.to_i
+        price_to = price_to.to_i
+        if price_to >= price_from && price_to >= 0 && price_from >= 0
+          restaurant.price_from = price_from
+          restaurant.price_to = price_to
+        else
+          return {:error => true, :message => '價格欄位資料錯誤，請確定為大於零整數'}
+        end
+      else
+        return {:error => true, :message => '價格欄位資料錯誤，請確定為大於零整數'}
+      end
+
       restaurant.business_hours = origin_restaurant[:business_hours].strip
       restaurant.supply_person = origin_restaurant[:supply_person].strip
 
