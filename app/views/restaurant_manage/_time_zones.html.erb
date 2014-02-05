@@ -8,11 +8,19 @@
     </div>
 
     <div style="font-size: 16px;letter-spacing: 0.5px;margin-bottom: 15px;margin-left: 2em">
+      <span class="title"><i class="required">*</i>設立名稱</span>
+      <% if @condition.present? %>
+          <span><input type="text" name="condition_name" value="<%= @condition.name %>" required="required" placeholder="ex:2014農曆春節"></span>
+      <% else %>
+          <span><input type="text" name="condition_name" value="" required="required" placeholder="ex:2014農曆春節"></span>
+      <% end %>
+    </div>
+
+    <div style="font-size: 16px;letter-spacing: 0.5px;margin-bottom: 15px;margin-left: 2em">
       <label style="font-size: 16px;letter-spacing: 0.5px">
         <input style="margin-top: -2px" type="checkbox" name="is_vacation" value="t" <%= @is_vacation == 't' ? 'checked="checked"' : '' %>>
-        休假日 <span style="color: red">( 此選項勾選時，表示此日全天不開放訂位 )</span>
+        休假日 <span style="color: red">( 勾選休假後，當日不開放訂餐，且忽略以下條件設定 )</span>
       </label>
-
     </div>
 
 <% end %>

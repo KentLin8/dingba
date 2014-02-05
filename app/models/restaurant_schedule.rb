@@ -1,6 +1,7 @@
 class RestaurantSchedule
 
   def self.send_report
+    Rails.logger.error APP_CONFIG['error'] + " Check Schedule"
     now = Time.now
     temp_now = now.strftime("%H:%M")
     sent_date = now.strftime("%H") + ':00'
@@ -15,6 +16,7 @@ class RestaurantSchedule
     tomorrow = Date.parse(tomorrow.to_s)
 
     result = Restaurant.find_by_sql ['SELECT restaurants.name as rname,restaurants.supply_email, bookings.booking_time, bookings.name, bookings.phone, bookings.email, bookings.remark, bookings.num_of_people FROM restaurants INNER JOIN(bookings) ON (restaurants.id = bookings.restaurant_id AND (restaurants.sent_type =? AND restaurants.sent_date =?) AND bookings.status = ?  AND (bookings.booking_time >= ? AND bookings.booking_time <= ?)) ORDER BY bookings.booking_time','1',sent_date, '0',tomorrow_begin, tomorrow_end]
+    #result = Restaurant.find_by_sql ['SELECT restaurants.name as rname,restaurants.supply_email, bookings.booking_time, bookings.name, bookings.phone, bookings.email, bookings.remark, bookings.num_of_people FROM restaurants INNER JOIN(bookings) ON (restaurants.id = bookings.restaurant_id AND (restaurants.sent_type =?) AND bookings.status = ?  AND (bookings.booking_time >= ? AND bookings.booking_time <= ?)) ORDER BY bookings.booking_time','1', '0',tomorrow_begin, tomorrow_end]
 
     if result.present?
       restaurant_group_books = result.group_by { |x| x[:rname] }

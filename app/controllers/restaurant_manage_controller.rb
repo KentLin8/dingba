@@ -180,10 +180,12 @@ class RestaurantManageController < ApplicationController
     begin
       @select_date = params[:special_day]
       condition_id = params[:condition_id]
+
+      @condition = nil
       @time_zones = RestaurantManage.get_time_zones(condition_id)
       if !condition_id.blank? && condition_id.to_i != 0
-        condition = SupplyCondition.find(condition_id.to_i)
-        @is_vacation = condition.is_vacation
+        @condition = SupplyCondition.find(condition_id.to_i)
+        @is_vacation = @condition.is_vacation
       end
       render 'restaurant_manage/_time_zones', :layout => false
     rescue => e
@@ -202,7 +204,7 @@ class RestaurantManageController < ApplicationController
     zones.push(params[:zone4])
     zones.push(params[:zone5])
 
-    result =  RestaurantManage.special_create(zones, params[:special_day], @restaurant.id, params[:is_vacation])
+    result =  RestaurantManage.special_create(zones, params[:special_day], @restaurant.id, params[:is_vacation], params[:condition_name])
 
     restaurant_month_result = Calendar.get_restaurant_month(nil,nil,@restaurant.id)
     @year = restaurant_month_result[:year]

@@ -539,7 +539,7 @@ class RestaurantManage
     end
   end
 
-  def self.special_create(origin_zones, special_day, restaurant_id, is_vacation)
+  def self.special_create(origin_zones, special_day, restaurant_id, is_vacation, condition_name)
     begin
       if is_vacation.blank?
         result = supply_condition_save_check(origin_zones)
@@ -586,7 +586,8 @@ class RestaurantManage
         condition = SupplyCondition.new
         condition.id = condition_id
         condition.restaurant_id = restaurant_id
-        condition.name = Date.parse(special_day_begin.to_s).to_s
+        #condition.name = Date.parse(special_day_begin.to_s).to_s
+        condition.name = condition_name.strip
         condition.status = 't'
         condition.range_begin = special_day_begin
         condition.range_end = special_day_end
