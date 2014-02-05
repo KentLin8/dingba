@@ -30,9 +30,9 @@
     <td style="width: 6%;">啟用</td>
     <td style="width: 27%;">時段名稱</td>
     <td style="width: 27%;">時段區間</td>
-    <td style="width: 11%;">總供位</td>
-    <td style="width: 17%;">15分鐘總供位 <a title="" class="ans" data-original-title="為避免餐廳無法在短時間接待太大量的客人，因此設定每15分鐘內的總訂位客人不超過一定的數量，以保持良好的服務品質。">?</a></td>
-    <td style="width: 12%;">單次供位 <a title="" class="ans" data-original-title="該時段餐廳能提供給單批客人桌椅的最大數量限制。">?</a></td>
+    <td style="width: 13%;">總供位</td>
+    <td style="width: 14%;">15分鐘總供位 <a title="" class="ans" data-original-title="為避免餐廳無法在短時間接待太大量的客人，因此設定每15分鐘內的總訂位客人不超過一定的數量，以保持良好的服務品質。">?</a></td>
+    <td style="width: 13%;">單次供位 <a title="" class="ans" data-original-title="該時段餐廳能提供給單批客人桌椅的最大數量限制。">?</a></td>
   </tr>
   <input name="special_day" type="hidden" value="<%= @select_date %>">
 
@@ -48,7 +48,7 @@
         <td><input style="width: 160px" type="text" name="zone<%= index %>[name]" value="<%= t.name %>">
 
         <td>
-          <select style="width: 77px" name="zone<%= index %>[time_begin]" data-value="<%= t.range_begin %>">
+          <select style="width: 80px" name="zone<%= index %>[time_begin]" data-value="<%= t.range_begin %>">
             <option value="00:30">00:30</option>
             <option value="01:00">01:00</option>
             <option value="01:30">01:30</option>
@@ -99,7 +99,7 @@
             <option value="24:00">24:00</option>
           </select>
           ~
-          <select style="width: 77px" name="zone<%= index %>[time_end]" data-value="<%= t.range_end %>">
+          <select style="width: 80px" name="zone<%= index %>[time_end]" data-value="<%= t.range_end %>">
             <option value="00:30">00:30</option>
             <option value="01:00">01:00</option>
             <option value="01:30">01:30</option>

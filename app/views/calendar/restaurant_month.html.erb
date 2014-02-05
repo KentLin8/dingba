@@ -84,8 +84,8 @@
                     <% end %>
                     <% if !@books[i].other.blank? && @books[i].other > 0 %>
                         <tr>
-                          <td style="vertical-align:baseline">其他時段</td>
-                          <td style="text-align: right;vertical-align:baseline"><%= @books[i].other%></td>
+                          <td style="vertical-align:baseline;color: red;font-weight: bold">其他時段</td>
+                          <td style="text-align: right;vertical-align:baseline;color: red;font-weight: bold"><%= @books[i].other%></td>
                         </tr>
                     <% end %>
                   </table>
