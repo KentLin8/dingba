@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140127065859) do
+ActiveRecord::Schema.define(version: 20140206071548) do
 
   create_table "bookings", force: true do |t|
     t.integer  "user_id"
@@ -110,6 +110,8 @@ ActiveRecord::Schema.define(version: 20140127065859) do
     t.string   "tag"
     t.string   "price_from",     limit: 7
     t.string   "price_to",       limit: 7
+    t.string   "home_img",       limit: 50
+    t.string   "home_des",       limit: 40
   end
 
   add_index "restaurants", ["area"], name: "index_restaurants_on_area", using: :btree
