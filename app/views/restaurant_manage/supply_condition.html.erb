@@ -105,7 +105,7 @@
   <tr>
     <td>
       <label class="radio inline" style="margin-left: 5px;">
-        <input type="radio" name="reserve_type" value="0" style="margin-top: 8px">開放預約到&nbsp;&nbsp;
+        <input type="radio" name="reserve_type" value="0" style="margin-top: 8px">開放預約 &nbsp;&nbsp;
 
       <input style="width: 30px; text-align: right" type="text" id="reserve_hour" value="<%= @restaurant.available_hour %>">&nbsp;&nbsp;小時之前的時間&nbsp;</label>
       <a class="ans" title="為確保訂位人數，建議餐廳設定最晚的訂位時間，爲該用餐時段前的幾個小時。">?</a>
@@ -148,11 +148,11 @@
 
 <div class="base_blue" style="margin-left: -20px;margin-bottom: 10px; margin-top: 20px;font-size: 18px; color: #7F1700">訂位資訊通知方式：</div>
 
-<table id="sent_table" style="margin-left: -20px; border: 2px solid rgb(190,190,190); width: 60%;padding-top: 10px;margin-bottom: 10px">
+<table id="sent_table" style="margin-left: -20px; border: 2px solid rgb(190,190,190); width: 80%;padding-top: 10px;margin-bottom: 10px">
   <tr>
     <td>
       <label class="radio inline" style="margin-left: 7px;">
-        <input type="radio" name="sent_type" value="0">每個資料都 E-Mail給供位聯絡人
+        <input type="radio" name="sent_type" value="0"> 每次訂位都通知餐廳(一天可能收到多份報表)
       </label>
     </td>
   </tr>
@@ -186,7 +186,7 @@
         <option value="22:00">22</option>
         <option value="23:00">23</option>
         <option value="24:00">24</option>
-      </select>&nbsp;&nbsp;點，彙整明日訂位資料 E-Mail 給供位聯絡人</label>
+      </select>&nbsp;&nbsp;點，彙整次日訂位報表通知餐廳 (一天收到一份報表) </label>
     </td>
   </tr>
 </table>
