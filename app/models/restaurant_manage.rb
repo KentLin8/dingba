@@ -892,23 +892,43 @@ class RestaurantManage
 
           if origin_condition.available_week.split(',').include?(origin_booking_time.wday.to_s)
             origin_zones = TimeZone.where(:supply_condition_id => origin_condition.id, :status => 't')
-            origin_zones.each do |z|
-              if z.range_begin <= origin_booking_time.strftime("%H:%M") && z.range_end > origin_booking_time.strftime("%H:%M")
-                if z.sequence == 0
-                  origin_day_booking.zone1 = origin_day_booking.zone1 - origin_num_of_people
-                elsif z.sequence == 1
-                  origin_day_booking.zone2 = origin_day_booking.zone2 - origin_num_of_people
-                elsif z.sequence == 2
-                  origin_day_booking.zone3 = origin_day_booking.zone3 - origin_num_of_people
-                elsif z.sequence == 3
-                  origin_day_booking.zone4 = origin_day_booking.zone4 - origin_num_of_people
-                elsif z.sequence == 4
-                  origin_day_booking.zone5 = origin_day_booking.zone5 - origin_num_of_people
-                elsif z.sequence == 5
-                  origin_day_booking.zone6 = origin_day_booking.zone6 - origin_num_of_people
+            origin_zones.each_with_index do |z, j|
+              if origin_zones.count != (j + 1) && (origin_zones[j + 1].present? && z.range_end == origin_zones[j + 1].range_begin)
+                if z.range_begin <= origin_booking_time.strftime("%H:%M") && z.range_end > origin_booking_time.strftime("%H:%M")
+                  if z.sequence == 0
+                    origin_day_booking.zone1 = origin_day_booking.zone1 - origin_num_of_people
+                  elsif z.sequence == 1
+                    origin_day_booking.zone2 = origin_day_booking.zone2 - origin_num_of_people
+                  elsif z.sequence == 2
+                    origin_day_booking.zone3 = origin_day_booking.zone3 - origin_num_of_people
+                  elsif z.sequence == 3
+                    origin_day_booking.zone4 = origin_day_booking.zone4 - origin_num_of_people
+                  elsif z.sequence == 4
+                    origin_day_booking.zone5 = origin_day_booking.zone5 - origin_num_of_people
+                  elsif z.sequence == 5
+                    origin_day_booking.zone6 = origin_day_booking.zone6 - origin_num_of_people
+                  end
+                  is_in_zone = true
+                  break;
                 end
-                is_in_zone = true
-                break;
+              else
+                if z.range_begin <= origin_booking_time.strftime("%H:%M") && z.range_end >= origin_booking_time.strftime("%H:%M")
+                  if z.sequence == 0
+                    origin_day_booking.zone1 = origin_day_booking.zone1 - origin_num_of_people
+                  elsif z.sequence == 1
+                    origin_day_booking.zone2 = origin_day_booking.zone2 - origin_num_of_people
+                  elsif z.sequence == 2
+                    origin_day_booking.zone3 = origin_day_booking.zone3 - origin_num_of_people
+                  elsif z.sequence == 3
+                    origin_day_booking.zone4 = origin_day_booking.zone4 - origin_num_of_people
+                  elsif z.sequence == 4
+                    origin_day_booking.zone5 = origin_day_booking.zone5 - origin_num_of_people
+                  elsif z.sequence == 5
+                    origin_day_booking.zone6 = origin_day_booking.zone6 - origin_num_of_people
+                  end
+                  is_in_zone = true
+                  break;
+                end
               end
             end
           end
@@ -952,23 +972,43 @@ class RestaurantManage
           is_in_zone = false
           if condition.available_week.split(',').include?(booking.booking_time.wday.to_s)
             zones = TimeZone.where(:supply_condition_id => condition.id, :status => 't')
-            zones.each do |z|
-              if z.range_begin <= booking.booking_time.strftime("%H:%M") && z.range_end > booking.booking_time.strftime("%H:%M")
-                if z.sequence == 0
-                  day_booking.zone1 = day_booking.zone1 + booking.num_of_people
-                elsif z.sequence == 1
-                  day_booking.zone2 = day_booking.zone2 + booking.num_of_people
-                elsif z.sequence == 2
-                  day_booking.zone3 = day_booking.zone3 + booking.num_of_people
-                elsif z.sequence == 3
-                  day_booking.zone4 = day_booking.zone4 + booking.num_of_people
-                elsif z.sequence == 4
-                  day_booking.zone5 = day_booking.zone5 + booking.num_of_people
-                elsif z.sequence == 5
-                  day_booking.zone6 = day_booking.zone6 + booking.num_of_people
+            zones.each_with_index do |z, j|
+              if zones.count != (j + 1) && (zones[j + 1].present? && z.range_end == zones[j + 1].range_begin)
+                if z.range_begin <= booking.booking_time.strftime("%H:%M") && z.range_end > booking.booking_time.strftime("%H:%M")
+                  if z.sequence == 0
+                    day_booking.zone1 = day_booking.zone1 + booking.num_of_people
+                  elsif z.sequence == 1
+                    day_booking.zone2 = day_booking.zone2 + booking.num_of_people
+                  elsif z.sequence == 2
+                    day_booking.zone3 = day_booking.zone3 + booking.num_of_people
+                  elsif z.sequence == 3
+                    day_booking.zone4 = day_booking.zone4 + booking.num_of_people
+                  elsif z.sequence == 4
+                    day_booking.zone5 = day_booking.zone5 + booking.num_of_people
+                  elsif z.sequence == 5
+                    day_booking.zone6 = day_booking.zone6 + booking.num_of_people
+                  end
+                  is_in_zone = true
+                  break;
                 end
-                is_in_zone = true
-                break;
+              else
+                if z.range_begin <= booking.booking_time.strftime("%H:%M") && z.range_end >= booking.booking_time.strftime("%H:%M")
+                  if z.sequence == 0
+                    day_booking.zone1 = day_booking.zone1 + booking.num_of_people
+                  elsif z.sequence == 1
+                    day_booking.zone2 = day_booking.zone2 + booking.num_of_people
+                  elsif z.sequence == 2
+                    day_booking.zone3 = day_booking.zone3 + booking.num_of_people
+                  elsif z.sequence == 3
+                    day_booking.zone4 = day_booking.zone4 + booking.num_of_people
+                  elsif z.sequence == 4
+                    day_booking.zone5 = day_booking.zone5 + booking.num_of_people
+                  elsif z.sequence == 5
+                    day_booking.zone6 = day_booking.zone6 + booking.num_of_people
+                  end
+                  is_in_zone = true
+                  break;
+                end
               end
             end
           end
@@ -1053,24 +1093,46 @@ class RestaurantManage
           condition = conditions.first
           if condition.is_vacation.blank?
             zones = TimeZone.where(:supply_condition_id => condition.id, :status => 't')
-            zones.each do |z|
-              if z.range_begin <= booking.booking_time.strftime("%H:%M") && z.range_end > booking.booking_time.strftime("%H:%M")
-                if z.sequence == 0
-                  day_booking.zone1 = day_booking.zone1 - booking.num_of_people
-                elsif z.sequence == 1
-                  day_booking.zone2 = day_booking.zone2 - booking.num_of_people
-                elsif z.sequence == 2
-                  day_booking.zone3 = day_booking.zone3 - booking.num_of_people
-                elsif z.sequence == 3
-                  day_booking.zone4 = day_booking.zone4 - booking.num_of_people
-                elsif z.sequence == 4
-                  day_booking.zone5 = day_booking.zone5 - booking.num_of_people
-                elsif z.sequence == 5
-                  day_booking.zone6 = day_booking.zone6 - booking.num_of_people
+            zones.each_with_index do |z, j|
+              if zones.count != (j + 1) && (zones[j + 1].present? && z.range_end == zones[j + 1].range_begin)
+
+                if z.range_begin <= booking.booking_time.strftime("%H:%M") && z.range_end > booking.booking_time.strftime("%H:%M")
+                  if z.sequence == 0
+                    day_booking.zone1 = day_booking.zone1 - booking.num_of_people
+                  elsif z.sequence == 1
+                    day_booking.zone2 = day_booking.zone2 - booking.num_of_people
+                  elsif z.sequence == 2
+                    day_booking.zone3 = day_booking.zone3 - booking.num_of_people
+                  elsif z.sequence == 3
+                    day_booking.zone4 = day_booking.zone4 - booking.num_of_people
+                  elsif z.sequence == 4
+                    day_booking.zone5 = day_booking.zone5 - booking.num_of_people
+                  elsif z.sequence == 5
+                    day_booking.zone6 = day_booking.zone6 - booking.num_of_people
+                  end
+                  booking.num_of_people = 0
+                  break;
                 end
-                booking.num_of_people = 0
-                break;
+              else
+                if z.range_begin <= booking.booking_time.strftime("%H:%M") && z.range_end >= booking.booking_time.strftime("%H:%M")
+                  if z.sequence == 0
+                    day_booking.zone1 = day_booking.zone1 - booking.num_of_people
+                  elsif z.sequence == 1
+                    day_booking.zone2 = day_booking.zone2 - booking.num_of_people
+                  elsif z.sequence == 2
+                    day_booking.zone3 = day_booking.zone3 - booking.num_of_people
+                  elsif z.sequence == 3
+                    day_booking.zone4 = day_booking.zone4 - booking.num_of_people
+                  elsif z.sequence == 4
+                    day_booking.zone5 = day_booking.zone5 - booking.num_of_people
+                  elsif z.sequence == 5
+                    day_booking.zone6 = day_booking.zone6 - booking.num_of_people
+                  end
+                  booking.num_of_people = 0
+                  break;
+                end
               end
+
             end
           end
 
@@ -1185,28 +1247,50 @@ class RestaurantManage
 
       day_booking_mix.each do |mix|
         if origin_condition.range_begin <= mix[0].day && origin_condition.range_end >= mix[0].day
-          zones.each do |z|
 
+          zones.each_with_index do |z, j|
             i = 0
             while i < mix[1].length
               books = mix[1][i]
-              if z.range_begin <= books[2] && z.range_end > books[2]
-                if z.sequence == 0
-                  mix[0].zone1 = mix[0].zone1 + books[1]
-                elsif z.sequence == 1
-                  mix[0].zone2 = mix[0].zone2 + books[1]
-                elsif z.sequence == 2
-                  mix[0].zone3 = mix[0].zone3 + books[1]
-                elsif z.sequence == 3
-                  mix[0].zone4 = mix[0].zone4 + books[1]
-                elsif z.sequence == 4
-                  mix[0].zone5 = mix[0].zone5 + books[1]
-                elsif z.sequence == 5
-                  mix[0].zone6 = mix[0].zone6 + books[1]
+
+              if zones.count != (j + 1) && (zones[j + 1].present? && z.range_end == zones[j + 1].range_begin)
+                if z.range_begin <= books[2] && z.range_end > books[2]
+                  if z.sequence == 0
+                    mix[0].zone1 = mix[0].zone1 + books[1]
+                  elsif z.sequence == 1
+                    mix[0].zone2 = mix[0].zone2 + books[1]
+                  elsif z.sequence == 2
+                    mix[0].zone3 = mix[0].zone3 + books[1]
+                  elsif z.sequence == 3
+                    mix[0].zone4 = mix[0].zone4 + books[1]
+                  elsif z.sequence == 4
+                    mix[0].zone5 = mix[0].zone5 + books[1]
+                  elsif z.sequence == 5
+                    mix[0].zone6 = mix[0].zone6 + books[1]
+                  end
+                  mix[1].to_a.delete(books)
+                  i = i - 1
                 end
-                mix[1].to_a.delete(books)
-                i = i - 1
+              else
+                if z.range_begin <= books[2] && z.range_end >= books[2]
+                  if z.sequence == 0
+                    mix[0].zone1 = mix[0].zone1 + books[1]
+                  elsif z.sequence == 1
+                    mix[0].zone2 = mix[0].zone2 + books[1]
+                  elsif z.sequence == 2
+                    mix[0].zone3 = mix[0].zone3 + books[1]
+                  elsif z.sequence == 3
+                    mix[0].zone4 = mix[0].zone4 + books[1]
+                  elsif z.sequence == 4
+                    mix[0].zone5 = mix[0].zone5 + books[1]
+                  elsif z.sequence == 5
+                    mix[0].zone6 = mix[0].zone6 + books[1]
+                  end
+                  mix[1].to_a.delete(books)
+                  i = i - 1
+                end
               end
+
               i = i + 1
             end
 
@@ -1311,27 +1395,47 @@ class RestaurantManage
               mix[0].other = mix[0].other + books[1]
             end
           else
-            zones.each do |z|
+            zones.each_with_index do |z, j|
 
               i = 0
               while i < mix[1].length
                 books = mix[1][i]
-                if z.range_begin <= books[2] && z.range_end > books[2]
-                  if z.sequence == 0
-                    mix[0].zone1 = mix[0].zone1 + books[1]
-                  elsif z.sequence == 1
-                    mix[0].zone2 = mix[0].zone2 + books[1]
-                  elsif z.sequence == 2
-                    mix[0].zone3 = mix[0].zone3 + books[1]
-                  elsif z.sequence == 3
-                    mix[0].zone4 = mix[0].zone4 + books[1]
-                  elsif z.sequence == 4
-                    mix[0].zone5 = mix[0].zone5 + books[1]
-                  elsif z.sequence == 5
-                    mix[0].zone6 = mix[0].zone6 + books[1]
+                if zones.count != (j + 1) && (zones[j + 1].present? && z.range_end == zones[j + 1].range_begin)
+                  if z.range_begin <= books[2] && z.range_end > books[2]
+                    if z.sequence == 0
+                      mix[0].zone1 = mix[0].zone1 + books[1]
+                    elsif z.sequence == 1
+                      mix[0].zone2 = mix[0].zone2 + books[1]
+                    elsif z.sequence == 2
+                      mix[0].zone3 = mix[0].zone3 + books[1]
+                    elsif z.sequence == 3
+                      mix[0].zone4 = mix[0].zone4 + books[1]
+                    elsif z.sequence == 4
+                      mix[0].zone5 = mix[0].zone5 + books[1]
+                    elsif z.sequence == 5
+                      mix[0].zone6 = mix[0].zone6 + books[1]
+                    end
+                    mix[1].to_a.delete(books)
+                    i = i - 1
                   end
-                  mix[1].to_a.delete(books)
-                  i = i - 1
+                else
+                  if z.range_begin <= books[2] && z.range_end >= books[2]
+                    if z.sequence == 0
+                      mix[0].zone1 = mix[0].zone1 + books[1]
+                    elsif z.sequence == 1
+                      mix[0].zone2 = mix[0].zone2 + books[1]
+                    elsif z.sequence == 2
+                      mix[0].zone3 = mix[0].zone3 + books[1]
+                    elsif z.sequence == 3
+                      mix[0].zone4 = mix[0].zone4 + books[1]
+                    elsif z.sequence == 4
+                      mix[0].zone5 = mix[0].zone5 + books[1]
+                    elsif z.sequence == 5
+                      mix[0].zone6 = mix[0].zone6 + books[1]
+                    end
+                    mix[1].to_a.delete(books)
+                    i = i - 1
+                  end
                 end
                 i = i + 1
               end
