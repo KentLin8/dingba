@@ -31,6 +31,10 @@ class HomeController < ApplicationController
   end
 
   def index
+    # DingBa home view
+    # TODO GET Home restaurant
+    # updated_at , set home tag save updated_at time,
+    @restaurants = Restaurant.where(:tag => 'home')
   end
 
   def index_old
