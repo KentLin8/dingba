@@ -236,8 +236,8 @@ class RestaurantManageController < ApplicationController
     @from, @to = params[:from], params[:to]
     if @from.blank? || @to.blank?
       now = Time.now
-      @from = now.beginning_of_month.to_date.to_s
-      @to = now.end_of_month.to_date.to_s
+      @from = now.to_date.to_s
+      @to = (now+ 14.day).to_date.to_s
     end
     #@books = RestaurantManage.query_books_by_date(@restaurant.id, params[:range_begin], params[:range_end])
     @books = RestaurantManage.query_books_by_date(@restaurant.id, @from, @to)
@@ -416,5 +416,9 @@ class RestaurantManageController < ApplicationController
     render :layout => false
   end
 
+  def test
+    render :layout => false
+
+  end
 
 end
