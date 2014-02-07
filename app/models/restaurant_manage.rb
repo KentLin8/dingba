@@ -763,17 +763,26 @@ class RestaurantManage
         zones = TimeZone.where(:supply_condition_id => effect_conditions.id, :status => 't').order('sequence ASC')
         zones_books = []
         if !zones.blank?
-          zones.each do |z|
+          zones.each_with_index do |z, j|
             has_books = false
             books = []
 
             i = 0
             while i < day_books.length
-              if z.range_begin <= day_books[i].booking_time.strftime("%H:%M") && z.range_end >= day_books[i].booking_time.strftime("%H:%M")
-                books.push(day_books[i])
-                has_books = true
-                day_books.to_a.delete(day_books[i])  # delete boj only from array
-                i = i - 1
+              if zones.count != (j + 1) && (zones[j + 1].present? && z.range_end == zones[j + 1].range_begin)
+                if z.range_begin <= day_books[i].booking_time.strftime("%H:%M") && z.range_end > day_books[i].booking_time.strftime("%H:%M")
+                  books.push(day_books[i])
+                  has_books = true
+                  day_books.to_a.delete(day_books[i])  # delete boj only from array
+                  i = i - 1
+                end
+              else
+                if z.range_begin <= day_books[i].booking_time.strftime("%H:%M") && z.range_end >= day_books[i].booking_time.strftime("%H:%M")
+                  books.push(day_books[i])
+                  has_books = true
+                  day_books.to_a.delete(day_books[i])  # delete boj only from array
+                  i = i - 1
+                end
               end
               i = i + 1
             end

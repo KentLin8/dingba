@@ -513,17 +513,20 @@ $ ->
       .fail( -> alert('oops! 出現錯誤了!') )
 
   $(document).on 'click', '.destroy_condition', ->
-    $.getJSON('/restaurant_manage/destroy_condition', {condition_id: $(this).data('id')})
-      .done( (response) ->
-        if response.success
-          refresh response.attachmentPartial
-          alert(response.data)
-        else if response.error
-          alert(response.message)
-        else
-          alert('發生未預期的回應，請告知CoDream小組處理!')
-      )
-      .fail( -> alert('oops! 出現錯誤了!') )
+    sure_delete = confirm("確定刪除?")
+
+    if sure_delete
+      $.getJSON('/restaurant_manage/destroy_condition', {condition_id: $(this).data('id')})
+        .done( (response) ->
+          if response.success
+            refresh response.attachmentPartial
+            alert(response.data)
+          else if response.error
+            alert(response.message)
+          else
+            alert('發生未預期的回應，請告知CoDream小組處理!')
+        )
+        .fail( -> alert('oops! 出現錯誤了!') )
 
   show_delete_form = (tr) ->
     id = tr.data('id')
