@@ -19,7 +19,12 @@
             </tr>
             <tr>
               <td colspan="2">
-                <%= f.radio_button :status, "7", checked: @booking.status == '7' %> 其他
+                <% if @booking.status == '0' %>
+                    <%= f.radio_button :status, "7", checked: true %> 其他
+                <% else %>
+                    <%= f.radio_button :status, "7", checked: @booking.status == '7' %> 其他
+                <% end %>
+
                 <%= f.text_field :cancel_note, :placeholder => '請輸入' %>
               </td>
             </tr>

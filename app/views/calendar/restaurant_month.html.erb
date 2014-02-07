@@ -46,24 +46,24 @@
           <% if x.con_id == 0 %>
               不提供訂位
               <table class="clean-table" style="font-size: 14px">
-              <% if !@books[i].other.blank? && @books[i].other > 0 %>
-                  <tr>
-                    <td style="vertical-align:baseline">其他時段</td>
-                    <td style="text-align: right;vertical-align:baseline"><%= @books[i].other%></td>
-                  </tr>
-              <% end %>
+                <% if !@books[i].other.blank? && @books[i].other > 0 %>
+                    <tr>
+                      <td style="vertical-align:baseline">其他時段</td>
+                      <td style="text-align: right;vertical-align:baseline"><%= @books[i].other%></td>
+                    </tr>
+                <% end %>
               </table>
           <% else %>
               <% if x.is_vacation %>
 
                   休假
                   <table class="clean-table" style="font-size: 14px">
-                  <% if !@books[i].other.blank? && @books[i].other > 0 %>
-                      <tr>
-                        <td style="vertical-align:baseline">其他時段</td>
-                        <td style="text-align: right;vertical-align:baseline"><%= @books[i].other%></td>
-                      </tr>
-                  <% end %>
+                    <% if !@books[i].other.blank? && @books[i].other > 0 %>
+                        <tr>
+                          <td style="vertical-align:baseline">其他時段</td>
+                          <td style="text-align: right;vertical-align:baseline"><%= @books[i].other%></td>
+                        </tr>
+                    <% end %>
                   </table>
               <% else %>
                   <table class="clean-table" style="font-size: 14px">
@@ -71,13 +71,13 @@
                         <% unless x.method("n#{j}".to_sym).call.blank? %>
                             <tr>
                               <td style="vertical-align:baseline;width: 55%"><%= x.method("n#{j}".to_sym).call %></td>
-<%
-   if    @books[i].method("zone#{j}".to_sym).call >0
-        style_highlight=';color: red;font-weight: bold'
-   else
-        style_highlight=''
-   end
-%>
+                              <%
+                                 if @books[i].method("zone#{j}".to_sym).call >0
+                                   style_highlight=';color: red;font-weight: bold'
+                                 else
+                                   style_highlight=''
+                                 end
+                              %>
                               <td style="text-align: right;vertical-align:baseline<%=style_highlight%>"><%= @books[i].method("zone#{j}".to_sym).call %>/ <%= x.method("z#{j}".to_sym).call %></td>
                             </tr>
                         <% end %>

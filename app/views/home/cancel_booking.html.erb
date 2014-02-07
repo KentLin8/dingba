@@ -148,11 +148,13 @@
                 </span>
             <% end %>
 
-            <a href="<%= "#{@booking.res_url}" %>" target="_blank" style="text-decoration:none">
-              <div style="font-size: 20px;width: 150px;height: 36px;margin-top: 10px;text-align: center;background-color: rgb(231, 56, 32);color: #ffffff;padding-top: 10px">
-                前往訂位
-              </div>
-            </a>
+            <% if @booking.status != '0' && @booking.status != '1' %>
+                <a href="<%= "#{@booking.res_url}" %>" target="_blank" style="text-decoration:none">
+                  <div style="font-size: 20px;width: 150px;height: 36px;margin-top: 10px;text-align: center;background-color: rgb(231, 56, 32);color: #ffffff;padding-top: 10px">
+                    重新訂位
+                  </div>
+                </a>
+            <% end %>
 
           </div>
 
@@ -161,18 +163,23 @@
                 訂位取消原因：
                 <div style="margin-left: 2em;margin-top: -15px;line-height: 24px">
                   <%= f.hidden_field :id %><br>
-                  <label style="font-size:16px ;letter-spacing: 1px"><%= f.radio_button :status, "2", :style => 'margin-top:-2px' %> 同伴無法配合</label>
-                  <label style="font-size:16px ;letter-spacing: 1px"><%= f.radio_button :status, "4", :style => 'margin-top:-2px' %> 選擇了其他餐廳</label>
-                  <label style="font-size:16px ;letter-spacing: 1px"><%= f.radio_button :status, "6", :style => 'margin-top:-2px' %> 聚餐延期</label>
-                  <label style="font-size:16px ;letter-spacing: 1px"><%= f.radio_button :status, "7", :style => 'margin-top:-2px' %> 其他：</label>
+                  <label style="font-size:16px ;letter-spacing: 1px"><%= f.radio_button :status, "2", checked: @booking.status == '2', :style => 'margin-top:-2px' %> 同伴無法配合</label>
+                  <label style="font-size:16px ;letter-spacing: 1px"><%= f.radio_button :status, "4", checked: @booking.status == '4', :style => 'margin-top:-2px' %> 選擇了其他餐廳</label>
+                  <label style="font-size:16px ;letter-spacing: 1px"><%= f.radio_button :status, "6", checked: @booking.status == '6', :style => 'margin-top:-2px' %> 聚餐延期</label>
+
+                  <% if @booking.status == '0' %>
+                      <label style="font-size:16px ;letter-spacing: 1px"><%= f.radio_button :status, "7", checked: true, :style => 'margin-top:-2px' %> 其他：</label>
+                  <% else %>
+                      <label style="font-size:16px ;letter-spacing: 1px"><%= f.radio_button :status, "7", checked: @booking.status == '7', :style => 'margin-top:-2px' %> 其他：</label>
+                  <% end %>
+
                   <%= f.text_area :cancel_note, :placeholder => '請輸入其他原因', :style => 'margin-left:20px;width:300px;height:23px;margin-top:5px;padding-left:10px' %>
                   <br>
                   <% if @booking.status == '0' %>
                   <hr color="#lelele" size="3" width="90%">
-
                       您訂位的手機號碼：
                       <%= f.text_field :phone, :placeholder => '為確保取消訂位的是本人', :style => 'width:200px;padding-left:10px' %> <br>
-                      <input type="submit" value="確認取消訂位" class="btn btn-primary" style="margin-top: 10px">
+                      <%= submit_tag "確認取消訂位" , { :class => 'btn btn-primary', :disable_with => 'Processing...' , :style => 'margin-top: 10px'} %>
                   <% end %>
                 </div>
             <% end %>
