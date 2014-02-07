@@ -23,14 +23,23 @@ class User < ActiveRecord::Base
     end
     user = User.where(:email => auth.info.email).first
     unless user
+
+      gender = nil
+      if auth.extra.raw_info.gender == 'female'
+        gender = '女'
+      elsif auth.extra.raw_info.gender == 'male'
+        gender = '男'
+      end
+
       user = User.new(name:auth.extra.raw_info.name,
                       provider:auth.provider,
                       #uid:auth.uid,
                       email:auth.info.email,
                       password:Devise.friendly_token[0,20],
                       phone: auth.info.phone,
-                      sex: auth.extra.raw_info.gender,
+                      sex: gender,
                       birthday: auth.info.birthday,
+                      allow_promot: 't',
                       role: '1')
 
       user.skip_confirmation!
@@ -47,11 +56,20 @@ class User < ActiveRecord::Base
     user = User.where(:email => data["email"]).first
 
     unless user
+
+      gender = nil
+      if data["gender"] == 'female'
+        gender = '女'
+      elsif data["gender"] == 'male'
+        gender = '男'
+      end
+
       user = User.new(name: data["name"],
                       email: data["email"],
                       phone: data["phone"],
-                      sex: data["sex"],
+                      sex: gender,
                       birthday: data["birthday"],
+                      allow_promot: 't',
                       provider: "google",
                       password: Devise.friendly_token[0,20],
                       role: '1')
