@@ -146,19 +146,19 @@ class Home
             h45_data = nil
 
             bookings_of_select_day.each do |b|
-              if b[0] == h.to_s + ":00"
+              if b[0] == h.to_s.rjust(2, '0') + ":00"
                 h00 = true
                 zone_total_people = zone_total_people + b[1]
                 h00_data = [1, h.to_s + ":00", b[1]]
-              elsif b[0] == h.to_s + ":15"
+              elsif b[0] == h.to_s.rjust(2, '0') + ":15"
                 h15 = true
                 zone_total_people = zone_total_people + b[1]
                 h15_data = [1, h.to_s + ":15", b[1]]
-              elsif b[0] == h.to_s + ":30"
+              elsif b[0] == h.to_s.rjust(2, '0') + ":30"
                 h30 = true
                 zone_total_people = zone_total_people + b[1]
                 h30_data = [1, h.to_s + ":30", b[1]]
-              elsif b[0] == h.to_s + ":45"
+              elsif b[0] == h.to_s.rjust(2, '0') + ":45"
                 h45 = true
                 zone_total_people = zone_total_people + b[1]
                 h45_data = [1, h.to_s + ":45", b[1]]
@@ -294,7 +294,7 @@ class Home
             h45_data = nil
 
             bookings_of_select_day.each do |b|
-              if b[0] == h.to_s + ":00"
+              if b[0] == h.to_s.rjust(2, '0') + ":00"
                 h00 = true
                 zone_total_people = zone_total_people + b[1]
                 if b[1] >= z.fifteen_allow || is_tomorrow
@@ -302,7 +302,7 @@ class Home
                 elsif b[1] < z.fifteen_allow
                   h00_data = [0, h.to_s + ":00", b[1]]
                 end
-              elsif b[0] == h.to_s + ":15"
+              elsif b[0] == h.to_s.rjust(2, '0') + ":15"
                 h15 = true
                 zone_total_people = zone_total_people + b[1]
                 if b[1] >= z.fifteen_allow || is_tomorrow
@@ -310,7 +310,7 @@ class Home
                 elsif b[1] < z.fifteen_allow
                   h15_data = [0, h.to_s + ":15", b[1]]
                 end
-              elsif b[0] == h.to_s + ":30"
+              elsif b[0] == h.to_s.rjust(2, '0') + ":30"
                 h30 = true
                 zone_total_people = zone_total_people + b[1]
                 if b[1] >= z.fifteen_allow || is_tomorrow
@@ -318,7 +318,7 @@ class Home
                 elsif b[1] < z.fifteen_allow
                   h30_data = [0, h.to_s + ":30", b[1]]
                 end
-              elsif b[0] == h.to_s + ":45"
+              elsif b[0] == h.to_s.rjust(2, '0') + ":45"
                 h45 = true
                 zone_total_people = zone_total_people + b[1]
                 if b[1] >= z.fifteen_allow || is_tomorrow
@@ -497,19 +497,19 @@ class Home
                 h45_data = nil
 
                 bookings_of_select_day.each do |b|
-                  if b[0] == (h.to_s + ":00")
+                  if b[0] == (h.to_s.rjust(2, '0') + ":00")
                     h00 = true
                     zone_total_people = zone_total_people + b[1]
                     h00_data = [1, h.to_s + ":00", b[1]]
-                  elsif b[0] == (h.to_s + ":15")
+                  elsif b[0] == (h.to_s.rjust(2, '0') + ":15")
                     h15 = true
                     zone_total_people = zone_total_people + b[1]
                     h15_data = [1, h.to_s + ":15", b[1]]
-                  elsif b[0] == (h.to_s + ":30")
+                  elsif b[0] == (h.to_s.rjust(2, '0') + ":30")
                     h30 = true
                     zone_total_people = zone_total_people + b[1]
                     h30_data = [1, h.to_s + ":30", b[1]]
-                  elsif b[0] == (h.to_s + ":45")
+                  elsif b[0] == (h.to_s.rjust(2, '0') + ":45")
                     h45 = true
                     zone_total_people = zone_total_people + b[1]
                     h45_data = [1, h.to_s + ":45", b[1]]
@@ -549,7 +549,7 @@ class Home
                 h30_data = nil
                 h45_data = nil
                 bookings_of_select_day.each do |b|
-                  if b[0] == h.to_s + ":00"
+                  if b[0] == h.to_s.rjust(2, '0') + ":00"
                     h00 = true
                     zone_total_people = zone_total_people + b[1]
                     if b[1] >= z.fifteen_allow
@@ -557,7 +557,7 @@ class Home
                     elsif b[1] < z.fifteen_allow
                       h00_data = [0, h.to_s + ":00", b[1]]
                     end
-                  elsif b[0] == h.to_s + ":15"
+                  elsif b[0] == h.to_s.rjust(2, '0') + ":15"
                     h15 = true
                     zone_total_people = zone_total_people + b[1]
                     if b[1] >= z.fifteen_allow
@@ -565,7 +565,7 @@ class Home
                     elsif b[1] < z.fifteen_allow
                       h15_data = [0, h.to_s + ":15", b[1]]
                     end
-                  elsif b[0] == h.to_s + ":30"
+                  elsif b[0] == h.to_s.rjust(2, '0') + ":30"
                     h30 = true
                     zone_total_people = zone_total_people + b[1]
                     if b[1] >= z.fifteen_allow
@@ -573,7 +573,7 @@ class Home
                     elsif b[1] < z.fifteen_allow
                       h30_data = [0, h.to_s + ":30", b[1]]
                     end
-                  elsif b[0] == h.to_s + ":45"
+                  elsif b[0] == h.to_s.rjust(2, '0') + ":45"
                     h45 = true
                     zone_total_people = zone_total_people + b[1]
                     if b[1] >= z.fifteen_allow

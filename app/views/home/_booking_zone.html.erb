@@ -45,6 +45,12 @@
   <!--</tr>-->
   <tr>
 
+    <input id="now_fifteen_allow" type="hidden" value="">
+    <input id="now_total_allow" type="hidden" value="">
+    <input id="now_total_people" type="hidden" value="">
+    <input id="now_each_allow" type="hidden" value="">
+
+
     <td id="time_select1" class="t_select" colspan="2" style="display:none">
       <% @booking_condition.option_of_time.each do |oft| %>
           <% if oft[5] == 0 %>
@@ -54,9 +60,9 @@
               <input id="z1_each_allow" type="hidden" value="<%= oft[4] %>">
               <% (oft.length - 6).times do |i| %>
                   <% if oft[i + 6][0] == 0 %>
-                      <input type="button" value='<%= oft[i + 6][1] %>' data-value='<%= oft[0] %>' class='btn' />
+                      <input type="button" value='<%= oft[i + 6][1] %>' data-value='<%= oft[0] %>' data-bcount='<%= oft[i + 6][2] %>' class='btn' />
                   <% elsif oft[i + 6][0] == 1 %>
-                      <input type="button" value='<%= oft[i + 6][1] %>' data-value='<%= oft[0] %>' class='btn btn-inverse' />
+                      <input type="button" value='<%= oft[i + 6][1] %>' data-value='<%= oft[0] %>' data-bcount='<%= oft[i + 6][2] %>' class='btn btn-inverse' />
                   <% end %>
               <% end %>
           <% end %>
@@ -72,9 +78,9 @@
               <input id="z2_each_allow" type="hidden" value="<%= oft[4] %>">
               <% (oft.length - 6).times do |i| %>
                   <% if oft[i + 6][0] == 0 %>
-                      <input type="button" value='<%= oft[i + 6][1] %>' data-value='<%= oft[0] %>' class='btn' />
+                      <input type="button" value='<%= oft[i + 6][1] %>' data-value='<%= oft[0] %>' data-bcount='<%= oft[i + 6][2] %>' class='btn' />
                   <% elsif oft[i + 6][0] == 1 %>
-                      <input type="button" value='<%= oft[i + 6][1] %>' data-value='<%= oft[0] %>' class='btn btn-inverse' />
+                      <input type="button" value='<%= oft[i + 6][1] %>' data-value='<%= oft[0] %>' data-bcount='<%= oft[i + 6][2] %>' class='btn btn-inverse' />
                   <% end %>
               <% end %>
           <% end %>
@@ -90,9 +96,9 @@
               <input id="z3_each_allow" type="hidden" value="<%= oft[4] %>">
               <% (oft.length - 6).times do |i| %>
                   <% if oft[i + 6][0] == 0 %>
-                      <input type="button" value='<%= oft[i + 6][1] %>' data-value='<%= oft[0] %>' class='btn' />
+                      <input type="button" value='<%= oft[i + 6][1] %>' data-value='<%= oft[0] %>' data-bcount='<%= oft[i + 6][2] %>' class='btn' />
                   <% elsif oft[i + 6][0] == 1 %>
-                      <input type="button" value='<%= oft[i + 6][1] %>' data-value='<%= oft[0] %>' class='btn btn-inverse' />
+                      <input type="button" value='<%= oft[i + 6][1] %>' data-value='<%= oft[0] %>' data-bcount='<%= oft[i + 6][2] %>' class='btn btn-inverse' />
                   <% end %>
               <% end %>
           <% end %>
@@ -108,9 +114,9 @@
               <input id="z4_each_allow" type="hidden" value="<%= oft[4] %>">
               <% (oft.length - 6).times do |i| %>
                   <% if oft[i + 6][0] == 0 %>
-                      <input type="button" value='<%= oft[i + 6][1] %>' data-value='<%= oft[0] %>' class='btn' />
+                      <input type="button" value='<%= oft[i + 6][1] %>' data-value='<%= oft[0] %>' data-bcount='<%= oft[i + 6][2] %>' class='btn' />
                   <% elsif oft[i + 6][0] == 1 %>
-                      <input type="button" value='<%= oft[i + 6][1] %>' data-value='<%= oft[0] %>' class='btn btn-inverse' />
+                      <input type="button" value='<%= oft[i + 6][1] %>' data-value='<%= oft[0] %>' data-bcount='<%= oft[i + 6][2] %>' class='btn btn-inverse' />
                   <% end %>
               <% end %>
           <% end %>
@@ -126,9 +132,9 @@
               <input id="z5_each_allow" type="hidden" value="<%= oft[4] %>">
               <% (oft.length - 6).times do |i| %>
                   <% if oft[i + 6][0] == 0 %>
-                      <input type="button" value='<%= oft[i + 6][1] %>' data-value='<%= oft[0] %>' class='btn' />
+                      <input type="button" value='<%= oft[i + 6][1] %>' data-value='<%= oft[0] %>' data-bcount='<%= oft[i + 6][2] %>' class='btn' />
                   <% elsif oft[i + 6][0] == 1 %>
-                      <input type="button" value='<%= oft[i + 6][1] %>' data-value='<%= oft[0] %>' class='btn btn-inverse' />
+                      <input type="button" value='<%= oft[i + 6][1] %>' data-value='<%= oft[0] %>' data-bcount='<%= oft[i + 6][2] %>' class='btn btn-inverse' />
                   <% end %>
               <% end %>
           <% end %>
@@ -144,9 +150,9 @@
               <input id="z6_each_allow" type="hidden" value="<%= oft[4] %>">
               <% (oft.length - 6).times do |i| %>
                   <% if oft[i + 6][0] == 0 %>
-                      <input type="button" value='<%= oft[i + 6][1] %>' data-value='<%= oft[0] %>' class='btn' />
+                      <input type="button" value='<%= oft[i + 6][1] %>' data-value='<%= oft[0] %>' data-bcount='<%= oft[i + 6][2] %>' class='btn' />
                   <% elsif oft[i + 6][0] == 1 %>
-                      <input type="button" value='<%= oft[i + 6][1] %>' data-value='<%= oft[0] %>' class='btn btn-inverse' />
+                      <input type="button" value='<%= oft[i + 6][1] %>' data-value='<%= oft[0] %>' data-bcount='<%= oft[i + 6][2] %>' class='btn btn-inverse' />
                   <% end %>
               <% end %>
           <% end %>

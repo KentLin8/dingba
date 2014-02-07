@@ -1,23 +1,23 @@
 <style>
     .grid {width:100%;}
-    /*.grid thead {margin:100px;}*/
-    /*.grid thead th{line-height:28px;height:28px;border-top:1px #D7D7D4 solid;border-bottom:1px #D7D7D4 solid; color:#666;}*/
-    /*.grid tbody tr{line-height:28px;height:30px;}*/
-    /*.grid tbody td{word-break:break-all;border-bottom:1px #d7d7d7 dotted;}*/
-    /*.grid tfoot tr{ line-height:30px; height:30; background-color:#fff;}*/
-    /*.grid tfoot td{ text-align:right; padding-right:5px;}*/
+        /*.grid thead {margin:100px;}*/
+        /*.grid thead th{line-height:28px;height:28px;border-top:1px #D7D7D4 solid;border-bottom:1px #D7D7D4 solid; color:#666;}*/
+        /*.grid tbody tr{line-height:28px;height:30px;}*/
+        /*.grid tbody td{word-break:break-all;border-bottom:1px #d7d7d7 dotted;}*/
+        /*.grid tfoot tr{ line-height:30px; height:30; background-color:#fff;}*/
+        /*.grid tfoot td{ text-align:right; padding-right:5px;}*/
         /**grid view 换色**/
-    /*.even{background-color:#FEF8F4;}*/
-    /*.over{background-color: #ffc;}*/
+        /*.even{background-color:#FEF8F4;}*/
+        /*.over{background-color: #ffc;}*/
 
-    /*.text-overflow {*/
+        /*.text-overflow {*/
         /*display:block;*/
         /*width:31em;*/
         /*word-break:keep-all;*/
         /*white-space:nowrap;*/
         /*overflow:hidden;*/
         /*text-overflow:ellipsis;*/
-    /*}*/
+        /*}*/
 </style>
 
 <div id="main" class="container">
@@ -230,9 +230,9 @@
         //$(this).addClass("over");
         $(this).find('td').eq(1).removeClass("text-overflow");
     }).mouseout(function(){
-        //$(this).removeClass("over");
-        $(this).find('td').eq(1).addClass("text-overflow");
-    });
+                //$(this).removeClass("over");
+                $(this).find('td').eq(1).addClass("text-overflow");
+            });
     //$(".grid tr:even").addClass("even");
 
 
@@ -340,7 +340,7 @@
 
                         var num_of_people = '1'
                         $('#select_people').val(num_of_people)
-                        set_time_button($('#select_zone').val());
+                        set_time_button($('#select_zone').val(), false);
                     }
                     else if (response.error)
                         alert(response.message)
@@ -354,22 +354,19 @@
         });
 
         $('#select_people').live('change', function(){
-            var num_of_people = $(this).val();
-            //show_zone(num_of_people)
+            set_time_button($('#select_zone').val(), true);
         });
 
         $('#select_zone').live('change', function(){
             var zone_sequence = $(this).val();
-            var num_of_people = $('#select_people').val();
-            set_time_button(zone_sequence);
+            set_time_button(zone_sequence, true);
         });
     }
 
     $(function(){
         var num_of_people = '1'
         $('#select_people').val(num_of_people)
-        set_time_button($('#select_zone').val())
-        //show_zone(num_of_people)
+        set_time_button($('#select_zone').val(), false)
     });
 
     $('#booking_save_btn').click(function(e){
@@ -456,27 +453,140 @@
         });
     });
 
-    function set_time_button(zone_value){
+
+    function check_gray(zone){
+        if ((parseInt($('#select_people').val()) + parseInt($('#now_total_people').val())) > parseInt($('#now_total_allow').val())) {
+            $("#" + zone + " input[type='button']").addClass('btn-inverse')
+        }
+        else if ( parseInt($('#select_people').val()) > parseInt($('#now_each_allow').val())) {
+            $("#" + zone + " input[type='button']").addClass('btn-inverse')
+        }
+        else {
+
+            $("#" + zone + " input[type='button']").removeClass('btn-inverse')
+
+            $("#" + zone + " input[type='button']").each(function(){
+                if ($(this).hasClass('ori_inverse')){
+                    $(this).addClass('btn-inverse')
+                }
+                else if ((parseInt($('#select_people').val()) + parseInt($(this).data('bcount'))) > parseInt($('#now_fifteen_allow').val()) ){
+                    $(this).addClass('btn-inverse')
+                }
+            });
+        }
+    };
+
+    function set_time_button(zone_value, check){
 
         $('.t_select .btn').removeClass('checked')
         $('.t_select:visible').hide();
 
         if (zone_value == 0) {
+            $('#now_fifteen_allow').val($('#z1_fifteen_allow').val())
+            $('#now_total_allow').val($('#z1_total_allow').val())
+            $('#now_total_people').val($('#z1_total_people').val())
+            $('#now_each_allow').val($('#z1_each_allow').val())
+
+            if (check){
+                check_gray('time_select1')
+            }else{
+                $("#time_select1 input[type='button']").each(function(){
+                    if ($(this).hasClass('btn btn-inverse')){
+                        $(this).addClass('ori_inverse')
+                    }
+                });
+            }
+
             $('#time_select1').show();
         }
         else if (zone_value == 1) {
+            $('#now_fifteen_allow').val($('#z2_fifteen_allow').val())
+            $('#now_total_allow').val($('#z2_total_allow').val())
+            $('#now_total_people').val($('#z2_total_people').val())
+            $('#now_each_allow').val($('#z2_each_allow').val())
+
+            if (check){
+                check_gray('time_select2')
+            }else{
+                $("#time_select2 input[type='button']").each(function(){
+                    if ($(this).hasClass('btn btn-inverse')){
+                        $(this).addClass('ori_inverse')
+                    }
+                });
+            }
+
             $('#time_select2').show();
         }
         else if (zone_value == 2) {
+            $('#now_fifteen_allow').val($('#z3_fifteen_allow').val())
+            $('#now_total_allow').val($('#z3_total_allow').val())
+            $('#now_total_people').val($('#z3_total_people').val())
+            $('#now_each_allow').val($('#z3_each_allow').val())
+
+            if (check){
+                check_gray('time_select3')
+            }else{
+                $("#time_select3 input[type='button']").each(function(){
+                    if ($(this).hasClass('btn btn-inverse')){
+                        $(this).addClass('ori_inverse')
+                    }
+                });
+            }
+
             $('#time_select3').show();
         }
         else if (zone_value == 3) {
+            $('#now_fifteen_allow').val($('#z4_fifteen_allow').val())
+            $('#now_total_allow').val($('#z4_total_allow').val())
+            $('#now_total_people').val($('#z4_total_people').val())
+            $('#now_each_allow').val($('#z4_each_allow').val())
+
+            if (check){
+                check_gray('time_select4')
+            }else{
+                $("#time_select4 input[type='button']").each(function(){
+                    if ($(this).hasClass('btn btn-inverse')){
+                        $(this).addClass('ori_inverse')
+                    }
+                });
+            }
+
             $('#time_select4').show();
         }
         else if (zone_value == 4) {
+            $('#now_fifteen_allow').val($('#z5_fifteen_allow').val())
+            $('#now_total_allow').val($('#z5_total_allow').val())
+            $('#now_total_people').val($('#z5_total_people').val())
+            $('#now_each_allow').val($('#z5_each_allow').val())
+
+            if (check){
+                check_gray('time_select5')
+            }else{
+                $("#time_select5 input[type='button']").each(function(){
+                    if ($(this).hasClass('btn btn-inverse')){
+                        $(this).addClass('ori_inverse')
+                    }
+                });
+            }
+
             $('#time_select5').show();
         }
         else if (zone_value == 5) {
+            $('#now_fifteen_allow').val($('#z6_fifteen_allow').val())
+            $('#now_total_allow').val($('#z6_total_allow').val())
+            $('#now_total_people').val($('#z6_total_people').val())
+            $('#now_each_allow').val($('#z6_each_allow').val())
+
+            if (check){
+                check_gray('time_select6')
+            }else{
+                $("#time_select6 input[type='button']").each(function(){
+                    if ($(this).hasClass('btn btn-inverse')){
+                        $(this).addClass('ori_inverse')
+                    }
+                });
+            }
+
             $('#time_select6').show();
         }
     };
