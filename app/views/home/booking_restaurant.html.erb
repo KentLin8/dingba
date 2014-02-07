@@ -340,6 +340,7 @@
 
                         var num_of_people = '1'
                         $('#select_people').val(num_of_people)
+                        set_default_ori_inverse();
                         set_time_button($('#select_zone').val(), false);
                     }
                     else if (response.error)
@@ -354,18 +355,39 @@
         });
 
         $('#select_people').live('change', function(){
-            set_time_button($('#select_zone').val(), true);
+            var zone_value = $('#select_zone').val()
+
+            if (zone_value == 0) {
+                check_gray('time_select1')
+            }
+            else if (zone_value == 1) {
+                check_gray('time_select2')
+            }
+            else if (zone_value == 2) {
+                check_gray('time_select3')
+            }
+            else if (zone_value == 3) {
+                check_gray('time_select4')
+            }
+            else if (zone_value == 4) {
+                check_gray('time_select5')
+            }
+            else if (zone_value == 5) {
+                check_gray('time_select6')
+            }
+
         });
 
         $('#select_zone').live('change', function(){
-            var zone_sequence = $(this).val();
-            set_time_button(zone_sequence, true);
+            var zone_value = $(this).val();
+            set_time_button(zone_value, true);
         });
     }
 
     $(function(){
         var num_of_people = '1'
         $('#select_people').val(num_of_people)
+        set_default_ori_inverse();
         set_time_button($('#select_zone').val(), false)
     });
 
@@ -456,13 +478,12 @@
 
     function check_gray(zone){
         if ((parseInt($('#select_people').val()) + parseInt($('#now_total_people').val())) > parseInt($('#now_total_allow').val())) {
-            $("#" + zone + " input[type='button']").addClass('btn-inverse')
+            $("#" + zone + " input[type='button']").removeClass('checked').addClass('btn-inverse')
         }
         else if ( parseInt($('#select_people').val()) > parseInt($('#now_each_allow').val())) {
-            $("#" + zone + " input[type='button']").addClass('btn-inverse')
+            $("#" + zone + " input[type='button']").removeClass('checked').addClass('btn-inverse')
         }
         else {
-
             $("#" + zone + " input[type='button']").removeClass('btn-inverse')
 
             $("#" + zone + " input[type='button']").each(function(){
@@ -470,11 +491,44 @@
                     $(this).addClass('btn-inverse')
                 }
                 else if ((parseInt($('#select_people').val()) + parseInt($(this).data('bcount'))) > parseInt($('#now_fifteen_allow').val()) ){
-                    $(this).addClass('btn-inverse')
+                    $(this).removeClass('checked').addClass('btn-inverse')
                 }
             });
         }
     };
+
+    function set_default_ori_inverse(){
+        $("#time_select1 input[type='button']").each(function(){
+            if ($(this).hasClass('btn btn-inverse')){
+                $(this).addClass('ori_inverse')
+            }
+        });
+        $("#time_select2 input[type='button']").each(function(){
+            if ($(this).hasClass('btn btn-inverse')){
+                $(this).addClass('ori_inverse')
+            }
+        });
+        $("#time_select3 input[type='button']").each(function(){
+            if ($(this).hasClass('btn btn-inverse')){
+                $(this).addClass('ori_inverse')
+            }
+        });
+        $("#time_select4 input[type='button']").each(function(){
+            if ($(this).hasClass('btn btn-inverse')){
+                $(this).addClass('ori_inverse')
+            }
+        });
+        $("#time_select5 input[type='button']").each(function(){
+            if ($(this).hasClass('btn btn-inverse')){
+                $(this).addClass('ori_inverse')
+            }
+        });
+        $("#time_select6 input[type='button']").each(function(){
+            if ($(this).hasClass('btn btn-inverse')){
+                $(this).addClass('ori_inverse')
+            }
+        });
+    }
 
     function set_time_button(zone_value, check){
 
@@ -489,12 +543,6 @@
 
             if (check){
                 check_gray('time_select1')
-            }else{
-                $("#time_select1 input[type='button']").each(function(){
-                    if ($(this).hasClass('btn btn-inverse')){
-                        $(this).addClass('ori_inverse')
-                    }
-                });
             }
 
             $('#time_select1').show();
@@ -507,12 +555,6 @@
 
             if (check){
                 check_gray('time_select2')
-            }else{
-                $("#time_select2 input[type='button']").each(function(){
-                    if ($(this).hasClass('btn btn-inverse')){
-                        $(this).addClass('ori_inverse')
-                    }
-                });
             }
 
             $('#time_select2').show();
@@ -525,12 +567,6 @@
 
             if (check){
                 check_gray('time_select3')
-            }else{
-                $("#time_select3 input[type='button']").each(function(){
-                    if ($(this).hasClass('btn btn-inverse')){
-                        $(this).addClass('ori_inverse')
-                    }
-                });
             }
 
             $('#time_select3').show();
@@ -543,12 +579,6 @@
 
             if (check){
                 check_gray('time_select4')
-            }else{
-                $("#time_select4 input[type='button']").each(function(){
-                    if ($(this).hasClass('btn btn-inverse')){
-                        $(this).addClass('ori_inverse')
-                    }
-                });
             }
 
             $('#time_select4').show();
@@ -561,12 +591,6 @@
 
             if (check){
                 check_gray('time_select5')
-            }else{
-                $("#time_select5 input[type='button']").each(function(){
-                    if ($(this).hasClass('btn btn-inverse')){
-                        $(this).addClass('ori_inverse')
-                    }
-                });
             }
 
             $('#time_select5').show();
@@ -579,12 +603,6 @@
 
             if (check){
                 check_gray('time_select6')
-            }else{
-                $("#time_select6 input[type='button']").each(function(){
-                    if ($(this).hasClass('btn btn-inverse')){
-                        $(this).addClass('ori_inverse')
-                    }
-                });
             }
 
             $('#time_select6').show();
