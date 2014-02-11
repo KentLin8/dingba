@@ -1,6 +1,7 @@
 
 class RestaurantManageController < ApplicationController
   layout 'restaurant_manage'
+  skip_before_filter :verify_authenticity_token, :only => [:set_restaurant_to_home]
   before_action :get_restaurant, :only => [:restaurant, :restaurant_info, :restaurant_info_save, :restaurant_image, :upload_img, :image_cover_save, :image_destroy,
                                            :supply_condition, :supply_time, :supply_condition_save, :condition_state_save,
                                            :destroy_condition, :special_create, :day_booking, :query_books_by_date,
@@ -384,13 +385,13 @@ class RestaurantManageController < ApplicationController
     db.save
   end
 
-  def  adm_index
+  def adm_index
     render :layout => false
 
   end
 
 
-  def  adm_list_all
+  def adm_list_all
     #@restaurant_list = Restaurant.joins('LEFT JOIN(restaurant_users, invite_codes) ON (restaurants.id = restaurant_users.restaurant_id AND restaurant_users.user_id = invite_codes.user_id)').order("id DESC")
     #@restaurant_list = Restaurant.joins('LEFT JOIN(restaurant_users, invite_codes) ON (restaurants.id = restaurant_users.restaurant_id AND restaurant_users.user_id = invite_codes.user_id)')
     #                   .order("id DESC")
@@ -406,19 +407,36 @@ class RestaurantManageController < ApplicationController
     redirect_to '/restaurant#/calendar/restaurant_month'
   end
 
-  def  adm_booking_list
+  def adm_booking_list
     @booking_list = Booking.order("id DESC").where("name is NOT NULL").limit(100)
     render :layout => false
   end
 
-  def  adm_registration
+  def adm_registration
     @registration_list = User.all.order("id DESC").limit(100)
     render :layout => false
   end
 
+  def set_restaurant_to_home
+    begin
+      restaurant = Restaurant.find(params[:restaurant_id])
+
+      if restaurant.tag == 'home'
+        restaurant.tag = nil
+      else
+        restaurant.tag = 'home'
+      end
+
+      restaurant.save
+
+      render json: {:success => true }
+    rescue => e
+      render json: {:error => true, :message => e.message }
+    end
+  end
+
   def test
     render :layout => false
-
   end
 
 end

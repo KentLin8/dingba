@@ -116,6 +116,7 @@ DingBa::Application.routes.draw do
     get  'restaurant_manage/adm_booking_list'
     get  'restaurant_manage/adm_registration'
     get  'h/:id' =>  'restaurant_manage#hack'
+    post 'restaurant_manage/set_restaurant_to_home'
   end
 
 

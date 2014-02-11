@@ -31,8 +31,7 @@
           background-color:#EAF2D3;
       }
   </style>
-
-
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 </head>
 
 <body>
@@ -46,6 +45,7 @@
         <th>Invited Code</th>
         <th>Created at</th>
         <th>Updated at</th>
+        <th>Set home</th>
       </tr>
 
       <% @restaurant_list.each do |rest| %>
@@ -64,9 +64,35 @@
 
         <td> <%= rest.created_at.to_date %> </td>
         <td> <%= rest.updated_at.to_date %> </td>
+        <td>
+          <% if rest.tag.present? && rest.tag.include?('home') %>
+            <input class="set_home_btn" type="button" data-value="<%= rest.id %>" style="width: 100px" value="取消放置首頁">
+          <% else %>
+            <input class="set_home_btn" type="button" data-value="<%= rest.id %>" style="width: 100px" value="放置首頁">
+          <% end %>
+        </td>
       </tr>
       <% end %>
     </table>
 
 </body>
 </html>
+
+
+<script>
+    $(".set_home_btn").click(function(){
+        $.post("/restaurant_manage/set_restaurant_to_home", {restaurant_id: $(this).data("value") }).done(function(response) {
+            if (response.success) {
+                alert("設定成功！");
+            } else if (response.error) {
+                alert("" + response.message);
+            } else {
+                alert('原因不明的失敗');
+            }
+            window.location.reload();
+        }).fail(function() {
+                    return alert('資料傳遞失敗');
+                });
+    });
+</script>
+
