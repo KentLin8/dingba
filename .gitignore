@@ -21,4 +21,5 @@ Gemfile.lock
 
 /public/javascripts/*
 /public/res/*
+!/public/res/home/
 
