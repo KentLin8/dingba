@@ -1,7 +1,10 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!--<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">-->
+<!--<html xmlns="http://www.w3.org/1999/xhtml">-->
+<!DOCTYPE html>
+<html>
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <!--<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />-->
+  <meta charset="UTF-8">
   <title>訂吧-24HR餐廳網路訂位平台</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +12,8 @@
   <%= javascript_include_tag 'home', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
 
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css" media="screen" />
+  <script type="text/javascript" src="/fancybox/jquery.fancybox.pack.js"></script>
   <link rel="stylesheet" href="/camera/camera.css" type="text/css" media="all" />
   <script type="text/javascript" src="/camera/camera.min.js"></script>
   <script type="text/javascript" src="/camera/jquery.easing.1.3.js"></script>
@@ -62,6 +67,31 @@
 
 <body onload="MM_preloadImages('/assets/home_index/goto_up.png','/assets/home_index/facebook_35.png','/assets/home_index/facebook_37.png','/assets/home_index/facebook_39.png')">
 
+<% if alert %>
+    <script type="text/javascript">alert("<%= alert %>");</script>
+<% end %>
 <%= yield %>
 </body>
 </html>
+
+<script>
+
+    $('#get_invite_code').click(function(){
+        var nzData = '/home/get_invite_code';
+
+        $.get(nzData, function(html) {
+            $.fancybox({
+                content: html,
+                width: 400,
+                padding: 20,
+                helpers: {
+                    overlay: {
+                        locked: false
+                    },
+                    title: null
+                }
+            });
+        });
+    });
+
+</script>

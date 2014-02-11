@@ -1,6 +1,25 @@
 class MyMailer < ActionMailer::Base
   #default from: "a17877yun@gmail.com"
 
+  def invite_code_notice(email, restaurant_name, person, phone, recive_email)
+    begin
+      @restaurant_name = restaurant_name
+      @person = person
+      @phone = phone
+      @email = email
+
+      mail(to: recive_email,
+           subject: '訂吧通知：' + restaurant_name + '索取邀請碼！') do |format|
+        format.html { render 'my_mailer/invite_code_notice' }
+      end
+
+      return true
+    rescue => e
+      Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/Mailers/booking_success.rb ,Method:invite_code_notice(email, restaurant_name, person, phone)"
+      return false
+    end
+  end
+
   def booking_success(email, booking)
     begin
       @booking = booking

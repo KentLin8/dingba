@@ -61,6 +61,25 @@ $ ->
       )
     .fail( -> alert '資料傳遞失敗' )
 
+
+#  $('#invite_div').submit (e) ->
+#
+#  if document.getElementById 'wrapper_out'
+#    $(document).on 'submit', 'form', (e) ->
+#    e.preventDefault()
+#    $.post(this.action, $(this).serialize())
+#    .done( (response) ->
+#        $.fancybox.close();
+#        if response.success
+#          alert "申請成功，我們會盡快給您邀請碼！"
+#        else if response.error
+#          alert "#{response.message}"
+#        else
+#          alert '原因不明的失敗'
+#      )
+#    .fail( -> alert '資料傳遞失敗' )
+
+
   # window.onbeforeunload = -> if not_finish
   #   '您的訂位尚未完成，確定要離開本頁嗎？'
 

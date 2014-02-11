@@ -37,6 +37,33 @@ class HomeController < ApplicationController
     @restaurants = Restaurant.where(:tag => 'home')
   end
 
+  def get_invite_code
+    render 'home/get_invite_code', :layout => false
+  end
+
+  def save_get_code_person
+    email = params[:email].strip
+    # Very Important user remote = true, 告訴jquery_ujs.js這個部分要非同步處理
+    # 重導向或是渲染模板都沒有效果，這是很正常的，因為預設接受的回應是JavaScript
+    # 但使用非同步傳輸，建議此功能如果壞掉，是不影響功能的為前提，因為我會先判定成功，再由後台錯誤訊息決定
+    begin
+      if !(email =~ /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/).blank?
+        send_mail_result = MyMailer.invite_code_notice(email, params[:restaurant_name], params[:user_name], params[:phone],APP_CONFIG['dingba_email']).deliver
+      else
+        render json:{:error => true , :message => '申請人 E-Mail 格式錯誤'}
+      end
+
+      if !send_mail_result.blank?
+        render json:{:success => true }
+      else
+        render json:{:error => true , :message => '線上申請異常，請撥電 DingBa 直接索取，謝謝'}
+      end
+    rescue => e
+      Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/controllers/home_controller.rb  ,Method:save_get_code_person"
+      render json:{:error => true , :message => '線上申請異常，請撥電 DingBa 直接索取，謝謝'}
+    end
+  end
+
   def index_old
   end
 
