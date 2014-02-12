@@ -4,9 +4,10 @@ source 'https://rubygems.org'
 #  gem 'pg'
 #end
 
+gem "mini_magick"
+
 # for solve send email is slow problem, sending asynchronous
 #gem 'delayed_job'
-
 #gem 'delayed_job_active_record'
 
 # schedule

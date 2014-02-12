@@ -27,11 +27,22 @@
   2. 按住ctrl鍵不放，可以用滑鼠點選多張圖片<br>
   <!--3. 圖片尺寸為寬200像素，高180像素<br>-->
   3. 圖片最大不可以超過 3M
-</div>
+</div>                      <hr>
+
+
+<a href="/restaurant_manage/home_image"   class="not_ajax btn btn-primary">產生首頁圖片</a>
+如果貴餐廳被選為首頁曝光的餐廳時，方須產生首頁圖片!
+
+<% if !@restaurant.home_img.blank?%>
+    <br>   現在使用中的 Dingba 首頁圖片 :                        <br>
+<img src="/res/home/images/<%= @restaurant.home_img%>"   >
+<% end %>
+
 
 <script>
   $('#next_step').click(function(){
       window.location.href = '/restaurant#/restaurant_manage/supply_condition'
       window.location.reload();
   });
+
 </script>

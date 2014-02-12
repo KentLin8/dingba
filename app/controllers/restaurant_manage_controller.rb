@@ -435,8 +435,48 @@ class RestaurantManageController < ApplicationController
     end
   end
 
-  def test
+  def home_image
+    get_restaurant
+
+    case @restaurant.front_cover
+      when '1'
+        @file_name =  @restaurant.pic_name1
+      when '2'
+        @file_name =  @restaurant.pic_name2
+      when '3'
+        @file_name =  @restaurant.pic_name3
+      when '4'
+        @file_name =  @restaurant.pic_name4
+      when '5'
+        @file_name =  @restaurant.pic_name5
+    end
+
+    @file_path = '/res/' + @restaurant.id.to_s() +'/images/'
+
     render :layout => false
   end
+
+  def image_process
+    get_restaurant
+
+    photo_name  =   params[:file_name]
+    org_photo =     './public'+ params[:file_path] + photo_name
+    if File.exist?( org_photo)
+      img = MiniMagick::Image.open(org_photo)
+      #img.format("jpg")
+
+      img.crop "#{params[:crop_w]}x#{params[:crop_h]}+#{params[:crop_x]}+#{params[:crop_y]}"
+      #photo_name.sub! 'png','jpg'
+      img.write "./public/res/home/images/#{photo_name}"
+      @restaurant.home_img = photo_name
+      @restaurant.save
+    end
+
+    redirect_to '/restaurant#/restaurant_manage/restaurant_image'
+
+
+  end
+
+
 
 end
