@@ -297,7 +297,7 @@ class RestaurantManageController < ApplicationController
   # POST === Function: cancel booking
   def cancel_booking_save
     booking = params[:booking]
-    result = RestaurantManage.cancel_booking(booking[:id], booking[:status], booking[:cancel_note])
+    result = RestaurantManage.cancel_booking(booking[:id], booking[:status], booking[:cancel_note], false)
 
     restaurant_month_result = Calendar.get_restaurant_month(nil,nil,@restaurant.id)
     @year = restaurant_month_result[:year]

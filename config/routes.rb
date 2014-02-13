@@ -25,13 +25,13 @@ DingBa::Application.routes.draw do
   end
 
 
-  root :to => 'home#index',                           :as => 'home'
+  root :to => 'home#index_old',                           :as => 'home'
 
   #==========================================================================
   # home controller
   #==========================================================================
   get  'home/index'
-  get  'home/index_old'
+  #get  'home/index_old'
   get  'home/get_invite_code'
   post 'home/save_get_code_person',              :as => 'save_invite_person'
   get  'home/about_codream'

@@ -1058,14 +1058,14 @@ class RestaurantManage
         return {:error => true, :message => '手機號碼錯誤~!' }
       end
 
-      return cancel_booking(booking_id, cancel_status, cancel_note)
+      return cancel_booking(booking_id, cancel_status, cancel_note, true)
     rescue => e
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/models/restaurant_manage.rb  ,Method:cancel_booking_email(cancel_booking)"
       return {:error => true, :message => '阿! 發生錯誤了! 取消訂位失敗!'}
     end
   end
 
-  def self.cancel_booking(booking_id, status, cancel_note)
+  def self.cancel_booking(booking_id, status, cancel_note, notice_restaurant)
     begin
       Booking.transaction do
         booking = Booking.find(booking_id.to_i)
@@ -1085,7 +1085,7 @@ class RestaurantManage
           booking.cancel_note = cancel_note
         end
         booking.save
-
+        b_num_of_people =  booking.num_of_people
         day_bookings = DayBooking.where(:restaurant_id => booking.restaurant_id, :day => Date.parse(booking.booking_time.to_s))
         if day_bookings.blank?
           Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/models/restaurant_manage.rb  ,Method:cancel_booking(origin_booking)"
@@ -1151,10 +1151,36 @@ class RestaurantManage
           day_booking.save
         end
 
+        bphone = booking.phone
         if booking.email.present?
           booking.phone = nil
+          booking.num_of_people = b_num_of_people
           booking.res_url = APP_CONFIG['domain'] + "#{booking.res_url}"
           MyMailer.cancel_booking(booking.email ,booking).deliver
+        end
+
+        if notice_restaurant && booking.restaurant_id.present?
+          restaurant = Restaurant.find(booking.restaurant_id)
+          if restaurant.present?
+            semail = restaurant.supply_email.split(',')
+            if semail.count == 1
+              semail = semail[0].split(';')
+            end
+
+            if semail.present?
+              effect_email = []
+              semail.each do |e|
+                if !e.blank? && !(e =~ /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/).blank?
+                  effect_email.push(e)
+                end
+              end
+
+              if effect_email.present?
+                booking.phone = bphone
+                MyMailer.notice_cancel_booking(effect_email, restaurant, booking).deliver
+              end
+            end
+          end
         end
 
         if booking.status == '2'

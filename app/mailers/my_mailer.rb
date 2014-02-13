@@ -20,6 +20,22 @@ class MyMailer < ActionMailer::Base
     end
   end
 
+  def notice_cancel_booking(email, restaurant, booking)
+    begin
+      @restaurant = restaurant
+      @booking = booking
+      mail(to: email,
+           subject: '訂吧通知：顧客' + booking.name + ' 取消 ' + booking.booking_time.strftime("%Y-%m-%d %H:%M") + ' 訂位！ ，取消人數：' + booking.num_of_people.to_s + ' 人') do |format|
+        format.html { render 'my_mailer/notice_cancel_booking' }
+      end
+
+      return true
+    rescue => e
+      Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/Mailers/booking_success.rb ,Method:notice_cancel_booking(email, restaurant, booking)"
+      return false
+    end
+  end
+
   def booking_success(email, booking)
     begin
       @booking = booking
