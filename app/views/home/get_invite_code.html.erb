@@ -6,7 +6,7 @@
     我們會盡速提供給您邀請碼
   </div>
 
-  <%= form_tag(save_invite_person_path, :id => 'invite_div') do %>
+  <%= form_tag(save_invite_person_path, :id => 'invite_div', :remote => true) do %>
       <div style="float: left;width: 160px;font-size: 18px; line-height:40px;text-align: right;padding-right: 5px">
         餐廳名稱：</br>
         聯絡人：</br>
@@ -31,18 +31,19 @@
     $('#invite_div').submit(function(e){
         e.preventDefault()
 
-        $.post(this.action, $(this).serialize()).done(function(response) {
-            $.fancybox.close();
-            if (response.success) {
-                return alert("申請成功，我們會盡快給您邀請碼！");
-            } else if (response.error) {
-                return alert("" + response.message);
-            } else {
-                return alert('原因不明的失敗');
-            }
-        }).fail(function() {
-            return alert('資料傳遞失敗');
-        });
+        return alert("申請成功，24小時內未收到邀請碼，請來電詢問，謝謝");
+//        $.post(this.action, $(this).serialize()).done(function(response) {
+//            $.fancybox.close();
+//            if (response.success) {
+//                return alert("申請成功，我們會盡快給您邀請碼！");
+//            } else if (response.error) {
+//                return alert("" + response.message);
+//            } else {
+//                return alert('原因不明的失敗');
+//            }
+//        }).fail(function() {
+//            return alert('資料傳遞失敗');
+//        });
     });
 </script>
 
