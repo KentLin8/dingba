@@ -174,7 +174,7 @@ class RegistrationsController < Devise::RegistrationsController
     res.available_type = '1'
     res.available_date = '22:00'
     res.available_hour = 1
-    res.sent_type = '1'
+    res.sent_type = '0'
     res.sent_date = '22:00'
     res.supply_person = user.name
     res.supply_email = user.email
