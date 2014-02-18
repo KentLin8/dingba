@@ -4,6 +4,11 @@ source 'https://rubygems.org'
 #  gem 'pg'
 #end
 
+gem 'sidekiq'
+
+#gem 'resque' # or a compatible alternative / fork
+#gem 'resque_mailer'
+
 gem "mini_magick"
 
 # for solve send email is slow problem, sending asynchronous

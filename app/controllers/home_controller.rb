@@ -175,17 +175,21 @@ class HomeController < ApplicationController
 
       booking.phone = nil
       booking.res_url = APP_CONFIG['domain'] + "#{booking.res_url}"
-      result = MyMailer.notify_friend(effect_email ,booking).deliver
+      #result = MyMailer.notify_friend(effect_email ,booking).deliver
+      result = MyMailer.delay_for(1.second).notify_friend(effect_email ,booking.id, APP_CONFIG['domain'])   # sidekiq
 
-      if result.perform_deliveries
-
-        #booking = Booking.find(booking_id)
-        booking.participants = effect_email.map{|k| "#{k}"}.join(',')
-        booking.save
-        render json: {:success => true, :data => '通知成功!' }
-      else
-        render json: {:error => true, :message => '阿! 發生錯誤了! 通知失敗!'}
-      end
+      #==========================================================================  use sidekiq can't not know the result immediate
+      #if result.perform_deliveries
+      #
+      #  #booking = Booking.find(booking_id)
+      #  booking.participants = effect_email.map{|k| "#{k}"}.join(',')
+      #  booking.save
+      #  render json: {:success => true, :data => '通知成功!' }
+      #else
+      #  render json: {:error => true, :message => '阿! 發生錯誤了! 通知失敗!'}
+      #end
+      #==========================================================================
+      render json: {:success => true, :data => '通知成功!' }
 
     rescue => e
       render json: {:error => true, :message => '阿! 發生錯誤了! 通知失敗!'}

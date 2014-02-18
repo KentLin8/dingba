@@ -812,8 +812,12 @@ class Home
           booking.phone = nil
           booking.res_url = APP_CONFIG['domain'] + "#{booking.res_url}"
           booking.cancel_key = APP_CONFIG['domain_clear'] + "home/cancel_booking_by_email?cancel_key=" + "#{booking.cancel_key}"  + "&booking_key=" + "#{booking.id}"
-          send_mail_result = MyMailer.booking_success(booking.email, booking).deliver   # Send mail fail may be the email problem, check time out
-                                                                                        #send_mail_result = MyMailer.delay(run_at: 1.minutes.from_now).booking_success(booking.email, booking)
+
+          #send_mail_result = MyMailer.booking_success(booking.email, booking).deliver   # default
+          #send_mail_result = MyMailer.booking_success(booking.id).deliver               # resque
+          send_mail_result = MyMailer.delay_for(1.second).booking_success(booking.id, APP_CONFIG['domain'], APP_CONFIG['domain_clear'])    # sidekiq
+          # Send mail fail may be the email problem, check time out
+          # send_mail_result = MyMailer.delay(run_at: 1.minutes.from_now).booking_success(booking.email, booking)
         end
 
         if restaurant.sent_type == '0'
@@ -833,16 +837,20 @@ class Home
             end
 
             booking.phone = temp_phone
-            effect_email.each do |eff|
-              MyMailer.sent_booking_notice_to_restaurant(restaurant.name, eff, booking).deliver
+
+            if effect_email.present?
+              MyMailer.sent_booking_notice_to_restaurant(restaurant.name, effect_email, booking).deliver
             end
+            #effect_email.each do |eff|
+            #  MyMailer.sent_booking_notice_to_restaurant(restaurant.name, eff, booking).deliver
+            #end
           end
         end
 
         has_mail = false
-        if !send_mail_result.blank?
-          has_mail = true
-        end
+        #if !send_mail_result.blank?
+        #  has_mail = true
+        #end
 
         if booking.num_of_people > 1
           booking_notice_type = 'multi'

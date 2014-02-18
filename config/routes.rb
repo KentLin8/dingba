@@ -30,8 +30,8 @@ DingBa::Application.routes.draw do
   #==========================================================================
   # home controller
   #==========================================================================
-  get  'home/index'
-  #get  'home/index_old'
+  #get  'home/index'
+  get  'home/index_old'
   get  'home/get_invite_code'
   post 'home/save_get_code_person',              :as => 'save_invite_person'
   get  'home/about_codream'

@@ -1,5 +1,6 @@
 class MyMailer < ActionMailer::Base
   #default from: "a17877yun@gmail.com"
+  #include Resque::Mailer
 
   def invite_code_notice(email, restaurant_name, person, phone, recive_email)
     begin
@@ -20,12 +21,17 @@ class MyMailer < ActionMailer::Base
     end
   end
 
-  def notice_cancel_booking(email, restaurant, booking)
+  def notice_cancel_booking(email, restaurant_id, booking_id, domain)
+  #def notice_cancel_booking(email, restaurant, booking)  *p1
     begin
-      @restaurant = restaurant
-      @booking = booking
+      #@restaurant = restaurant    *p1
+      #@booking = booking      *p1
+      @booking = Booking.find(booking_id)
+      @booking.res_url = domain + "#{@booking.res_url}"
+      @restaurant = Restaurant.find(restaurant_id)
+
       mail(to: email,
-           subject: '訂吧通知：顧客' + booking.name + ' 取消 ' + booking.booking_time.strftime("%Y-%m-%d %H:%M") + ' 訂位！ ，取消人數：' + booking.num_of_people.to_s + ' 人') do |format|
+           subject: '訂吧通知：顧客' + @booking.name + ' 取消 ' + @booking.booking_time.strftime("%Y-%m-%d %H:%M") + ' 訂位！ ，取消人數：' + @booking.num_of_people.to_s + ' 人') do |format|
         format.html { render 'my_mailer/notice_cancel_booking' }
       end
 
@@ -36,11 +42,17 @@ class MyMailer < ActionMailer::Base
     end
   end
 
-  def booking_success(email, booking)
+  def booking_success(booking_id, domain, domain_clear)
+  #def booking_success(email, booking)   *p1
     begin
-      @booking = booking
-      #@domain_clear = APP_CONFIG['domain_clear'] + "home/cancel_booking_by_email/"
+      #@booking = booking *p1
+      @booking = Booking.find(booking_id)
+      @booking.phone = nil
+      @booking.res_url = domain + "#{@booking.res_url}"
+      @booking.cancel_key = domain_clear + "home/cancel_booking_by_email?cancel_key=" + "#{@booking.cancel_key}"  + "&booking_key=" + "#{@booking.id}"
 
+      #@domain_clear = APP_CONFIG['domain_clear'] + "home/cancel_booking_by_email/"
+      email = @booking.email
       mail(to: email,
            subject: '訂吧通知：您的訂位成功！') do |format|
         format.html { render 'my_mailer/booking_success' }
@@ -53,9 +65,13 @@ class MyMailer < ActionMailer::Base
     end
   end
 
-  def notify_friend(effect_email, booking)
+  def notify_friend(effect_email, booking_id, domain)
+  #def notify_friend(effect_email, booking)
     begin
-      @booking = booking
+      #@booking = booking    *p1
+      @booking = Booking.find(booking_id)
+      @booking.phone = nil
+      @booking.res_url = domain + "#{@booking.res_url}"
 
       mail(to: effect_email,
            subject: '訂吧通知：您的朋友邀請您一起用餐！') do |format|
@@ -69,10 +85,14 @@ class MyMailer < ActionMailer::Base
     end
   end
 
-  def cancel_booking(email, booking)
+  def cancel_booking(booking_id, domain)
+  #def cancel_booking(email, booking)
     begin
-      @booking = booking
-
+      #@booking = booking    *p1
+      @booking = Booking.find(booking_id)
+      @booking.phone = nil
+      @booking.res_url = domain + "#{@booking.res_url}"
+      email = @booking.email
       mail(to: email,
            subject: '訂吧通知：您的訂位已取消！') do |format|
         format.html { render 'my_mailer/cancel_booking' }
@@ -83,9 +103,15 @@ class MyMailer < ActionMailer::Base
     end
   end
 
-  def modify_booking(email, booking)
+  def modify_booking(booking_id, domain, domain_clear)
+  #def modify_booking(email, booking)
     begin
-      @booking = booking
+      #@booking = booking    *p1
+      @booking = Booking.find(booking_id)
+      @booking.phone = nil
+      @booking.res_url = domain + "#{@booking.res_url}"
+      @booking.cancel_key = domain_clear + "home/cancel_booking_by_email?cancel_key=" + "#{@booking.cancel_key}"  + "&booking_key=" + "#{@booking.id}"
+      email = @booking.email
 
       mail(to: email,
            subject: '訂吧通知：您的訂位已由餐廳方修改，請再次確認！') do |format|
@@ -113,10 +139,12 @@ class MyMailer < ActionMailer::Base
     end
   end
 
-  def sent_booking_notice_to_restaurant(restaurant_name, email, booking)
+  def sent_booking_notice_to_restaurant(restaurant_name, email, booking_id)
+  #def sent_booking_notice_to_restaurant(restaurant_name, email, booking)
     begin
       @restaurant_name = restaurant_name
-      @booking = booking
+      #@booking = booking    *p1
+      @booking = Booking.find(booking_id)
 
       mail(to: email,
            subject: '訂吧通知：即時訂位通知！') do |format|

@@ -1032,7 +1032,8 @@ class RestaurantManage
         booking.phone = nil
         booking.res_url = APP_CONFIG['domain'] + "#{booking.res_url}"
         booking.cancel_key = APP_CONFIG['domain_clear'] + "home/cancel_booking_by_email?cancel_key=" + "#{booking.cancel_key}"  + "&booking_key=" + "#{booking.id}"
-        MyMailer.modify_booking(booking.email ,booking).deliver
+        #MyMailer.modify_booking(booking.email ,booking).deliver
+        MyMailer.delay_for(1.second).modify_booking(booking.id, APP_CONFIG['domain'], APP_CONFIG['domain_clear'])    # sidekiq
         return {:success => true, :data => '修改成功!'}
       end
     rescue => e
@@ -1156,7 +1157,8 @@ class RestaurantManage
           booking.phone = nil
           booking.num_of_people = b_num_of_people
           booking.res_url = APP_CONFIG['domain'] + "#{booking.res_url}"
-          MyMailer.cancel_booking(booking.email ,booking).deliver
+          #MyMailer.cancel_booking(booking.email ,booking).deliver
+          MyMailer.delay_for(1.second).cancel_booking(booking.id, APP_CONFIG['domain'])    # sidekiq
         end
 
         if notice_restaurant && booking.restaurant_id.present?
@@ -1177,7 +1179,8 @@ class RestaurantManage
 
               if effect_email.present?
                 booking.phone = bphone
-                MyMailer.notice_cancel_booking(effect_email, restaurant, booking).deliver
+                #MyMailer.notice_cancel_booking(effect_email, restaurant, booking).deliver
+                MyMailer.delay_for(1.second).notice_cancel_booking(effect_email, restaurant.id, booking.id, APP_CONFIG['domain'])   # sidekiq
               end
             end
           end

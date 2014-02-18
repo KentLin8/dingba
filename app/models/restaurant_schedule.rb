@@ -43,9 +43,13 @@ class RestaurantSchedule
               end
             end
 
-            effect_email.each do |eff|
-              MyMailer.restaurant_daily_report(tomorrow, r[0], eff, r[1]).deliver
+            if effect_email.present?
+              MyMailer.restaurant_daily_report(tomorrow, r[0], effect_email, r[1]).deliver
             end
+
+            #effect_email.each do |eff|
+            #  MyMailer.restaurant_daily_report(tomorrow, r[0], eff, r[1]).deliver
+            #end
           end
         end
       end
