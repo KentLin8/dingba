@@ -839,7 +839,8 @@ class Home
             booking.phone = temp_phone
 
             if effect_email.present?
-              MyMailer.sent_booking_notice_to_restaurant(restaurant.name, effect_email, booking).deliver
+              #MyMailer.sent_booking_notice_to_restaurant(restaurant.name, effect_email, booking).deliver
+              MyMailer.delay_for(1.second).sent_booking_notice_to_restaurant(restaurant.name, effect_email, booking.id)    # sidekiq
             end
             #effect_email.each do |eff|
             #  MyMailer.sent_booking_notice_to_restaurant(restaurant.name, eff, booking).deliver
