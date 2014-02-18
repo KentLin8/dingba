@@ -17,9 +17,9 @@ class Restaurant < ActiveRecord::Base
   validates :supply_person, :length => { :maximum => 20, :message => "供位聯絡人，" + OUT_OF_LENGTH }
   validates :supply_email, :format => { with: /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/, :message => "供位聯絡人 E-mail 格式錯誤喔!" },
                            :length => { :maximum => 1000, :message => "E-mail，" + OUT_OF_LENGTH }
-  validates :url1, :length => { :maximum => 60, :message => "餐廳網址1，" + OUT_OF_LENGTH }
-  validates :url2, :length => { :maximum => 60, :message => "餐廳網址2，" + OUT_OF_LENGTH }
-  validates :url3, :length => { :maximum => 60, :message => "餐廳網址3，" + OUT_OF_LENGTH }
+  validates :url1, :length => { :maximum => 500, :message => "餐廳網址1，" + OUT_OF_LENGTH }
+  validates :url2, :length => { :maximum => 500, :message => "餐廳網址2，" + OUT_OF_LENGTH }
+  validates :url3, :length => { :maximum => 500, :message => "餐廳網址3，" + OUT_OF_LENGTH }
   validates :info_url1, :length => { :maximum => 50, :message => "網址名稱1，" + OUT_OF_LENGTH }
   validates :info_url2, :length => { :maximum => 50, :message => "網址名稱2，" + OUT_OF_LENGTH }
   validates :info_url3, :length => { :maximum => 50, :message => "網址名稱3，" + OUT_OF_LENGTH }
