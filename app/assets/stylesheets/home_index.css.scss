@@ -6,7 +6,8 @@
   background-color: #FFF;
 }
 #wrapper_out {
-  height: 1750px;
+  #height: 1950px;
+  height: auto;
   width: 1020px;
   margin-right: auto;
   margin-left: auto;
@@ -57,8 +58,8 @@
   clip: rect(auto,auto,auto,auto);
 }
 #main {
-  height: 1020px;
   clip: rect(auto,auto,auto,auto);
+  height: 1000px;
 }
 #main_top {
   height: 300px;
@@ -77,8 +78,30 @@
   height: 22px;
   padding-top: 5px;
   padding-bottom: 2px;
-  width: 100px;
+  width: 200px;
 }
+.ad {
+
+}
+.ad_in {
+  height: 60px;
+  width: 165px;
+  float: left;
+  padding-top: 10px;
+}
+.ad_01 {
+  width: 970px;
+  padding: 10px;
+  background-color: #FEE;
+  margin-top: 10px;
+  line-height: 25px;
+}
+
+.ad_01 a:link {color:#ba365e;}
+a:visited {color:#ba365e;}
+a:hover   {color:#ba365e;}
+a:active  {color:#ba365e;}
+
 .title_red {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 16px;
@@ -156,14 +179,15 @@ a:active  {color:red;}
 }
 
 .footer_about {
-  text-align: center;
   font-size: 14px;
   font-family: Verdana, Geneva, sans-serif;
   color: #333;
-  height: 25px;
-  width: 360px;
   margin-right: auto;
   margin-left: auto;
+  padding-top: 30px;
+  height: 40px;
+  width: 365px;
+  text-align: center;
 }
 .footer_bu {
   width: 120px;
@@ -326,6 +350,12 @@ a:active  {color:red;}
   width: 300px;
   float: left;
 }
+.main_top_title_pading {
+  height: 22px;
+  padding-top: 10px;
+  padding-bottom: 2px;
+  width: 200px;
+}
 
 
 .fluid_container {
@@ -380,3 +410,4 @@ a:active  {color:red;}
 .camera_pag_ul {
   height: 40px;
 }
+
