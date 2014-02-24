@@ -35,6 +35,10 @@ class HomeController < ApplicationController
     # TODO GET Home restaurant
     # updated_at , set home tag save updated_at time,
     @restaurants = Restaurant.where(:tag => 'home')
+    if  $my_friends_list.nil?
+      reload_friends
+    end
+
   end
 
   def get_invite_code
@@ -313,5 +317,14 @@ class HomeController < ApplicationController
         'home'
     end
   end
+
+  def reload_friends
+    require 'google_drive'
+    google_session =  GoogleDrive.login('streams.in.taipei@gmail.com', DingBa::Application::Google_Driver_Login_P)
+    # First worksheet of https://docs.google.com/spreadsheet/ccc?key=pz7XtlQC-PYx-jrVMJErTcg
+    $my_friends_list =  google_session.spreadsheet_by_key('0Au6aqiVMytnzdF9QejN3T19oRzZXME41blhfX2tzelE').worksheets[1]
+
+  end
+
 
 end

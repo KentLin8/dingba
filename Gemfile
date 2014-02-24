@@ -4,6 +4,7 @@ source 'https://rubygems.org'
 #  gem 'pg'
 #end
 
+gem 'google_drive'
 gem 'sidekiq'
 
 #gem 'resque' # or a compatible alternative / fork
