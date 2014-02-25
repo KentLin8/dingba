@@ -21,6 +21,8 @@
   <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css" media="screen" />
   <script type="text/javascript" src="/fancybox/jquery.fancybox.pack.js"></script>
 
+
+
   <style type="text/css">
       .link_text {
           height: 30px;
@@ -47,6 +49,26 @@
       }
   </style>
 
+
+
+  <!-- UserVoice JavaScript SDK (only needed once on a page) -->
+  <script>(function(){var uv=document.createElement('script');uv.type='text/javascript';uv.async=true;uv.src='//widget.uservoice.com/sF5ldGsjGJoCOLJrdnsA.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(uv,s)})()</script>
+  <!-- A tab to launch the Classic Widget -->
+  <script>
+      UserVoice = window.UserVoice || [];
+      UserVoice.push(['showTab', 'classic_widget', {
+          mode: 'full',
+          primary_color: '#ad0741',
+          link_color: '#007dbf',
+          default_mode: 'support',
+          forum_id: 241700,
+          topic_id: 49849,
+          tab_label: '線上客服',
+          tab_color: '#910515',
+          tab_position: 'middle-left',
+          tab_inverted: false
+      }]);
+  </script>
 
 
 </head>
