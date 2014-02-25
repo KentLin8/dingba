@@ -30,6 +30,74 @@ class HomeController < ApplicationController
   def q_and_a
   end
 
+  def turn_to_restaurant
+  end
+
+  def turn_restaurant_with_invite
+    invite_code = params[:invite_code].strip
+
+    if invite_code.blank?
+      render json:{:error => true , :message => '邀請碼不能空白喔！'}
+      return
+    end
+
+    code_records = InviteCode.where(:code => invite_code, :user_id => nil)
+    if code_records.blank?
+      render json:{:error => true , :message => '沒有此筆邀請碼！'}
+      return
+    end
+
+    target_user = nil
+    if current_user.present? && current_user.role == '1'
+      target_user = User.find(current_user.id)
+    end
+
+    if target_user.blank?
+      render json:{:error => true , :message => '疑～你好像登出了～ 麻煩你先登入再進行建立動作喔~！'}
+      return
+    end
+
+    User.transaction do
+      target_user.role = '0'
+      target_user.allow_promot = 't'
+      target_user.save
+
+      code_record = code_records.first
+      code_record.user_id = target_user.id
+      code_record.save
+
+      res_url_tag = get_res_url_tag
+      res = Restaurant.new
+      res.res_url = res_url_tag         # APP_CONFIG['domain']
+      res.available_type = '1'
+      res.available_date = '22:00'
+      res.available_hour = 1
+      res.sent_type = '0'
+      res.sent_date = '22:00'
+      res.supply_person = target_user.name
+      res.supply_email = target_user.email
+      res.save
+
+      res_user = RestaurantUser.new
+      res_user.restaurant_id = res.id
+      res_user.permission = '0'           # 0 mean all manager
+      res_user.user_id = target_user.id
+      res_user.save
+      render json:{:success => true , :data => '建立餐廳成功~'}
+    end
+  end
+
+  def get_res_url_tag
+    rand_string = SecureRandom.hex(3)
+    check = Restaurant.where(:res_url => rand_string)
+
+    if check.blank?
+      return rand_string
+    else
+      get_res_url_tag
+    end
+  end
+
   def index
     # DingBa home view
     # TODO GET Home restaurant
@@ -266,10 +334,10 @@ class HomeController < ApplicationController
       @booker = User.new
       if !current_user.blank?
         #if current_user.role == '0'   # restaurant
-          #signed_out = (Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name))
-          #redirect_to confirmation_getting_started_path
+        #signed_out = (Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name))
+        #redirect_to confirmation_getting_started_path
         #elsif current_user.role == '1'  # booker
-          @booker = User.find(current_user.id)
+        @booker = User.find(current_user.id)
         #end
       end
     rescue => e
@@ -305,7 +373,7 @@ class HomeController < ApplicationController
 
   def resolve_layout
     case action_name
-      when 'index_old', 'clause', 'about_codream', 'q_and_a', 'wait_confirm_email', 'cancel_booking_by_email', 'save_cancel_booking_by_email'
+      when 'index_old', 'clause', 'about_codream', 'q_and_a', 'wait_confirm_email', 'cancel_booking_by_email', 'save_cancel_booking_by_email', 'turn_to_restaurant'
         'home_index_old'
       when 'index'
         'home_index'

@@ -3,7 +3,14 @@ class SessionsController < Devise::SessionsController
   layout 'registration'
 
   def restaurant_new
-    new_user('0', nil)
+    begin
+      if current_user.present? && current_user.role == '1'
+        redirect_to turn_to_restaurant_path
+      else
+        new_user('0', nil)
+      end
+    rescue => e
+    end
   end
 
   def booker_new

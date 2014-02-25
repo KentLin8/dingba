@@ -39,6 +39,8 @@ DingBa::Application.routes.draw do
   get  'home/q_and_a'
 
   get  'home/index_old'
+  get  'home/turn_to_restaurant',                :as => 'turn_to_restaurant'
+  post 'home/turn_restaurant_with_invite'
   get  'r/:id' => 'home#booking_restaurant',     :as => 'booking_restaurant'
   get  'home/get_condition'
   get  'home/notice_friend'
