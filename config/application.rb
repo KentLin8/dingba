@@ -35,5 +35,7 @@ module DingBa
     #config.i18n.enforce_available_locales = true
     config.i18n.default_locale = "zh-TW"
     Week = ['星期一','星期二','星期三','星期四','星期五','星期六','星期日']
+    Google_Driver_Login_P =  'koala4_fiat'
+
   end
 end
