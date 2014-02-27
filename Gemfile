@@ -5,7 +5,7 @@ source 'https://rubygems.org'
 #end
 
 gem 'google_drive'
-gem 'kendoui-rails'
+#gem 'kendoui-rails'
 
 gem 'sidekiq'
 
