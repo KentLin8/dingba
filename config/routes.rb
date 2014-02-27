@@ -87,7 +87,11 @@ DingBa::Application.routes.draw do
   get  'restaurant_manage/query_books_by_date'
 
   get  'restaurant_manage/home_image'           #test, it must to delete after prototype
-  post  'restaurant_manage/image_process'
+  post 'restaurant_manage/image_process'
+
+  get  'restaurant_manage/multi_restaurant'
+  post 'restaurant_manage/create_restaurant'
+  post 'restaurant_manage/switch_restaurant'
 
   #==========================================================================
   # calendar controller

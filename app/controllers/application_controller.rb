@@ -154,11 +154,10 @@ class ApplicationController < ActionController::Base
           @pay_type = @restaurant.pay_type.split(',')
         end
       end
-
     rescue => e
       Rails.logger.error APP_CONFIG['error'] + "(#{e.message})" + ",From:app/controllers/calendar_controller.rb  ,Filter:get_restaurant"
       flash.now[:alert] = 'oops! 出現錯誤了!'
-      redirect_to res_session_new_path
+      #redirect_to res_session_new_path
     end
   end
 

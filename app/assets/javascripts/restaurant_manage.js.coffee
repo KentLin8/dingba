@@ -347,6 +347,14 @@ $ ->
             #window.location.reload();
             window.location.href = '/sessions/restaurant_new'
 
+          if response.is_create_res
+            window.location.href = '/restaurant#/restaurant_manage/restaurant_info'
+            window.location.reload();
+
+          if response.is_switch
+            window.location.href = '/restaurant#/restaurant_manage/restaurant_info'
+            window.location.reload();
+
           if response.registration
             $.fancybox.close();
 
@@ -439,6 +447,9 @@ $ ->
     $('#sub_choice').animate(height: 0, 'border-width': 0, 'margin-bottom': 0)
     $('#sub_choice2').animate(height: 44, 'border-width': 1, 'margin-bottom': 10)
   $('#step4').click ->
+    $('#sub_choice').animate(height: 0, 'border-width': 0, 'margin-bottom': 0)
+    $('#sub_choice2').animate(height: 0, 'border-width': 0, 'margin-bottom': 0)
+  $('#step5').click ->
     $('#sub_choice').animate(height: 0, 'border-width': 0, 'margin-bottom': 0)
     $('#sub_choice2').animate(height: 0, 'border-width': 0, 'margin-bottom': 0)
 

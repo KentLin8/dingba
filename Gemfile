@@ -5,6 +5,8 @@ source 'https://rubygems.org'
 #end
 
 gem 'google_drive'
+gem 'kendoui-rails'
+
 gem 'sidekiq'
 
 #gem 'resque' # or a compatible alternative / fork

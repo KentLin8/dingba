@@ -5,7 +5,8 @@ class RestaurantManageController < ApplicationController
   before_action :get_restaurant, :only => [:restaurant, :restaurant_info, :restaurant_info_save, :restaurant_image, :upload_img, :image_cover_save, :image_destroy,
                                            :supply_condition, :supply_time, :supply_condition_save, :condition_state_save,
                                            :destroy_condition, :special_create, :day_booking, :query_books_by_date,
-                                           :modify_booking, :modify_booking_save, :cancel_booking,:cancel_booking_save, :adm_list_all ]
+                                           :modify_booking, :modify_booking_save, :cancel_booking,:cancel_booking_save, :adm_list_all,
+                                           :home_image, :image_process, :multi_restaurant]
 
 
   # =========================================================================
@@ -387,9 +388,7 @@ class RestaurantManageController < ApplicationController
 
   def adm_index
     render :layout => false
-
   end
-
 
   def adm_list_all
     #@restaurant_list = Restaurant.joins('LEFT JOIN(restaurant_users, invite_codes) ON (restaurants.id = restaurant_users.restaurant_id AND restaurant_users.user_id = invite_codes.user_id)').order("id DESC")
@@ -436,8 +435,6 @@ class RestaurantManageController < ApplicationController
   end
 
   def home_image
-    get_restaurant
-
     case @restaurant.front_cover
       when '1'
         @file_name =  @restaurant.pic_name1
@@ -457,8 +454,6 @@ class RestaurantManageController < ApplicationController
   end
 
   def image_process
-    get_restaurant
-
     photo_name  =   params[:file_name]
     org_photo =     './public'+ params[:file_path] + photo_name
     if File.exist?( org_photo)
@@ -473,10 +468,78 @@ class RestaurantManageController < ApplicationController
     end
 
     redirect_to '/restaurant#/restaurant_manage/restaurant_image'
-
-
   end
 
+  def multi_restaurant
+    @restaurants  = Restaurant.find_by_sql ['SELECT restaurants.id, restaurants.name as name FROM restaurant_users INNER JOIN(restaurants) ON (restaurant_users.restaurant_id = restaurants.id)AND (restaurant_users.user_id =? )',current_user.id]
 
+    render json: {:success => true, :attachmentPartial => render_to_string('restaurant_manage/multi_restaurant', :layout => false ) }
+  end
+
+  def create_restaurant
+    target_user = nil
+    if current_user.present?
+      target_user = User.find(current_user.id)
+    end
+
+    if target_user.blank?
+      render json:{:error => true , :message => '疑～你好像登出了～ 麻煩你先登入再進行建立動作喔~！'}
+      return
+    end
+
+    User.transaction do
+      res_url_tag = get_res_url_tag
+      res = Restaurant.new
+      res.res_url = res_url_tag         # APP_CONFIG['domain']
+      res.available_type = '1'
+      res.available_date = '22:00'
+      res.available_hour = 1
+      res.sent_type = '0'
+      res.sent_date = '22:00'
+      res.supply_person = target_user.name
+      res.supply_email = target_user.email
+      res.save
+
+      res_user = RestaurantUser.new
+      res_user.restaurant_id = res.id
+      res_user.permission = '0'           # 0 mean all manager
+      res_user.user_id = target_user.id
+      res_user.save
+
+      session[:hack_restaurant_id] = res.res_url
+      @pay_type = []
+      @restaurant = res
+      if !@restaurant.pay_type.blank?
+        @pay_type = @restaurant.pay_type.split(',')
+      end
+
+      render json: {:step => '1',:is_create_res => true, :success => true, :data => '建立餐廳成功~', :attachmentPartial => render_to_string('restaurant_manage/restaurant_info', :layout => false ) }
+    end
+  end
+
+  def get_res_url_tag
+    rand_string = SecureRandom.hex(3)
+    check = Restaurant.where(:res_url => rand_string)
+
+    if check.blank?
+      return rand_string
+    else
+      get_res_url_tag
+    end
+  end
+
+  def switch_restaurant
+    begin
+      restaurant = Restaurant.find(params[:restaurant_id].to_i)
+      session[:hack_restaurant_id] = restaurant.res_url
+
+      res_name = ''
+      if restaurant.name.present?
+        res_name = restaurant.name
+      end
+      render json: {:is_switch => true, :success => true, :data => '切換成餐廳：' + res_name }
+    rescue => e
+    end
+  end
 
 end
