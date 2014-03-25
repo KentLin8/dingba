@@ -25,7 +25,7 @@ DingBa::Application.routes.draw do
   end
 
 
-  root :to => 'home#index_old',                           :as => 'home'
+  root :to => 'home#index',                           :as => 'home'
 
   #==========================================================================
   # home controller

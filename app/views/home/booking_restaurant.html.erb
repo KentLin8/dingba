@@ -60,19 +60,19 @@
               <col style="width: 450px">
             </colgroup>
             <tr>
-              <td style="font-size: 16px;">餐廳名稱：</td>
+              <td style="font-size: 16px;">服務名稱：</td>
               <td><%= @restaurant.name %></td>
             </tr>
             <tr>
-              <td style="font-size: 16px">餐廳地址：</td>
+              <td style="font-size: 16px">服務地址：</td>
               <td><%= @address %></td>
             </tr>
             <tr>
-              <td style="font-size: 16px">餐廳電話：</td>
+              <td style="font-size: 16px">服務電話：</td>
               <td><%= @restaurant.phone %></td>
             </tr>
             <tr>
-              <td style="font-size: 16px">餐廳特色：</td>
+              <td style="font-size: 16px">服務特色：</td>
               <td ><%= @restaurant.feature %></td>
             </tr>
             <tr>
@@ -96,7 +96,7 @@
               </td>
             </tr>
             <tr>
-              <td style="font-size: 16px">餐廳網址：</td>
+              <td style="font-size: 16px">服務網址：</td>
               <td>
                 <% if !@restaurant.url1.blank? %><a href="<%= @restaurant.url1 %>" target="_blank"><%= @restaurant.info_url1 %></a><% end %>
                 <% if !@restaurant.url1.blank? && !@restaurant.url2.blank? %>、<% end %>
@@ -146,7 +146,7 @@
                   <td><input type="text" id="b_email" name="booker_email" style="width:262px; text-align: left; font-size: 16px; padding-left: 5px" value="<%= @booker.email %>"></td>
                 </tr>
                 <tr>
-                  <td colspan="2"><textarea style="width: 76%; height:60px" placeholder="  留言給餐廳" name="remark"></textarea></td>
+                  <td colspan="2"><textarea style="width: 76%; height:60px" placeholder="  留言給服務" name="remark"></textarea></td>
                 </tr>
                 <tr>
                   <td colspan="2">
@@ -400,9 +400,12 @@
         var booker_data = $("#booking_form").serializeArray();
         var booking = {};
 
-        for(item in booker_data){
-            booking[booker_data[item]['name']] = $.trim(booker_data[item]['value'])
-        }
+
+
+//        for(item in booker_data){
+//            booking[booker_data[item]['name']] = $.trim(booker_data[item]['value'])
+//        }
+
 
         var no_select = true
         $(".btn.checked").each(function(){
