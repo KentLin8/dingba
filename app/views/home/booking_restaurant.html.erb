@@ -406,6 +406,10 @@
 //            booking[booker_data[item]['name']] = $.trim(booker_data[item]['value'])
 //        }
 
+        $.each(booker_data, function(i, field){
+            booking[field.name] = $.trim(field.value)
+        });
+
 
         var no_select = true
         $(".btn.checked").each(function(){
